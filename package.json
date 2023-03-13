@@ -1,0 +1,25 @@
+{
+  "name": "typenexus",
+  "version": "0.0.1",
+  "description": "TypeNexus is a good tool for API encapsulation and management. It provides a clean and lightweight way to package TypeORM functionality, helping you build applications faster while reducing template code redundancy and type conversion work.",
+  "author": "kenny wong <wowohoo@qq.com>",
+  "license": "MIT",
+  "homepage": "http://jaywcjlove.github.io/typenexus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaywcjlove/typenexus.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "TypeORM",
+    "Type",
+    "api",
+    "Efficiency",
+    "querying",
+    "TypeScript",
+    "ORM"
+  ]
+}
