@@ -1,25 +1,31 @@
 {
-  "name": "typenexus",
-  "version": "0.0.1",
-  "description": "TypeNexus is a good tool for API encapsulation and management. It provides a clean and lightweight way to package TypeORM functionality, helping you build applications faster while reducing template code redundancy and type conversion work.",
-  "author": "kenny wong <wowohoo@qq.com>",
-  "license": "MIT",
-  "homepage": "http://jaywcjlove.github.io/typenexus",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jaywcjlove/typenexus.git"
-  },
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "husky install",
+    "start": "npm run start --workspace=core",
+    "watch": "npm run watch --workspace=core",
+    "dev": "npm run dev --workspace=core",
+    "build": "npm run build --workspace=client",
+    "version": "lerna version --exact --force-publish --no-push --no-git-tag-version",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "clean": "lerna clean --yes"
   },
-  "keywords": [
-    "TypeORM",
-    "Type",
-    "api",
-    "Efficiency",
-    "querying",
-    "TypeScript",
-    "ORM"
-  ]
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "workspaces": [
+    "core",
+    "examples/**"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lerna": "^6.5.1",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.4"
+  }
 }

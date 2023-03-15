@@ -1,0 +1,46 @@
+import 'reflect-metadata';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { createDatabase } from 'typeorm-extension';
+import { Controllers } from './Controllers.js';
+import { Driver } from './Driver.js';
+
+export * from 'typeorm';
+export * from './decorator/Controller.js';
+export * from './decorator/Get.js';
+export * from './decorator/Res.js';
+
+export class TypeNexus extends Driver {
+  public dataSource: DataSource;
+  /** import all controllers and middleman's and error handlers (new way) */
+  public controllers(classes: Function[]) {
+    new Controllers(this).registerControllers(classes)
+  }
+  public async connect(options: DataSourceOptions): Promise<TypeNexus> {
+    try {
+      await createDatabase({ ifNotExist: true, options });
+      this.dataSource = new DataSource({ ...options });
+      const dataSource = await this.dataSource.initialize();
+      if (!dataSource.isInitialized) {
+        throw new Error('Initialization and establishment of initial connection/connection pool to database failed.');
+      }
+    } catch (error) {
+      console.error('Error connecting to the database', error);
+      process.exit(1);
+    }
+    return Promise.resolve(this);
+  }
+  public async start(): Promise<TypeNexus> {
+    await new Promise(resolve => this.app.listen(this.port, resolve as () => void));
+    console.log(
+      '\n  App is running at\x1b[32;1m http://localhost:%d\x1b[0m in %s mode',
+      this.app.get('port'),
+      this.app.get('env'),
+    );
+    console.log('  Press\x1b[33;1m CTRL-C\x1b[0m to stop\n');
+    return this;
+  }
+  public async stop(): Promise<void> {
+    this.dataSource.destroy();
+    console.log('Connection to the database closed');
+  }
+}

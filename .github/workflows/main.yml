@@ -22,6 +22,7 @@ jobs:
         uses: jaywcjlove/create-tag-action@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          package-path: core/package.json
 
       - name: Generate Changelog
         id: changelog
@@ -35,6 +36,7 @@ jobs:
 
       - run: npm publish --access public
         continue-on-error: true
+        working-directory: core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

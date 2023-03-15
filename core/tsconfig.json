@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "strict": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "outDir": "lib",
+    "baseUrl": "."
+  }
+}

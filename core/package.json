@@ -1,0 +1,70 @@
+{
+  "name": "typenexus",
+  "version": "0.0.1",
+  "description": "TypeNexus is a good tool for API encapsulation and management. It provides a clean and lightweight way to package TypeORM functionality, helping you build applications faster while reducing template code redundancy and type conversion work.",
+  "author": "kenny wong <wowohoo@qq.com>",
+  "license": "MIT",
+  "type": "module",
+  "homepage": "http://jaywcjlove.github.io/typenexus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaywcjlove/typenexus.git"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "watch": "tsbb watch --disable-babel",
+    "build": "tsbb build --disable-babel",
+    "test": "tsbb test",
+    "coverage": "tsbb test --coverage --bail"
+  },
+  "keywords": [
+    "TypeORM",
+    "Type",
+    "api",
+    "Efficiency",
+    "querying",
+    "TypeScript",
+    "ORM"
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "lib",
+      "test/*",
+      "node_modules/*"
+    ],
+    "delay": "2500"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "tsbb": "^3.7.9"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.21.0",
+    "@types/compression": "^1.7.2",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/express": "^4.17.17",
+    "@types/express-form-data": "^2.0.2",
+    "@types/express-session": "^1.17.6",
+    "@types/fs-extra": "^11.0.1",
+    "@types/http-errors": "^2.0.1",
+    "@types/node": "^18.14.1",
+    "@wcj/connect-typeorm": "^1.1.4",
+    "@wcj/generate-password": "^1.0.3",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-form-data": "^2.0.22",
+    "express-session": "^1.17.3",
+    "fs-extra": "^11.1.0",
+    "http-errors": "^2.0.0",
+    "pg": "~8.7.1",
+    "reflect-metadata": "^0.1.13",
+    "routing-controllers": "^0.10.2",
+    "typeorm": "^0.3.12",
+    "typeorm-extension": "^2.5.2"
+  }
+}
