@@ -201,6 +201,24 @@ export class UserController {
 }
 ```
 
+### Inject query parameters
+
+To inject query parameters, use **`@QueryParam`** decorator:
+
+```typescript
+import { Controller, Get, QueryParam } from 'typeorm';
+
+type UserBody = { username: string; id: number; };
+
+@Controller()
+export class UserController {
+  @Get("/users")
+  public async getUsers(@QueryParam("limit") limit: number) {
+    // ....
+  }
+}
+```
+
 ### Inject routing parameters
 
 You can use **`@Param`** decorator to inject parameters in your controller actions:
