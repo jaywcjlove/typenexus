@@ -18,6 +18,10 @@
     "test": "tsbb test",
     "coverage": "tsbb test --coverage --bail"
   },
+  "files": [
+    "lib",
+    "src"
+  ],
   "keywords": [
     "TypeORM",
     "Type",
