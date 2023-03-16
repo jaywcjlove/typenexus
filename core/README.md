@@ -48,7 +48,7 @@ import { TypeNexus } from 'typenexus';
 `./src/controller/User.ts`
 
 ```typescript
-import { TypeNexus, Controller, Get, Put, Param, Body, DataSource } from 'typenexus';
+import { TypeNexus, Controller, Get, Put, Delete, Patch, Delete, Param, Body, DataSource } from 'typenexus';
 import { User } from '../entities/user.entity';
 
 @Controller('/api/users')
@@ -61,13 +61,21 @@ export class UserController {
   public async getById(@Param('id') id: string, @DSource() dataSource: DataSource): Promise<User> {
     return dataSource.manager.findOne(User, id);
   }
+  @Post('/:id') // => POST /api/users/:id
+  public async modify(@Body() body: { name: string; }): Promise<{ name: string; }> {
+    return { name: body.name + '~~' }
+  }
   @Put('/:id') // => PUT /api/users/:id
   public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
     return { uid: id }
   }
-  @Post('/:id') // => POST /api/users/:id
-  public async modify(@Body() body: { name: string; }): Promise<{ name: string; }> {
-    return { name: body.name + '~~' }
+  @Delete('/:id') // => DELETE /api/users/:id
+  public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
+    return { uid: id }
+  }
+  @Patch('/:id') // => PATCH /api/users/:id
+  public async patch(): Promise<any> {
+    return { id: 12 }
   }
 }
 ```
