@@ -6,15 +6,15 @@ export type ParamType =
   | 'data-source'
   | 'request'
   | 'response'
-
+  | 'param'
+  | 'params'
   | 'body'
+
   | 'body-param'
   | 'query'
   | 'queries'
   | 'header'
   | 'headers'
-  | 'param'
-  | 'params'
   | 'session'
   | 'session-param'
   | 'cookie'

@@ -207,6 +207,7 @@ You can use **`@Param`** decorator to inject parameters in your controller actio
 
 ```ts
 import { Controller, Get, Param } from 'typeorm';
+
 @Controller()
 export class UserController {
   @Get("/users/:id")

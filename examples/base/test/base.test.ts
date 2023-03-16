@@ -50,6 +50,6 @@ const options: DataSourceOptions = {
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
-  assert.deepEqual(req.body, {  id: 12, uid: '34' });
+  assert.deepEqual(req.body, { id: '34', params: { id: '34' } });
 
 })();
