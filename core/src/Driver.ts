@@ -14,6 +14,7 @@ export abstract class Driver {
   public app: Express;
   constructor(public readonly port: number = 3000) {
     this.app = express();
+    this.app.use(express.json());
     this.app.set('port', process.env.PORT || this.port);
   }
   public use<Route extends string = string>(handlers: Array<RequestHandler<RouteParameters<Route>>>) {
@@ -61,14 +62,14 @@ export abstract class Driver {
       case 'body':
         return request.body;
 
-      case 'body-param':
-        return request.body[param.name];
-
       case 'param':
         return request.params[param.name];
 
       case 'params':
         return request.params;
+
+      case 'body-param':
+        return request.body[param.name];
 
       case 'session-param':
         return request.session[param.name];

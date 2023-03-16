@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
+import { Controller, Get, Body, Post, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -7,6 +7,10 @@ export class UserController {
   @Get()
   public async getAll(@Req() request: Request, @Res() response: Response, @DSource() dataSource: DataSource): Promise<User[]> {
     return dataSource.manager.find(User);
+  }
+  @Post()
+  public async create(@Body() body: any): Promise<{ name: string; id: number }> {
+    return { id: 12, name: body.name }
   }
   @Get('/users/info')
   public async getInfo(@Req() request: Request, @Res() response: Response,): Promise<any> {

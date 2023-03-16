@@ -7,6 +7,8 @@ import { Driver } from './Driver.js';
 export * from 'typeorm';
 export * from './decorator/Controller.js';
 export * from './decorator/Get.js';
+export * from './decorator/Post.js';
+export * from './decorator/Body.js';
 export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';

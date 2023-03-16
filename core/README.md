@@ -149,7 +149,7 @@ export class UserController {
 
 You can use framework's request and response objects directly. If you want to handle the response by yourself, just make sure you return the response object itself from the action.
 
-### Using DSource objects
+### Using DataSource objects
 
 **`@DSource()`** decorator injects you a [DataSource](https://typeorm.io/data-source-api) object.
 

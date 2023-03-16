@@ -19,6 +19,7 @@ const options: DataSourceOptions = {
   const app = new TypeNexus(3033);
   app.controllers([UserController]);
   await app.connect(options);
+
   console.log('\x1b[32;1m GET\x1b[0m /users');
   let req = await request(app.app)
     .get('/users')
@@ -32,7 +33,15 @@ const options: DataSourceOptions = {
     .get('/users/users/info')
     .expect('Content-Type', /json/)
     .expect(200)
-
   assert.deepEqual(req.body, { id: 12 });
+
+  console.log('\x1b[32;1m POST\x1b[0m /users');
+  req = await request(app.app)
+    .post('/users')
+    .send({ name: 'john' })
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+  assert.deepEqual(req.body, {  id: 12, name: 'john' });
 
 })();

@@ -5,14 +5,15 @@ on: push
 jobs:
   build:
 
+    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:latest
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: wcjiang
-          POSTGRES_DB: typenexus-base
         ports:
           - 5432:5432
         options: >-
@@ -45,10 +46,12 @@ jobs:
       - name: Run example base tests with Postgres 
         working-directory: examples/base
         env:
+          # The hostname used to communicate with the PostgreSQL service container
           POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: wcjiang
-          POSTGRES_DB: typenexus-base
         run: |
           npm install
           npm run test
