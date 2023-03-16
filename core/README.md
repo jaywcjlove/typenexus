@@ -3,7 +3,7 @@ TypeNexus
 
 [![CI](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml/badge.svg)](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml)
 [![NPM Downloads](https://img.shields.io/npm/dm/typenexus.svg?style=flat)](https://www.npmjs.com/package/typenexus)
-[![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat)](https://npmjs.org/package/typenexus)
+[![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat&label=typenexus)](https://npmjs.org/package/typenexus)
 [![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://typeorm.io/)
 [![express@^4.18.2](https://shields.io/badge/express-^4.18.2-green?style=flat&logo=express)](http://expressjs.com/)
 
@@ -58,8 +58,8 @@ export class UserController {
     return dataSource.manager.find(User);
   }
   @Get('/:id') // => GET /api/users/:id
-  public async getById(@Param('id') id: number): Promise<User> {
-    return await this.connection.manager.findOne(User, id);
+  public async getById(@Param('id') id: string, @DSource() dataSource: DataSource): Promise<User> {
+    return dataSource.manager.findOne(User, id);
   }
   @Put('/:id') // => PUT /api/users/:id
   public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
@@ -128,6 +128,15 @@ import { UserController } from './controller/User.js';
 })();
 ```
 
+```bash
+├── src
+    ├── controller
+    │   └── User.ts
+    ├── entity
+    │   └── User.ts
+    └── index.ts
+```
+
 ## More Examples
 
 ### Using Request and Response objects
@@ -162,14 +171,14 @@ You can use framework's request and response objects directly. If you want to ha
 **`@DSource()`** decorator injects you a [DataSource](https://typeorm.io/data-source-api) object.
 
 ```typescript
-import { Controller, Get, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
+import { Controller, Get, DSource, DataSource } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
 @Controller('/users')
 export class UserController {
   @Get() // => GET /users
-  public async getAll(@DSource() dataSource: DataSource): Promise<User[]> {
+  public async getUsers(@DSource() dataSource: DataSource): Promise<User[]> {
     return dataSource.manager.find(User);
   }
 }
