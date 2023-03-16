@@ -48,7 +48,8 @@ import { TypeNexus } from 'typenexus';
 `./src/controller/User.ts`
 
 ```typescript
-import { TypeNexus, Controller, Get, Put, Delete, Patch, Delete, Param, Body, DataSource } from 'typenexus';
+import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
+import { Get, Post, Put, Delete, Patch, Delete } from 'typenexus';
 import { User } from '../entities/user.entity';
 
 @Controller('/api/users')
@@ -209,6 +210,24 @@ export class UserController {
 }
 ```
 
+### Inject request header parameters
+
+To inject request header parameter, use **`@HeaderParam`** decorator:
+
+```typescript
+import { Controller, Post, HeaderParam } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Post("/users")
+  saveUser(@HeaderParam("authorization") token: string) {
+    // ...
+  }
+}
+```
+
+If you want to inject all header parameters use **`@HeaderParams()`** decorator.
+
 ### Inject query parameters
 
 To inject query parameters, use **`@QueryParam`** decorator:
@@ -236,9 +255,28 @@ import { Controller, Get, QueryParams } from 'typeorm';
 export class UserController {
   @Get("/users")
   public async getUsers(@QueryParams() query: any) {
+    // ....
   }
 }
 ```
+
+### Inject cookie parameters
+
+To get a cookie parameter, use **`@CookieParam`** decorator:
+
+```typescript
+import { Controller, Get, CookieParam, CookieParams } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Get("/users")
+  public async getUsers(@CookieParam("token") token: string) {
+    // ....
+  }
+}
+```
+
+If you want to inject all header parameters use **`@CookieParams()`** decorator.
 
 ### Inject routing parameters
 

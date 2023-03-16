@@ -2,7 +2,6 @@ import { TypeNexus, DataSourceOptions } from 'typenexus';
 import request from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/controller/User.js';
-import cookies from 'cookie';
 
 const options: DataSourceOptions = { 
   type: 'postgres',
@@ -21,7 +20,7 @@ const options: DataSourceOptions = {
   app.controllers([UserController]);
   await app.connect(options);
 
-  console.log('\x1b[32;1m GET\x1b[0m /users');
+  console.log('\x1b[32;1m GET\x1b[0m /users \x1b[34;1m @DSource\x1b[0m');
   let req = await request(app.app)
     .get('/users')
     .expect('Content-Type', /json/)
@@ -29,14 +28,14 @@ const options: DataSourceOptions = {
   assert.equal(Array.isArray(req.body), true);
   assert.deepEqual(req.body, []);
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&age=18');
+  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&age=18  \x1b[34;1m @QueryParam/@QueryParams\x1b[0m');
   req = await request(app.app)
     .get('/users/users/info?user=wcj&age=18')
     .expect('Content-Type', /json/)
     .expect(200)
   assert.deepEqual(req.body, { id: 12, user: 'wcj', queries: { user: 'wcj', age: '18' } });
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&user=jay');
+  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&user=jay \x1b[34;1m user=[]\x1b[0m');
   req = await request(app.app)
     .get('/users/users/info?user=wcj&user=jay')
     .expect('Content-Type', /json/)
@@ -60,13 +59,13 @@ const options: DataSourceOptions = {
     .expect(200)
   assert.deepEqual(req.body, { id: '34', params: { id: '34' } });
 
-  console.log('\x1b[32;1m DELETE\x1b[0m /users/order/:id');
+  console.log('\x1b[32;1m DELETE\x1b[0m /users/order/:id \x1b[34;1m @HeaderParams/@HeaderParam\x1b[0m');
   req = await request(app.app)
     .delete('/users/order/34')
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
-  assert.deepEqual(req.body, { id: 12 });
+  assert.deepEqual(req.body, { id: 12, accept: 'application/json', keys: ['host', 'accept-encoding', 'accept', 'connection'] });
 
   console.log('\x1b[32;1m GET\x1b[0m /users/order/:id \x1b[34;1m cookies|@Get\x1b[0m');
   req = await request(app.app)

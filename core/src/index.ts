@@ -14,6 +14,8 @@ export * from './decorator/Get.js';
 export * from './decorator/Body.js';
 export * from './decorator/Param.js';
 export * from './decorator/Params.js';
+export * from './decorator/HeaderParam.js';
+export * from './decorator/HeaderParams.js';
 export * from './decorator/QueryParam.js';
 export * from './decorator/QueryParams.js';
 export * from './decorator/CookieParam.js';
