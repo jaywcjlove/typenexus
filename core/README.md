@@ -45,7 +45,7 @@ import { TypeNexus } from 'typenexus';
 
 ### ① Create API
 
-`./src/controller/User.ts`
+`./src/controller/UserController.ts`
 
 ```typescript
 import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
@@ -85,6 +85,8 @@ export class UserController {
 }
 ```
 
+This class will register routes specified in method decorators in your server framework [Express.js](https://github.com/expressjs/express).
+
 ### ② Create Entity
 
 Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
@@ -119,7 +121,7 @@ import { TypeNexus } from 'typenexus';
 import { UserController } from './controller/User.js';
 
 ;(async () => {
-  const app = new TypeNexus(3009);
+  const app = new TypeNexus();
   app.controllers([UserController])
 
   await app.connect({ 
@@ -140,6 +142,8 @@ import { UserController } from './controller/User.js';
 
 })();
 ```
+
+Open in browser http://localhost:3000/users. You will see This action returns all users in your browser. If you open `http://localhost:3000/api/users/1` you will see This action returns user data.
 
 ```bash
 └── src
@@ -178,6 +182,39 @@ export class UserController {
 ```
 
 You can use framework's request and response objects directly. If you want to handle the response by yourself, just make sure you return the response object itself from the action.
+
+### Prefix all controllers routes
+
+If you want to prefix all your routes, e.g. `/api` you can use routePrefix option:
+
+```ts
+import { TypeNexus } from 'typenexus';
+import { UserController } from './controller/User.js';
+
+;(async () => {
+  const app = new TypeNexus(3033);
+  app.routePrefix = '/api'
+  // 🚨 Be sure to put it in front of `app.controllers()`
+  app.controllers([UserController]);
+})();
+```
+
+### Prefix controller with base route
+
+You can prefix all specific controller's actions with base route:
+
+```typescript
+import { Controller, Get } from 'typeorm';
+
+@Controller('/api')
+export class UserController {
+  @Get("/users/:id")  // => GET /api/users/12
+  public async getOne() {}
+  @Get("/users")      // => GET /api/users
+  public async getUsers() {}
+  // ...
+}
+```
 
 ### Using DataSource objects
 
@@ -283,6 +320,22 @@ export class UserController {
 }
 ```
 
+### Inject routing parameters
+
+You can use **`@Param`** decorator to inject parameters in your controller actions:
+
+```ts
+import { Controller, Get, Param } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  getOne(@Param("id") id: string) {}
+}
+```
+
+If you want to inject all parameters use **`@Params()`** decorator.
+
 ### Inject cookie parameters
 
 To get a cookie parameter, use **`@CookieParam`** decorator:
@@ -300,55 +353,6 @@ export class UserController {
 ```
 
 If you want to inject all header parameters use **`@CookieParams()`** decorator.
-
-### Inject routing parameters
-
-You can use **`@Param`** decorator to inject parameters in your controller actions:
-
-```ts
-import { Controller, Get, Param } from 'typeorm';
-
-@Controller()
-export class UserController {
-  @Get("/users/:id")
-  getOne(@Param("id") id: string) {}
-}
-```
-
-If you want to inject all parameters use **`@Params()`** decorator.
-
-### Prefix all controllers routes
-
-If you want to prefix all your routes, e.g. `/api` you can use routePrefix option:
-
-```ts
-import { TypeNexus } from 'typenexus';
-import { UserController } from './controller/User.js';
-
-;(async () => {
-  const app = new TypeNexus(3033);
-  app.routePrefix = '/api'
-  // 🚨 Be sure to put it in front of `app.controllers()`
-  app.controllers([UserController]);
-})();
-```
-
-### Prefix controller with base route
-
-You can prefix all specific controller's actions with base route:
-
-```typescript
-import { Controller, Get } from 'typeorm';
-
-@Controller('/api')
-export class UserController {
-  @Get("/users/:id")  // => GET /api/users/12
-  public async getOne() {}
-  @Get("/users")      // => GET /api/users
-  public async getUsers() {}
-  // ...
-}
-```
 
 ## License
 
