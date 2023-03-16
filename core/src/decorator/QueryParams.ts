@@ -1,17 +1,17 @@
 import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 
 /**
- * Injects a request's query parameter value to the controller action parameter.
+ * Injects all request's query parameters to the controller action parameter.
  * Must be applied on a controller action parameter.
  */
-export function QueryParam(name: string): ParameterDecorator {
+export function QueryParams(): ParameterDecorator {
   return function (object: Object, methodName: string, index: number) {
     getMetadataArgsStorage().params.push({
-      type: 'query',
+      type: 'queries',
       object: object,
       method: methodName,
       index: index,
-      name: name,
+      name: '',
     });
   };
 }

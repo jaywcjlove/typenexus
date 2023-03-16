@@ -219,6 +219,19 @@ export class UserController {
 }
 ```
 
+If you want to inject all query parameters use **`@QueryParams()`** decorator. 
+
+```typescript
+import { Controller, Get, QueryParams } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Get("/users")
+  public async getUsers(@QueryParams() query: any) {
+  }
+}
+```
+
 ### Inject routing parameters
 
 You can use **`@Param`** decorator to inject parameters in your controller actions:
@@ -256,6 +269,8 @@ import { UserController } from './controller/User.js';
 You can prefix all specific controller's actions with base route:
 
 ```typescript
+import { Controller } from 'typeorm';
+
 @Controller('/users')
 export class UserController {
   // ...

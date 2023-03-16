@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Params, QueryParam, Post, Put, Res, Req, DSource, DataSource } from 'typenexus';
+import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, Post, Put, Res, Req, DSource, DataSource } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -13,8 +13,8 @@ export class UserController {
     return { id: 12, name: body.name }
   }
   @Get('/users/info')
-  public async getInfo(@QueryParam('user') user: string): Promise<any> {
-    return { id: 12, user }
+  public async getInfo(@QueryParam('user') user: string, @QueryParams() queries: any): Promise<any> {
+    return { id: 12, user, queries }
   }
   @Put('/info/:id')
   modify(@Param('id') id: number, @Params() params: any) {

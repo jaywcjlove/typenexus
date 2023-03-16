@@ -13,6 +13,7 @@ export * from './decorator/Body.js';
 export * from './decorator/Param.js';
 export * from './decorator/Params.js';
 export * from './decorator/QueryParam.js';
+export * from './decorator/QueryParams.js';
 export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';

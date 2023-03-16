@@ -28,19 +28,19 @@ const options: DataSourceOptions = {
   assert.equal(Array.isArray(req.body), true);
   assert.deepEqual(req.body, []);
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj');
+  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&age=18');
   req = await request(app.app)
-    .get('/users/users/info?user=wcj')
+    .get('/users/users/info?user=wcj&age=18')
     .expect('Content-Type', /json/)
     .expect(200)
-  assert.deepEqual(req.body, { id: 12, user: 'wcj' });
+  assert.deepEqual(req.body, { id: 12, user: 'wcj', queries: { user: 'wcj', age: '18' } });
 
   console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&user=jay');
   req = await request(app.app)
     .get('/users/users/info?user=wcj&user=jay')
     .expect('Content-Type', /json/)
     .expect(200)
-  assert.deepEqual(req.body, { id: 12, user: ['wcj', 'jay'] });
+  assert.deepEqual(req.body, { id: 12, user: ['wcj', 'jay'], queries: { user: ['wcj', 'jay'] } });
 
   console.log('\x1b[32;1m POST\x1b[0m /users');
   req = await request(app.app)

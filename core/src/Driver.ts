@@ -68,6 +68,12 @@ export abstract class Driver {
       case 'params':
         return request.params;
 
+      case 'query':
+        return request.query[param.name];
+
+      case 'queries':
+        return request.query;
+
       case 'body-param':
         return request.body[param.name];
 
@@ -76,12 +82,6 @@ export abstract class Driver {
 
       case 'session':
         return request.session;
-
-      case 'query':
-        return request.query[param.name];
-
-      case 'queries':
-        return request.query;
 
       case 'header':
         return request.headers[param.name.toLowerCase()];
