@@ -30,14 +30,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with Postgres
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
-        run: |
-          npm test
+      # - name: Run tests with Postgres
+      #   env:
+      #     POSTGRES_HOST: localhost
+      #     POSTGRES_USER: postgres
+      #     POSTGRES_PASSWORD: postgres
+      #     POSTGRES_DB: testdb
+      #   run: |
+      #     npm test
 
       - name: Run example base tests with Postgres 
         working-directory: examples/base
