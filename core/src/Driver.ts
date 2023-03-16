@@ -12,9 +12,8 @@ export abstract class Driver {
    */
   public routePrefix: string = '';
   public dataSource: DataSource;
-  public app: Express;
+  public app: Express = express();
   constructor(public readonly port: number = 3000) {
-    this.app = express();
     this.app.use(express.json());
     this.app.set('port', process.env.PORT || this.port);
   }
