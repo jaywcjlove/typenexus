@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Res, Req, DSource, DataSource } from 'typenexus';
+import { Controller, Get, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Head, Res, Req, DSource, DataSource } from 'typenexus';
 import { HeaderParam, HeaderParams, Body, BodyParam } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
@@ -32,6 +32,10 @@ export class UserController {
   @Patch('/order/:id')
   public async patchOrder(): Promise<any> {
     return { id: 12 }
+  }
+  @Head('/order')
+  public async head(@Res() response: Response): Promise<any> {
+    return response.json({ id: 12 })
   }
   @Get('/posts')
   getAllPosts(@Req() request: Request, @Res() response: Response) {

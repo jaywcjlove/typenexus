@@ -2,4 +2,4 @@
 /**
  * Controller action type.
  */
-export type ActionType = 'get' | 'delete' | 'post' | 'put' | 'patch';
+export type ActionType = 'get' | 'delete' | 'post' | 'put' | 'patch' | 'head';

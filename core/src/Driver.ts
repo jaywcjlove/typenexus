@@ -38,14 +38,21 @@ export abstract class Driver {
    * Handles result of successfully executed controller action.
    */
   public handleSuccess(result: any, action: ActionMetadata, options: Action) {
+    /**
+     * HTTP HEAD requests are a type of request similar to GET requests,
+     * but the server does not return the entity body of the requested resource.
+     * Instead, it only returns the metadata of the requested resource,
+     * such as the response header information. Therefore,
+     * it is often used to retrieve metadata of resources,
+     * such as whether a resource exists or its last modification time.
+     */
     if (result && result === options.response) {
       options.next!();
       return;
     }
     if (action.controllerMetadata.type === 'json') {
-      options.response.json(result || {});
+      options.response.json(result);
     }
-
     options.next!();
   }
   /**

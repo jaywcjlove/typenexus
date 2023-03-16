@@ -5,6 +5,8 @@ import { UserController } from './controller/User.js';
   const app = new TypeNexus(3009);
   app.controllers([UserController])
 
+  app.app.disable('x-powered-by');
+
   await app.connect({ 
     type: 'postgres',
     host: process.env.POSTGRES_HOST || 'localhost',

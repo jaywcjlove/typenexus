@@ -49,24 +49,24 @@ import { TypeNexus } from 'typenexus';
 
 ```typescript
 import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
-import { Get, Post, Put, Delete, Patch, Delete } from 'typenexus';
+import { Get, Post, Put, Delete, Patch, Delete, Head } from 'typenexus';
 import { User } from '../entities/user.entity';
 
 @Controller('/api/users')
 export class UserController {
-  @Get() // => GET /api/users
+  @Get()          // => GET /api/users
   public async getAll(@DSource() dataSource: DataSource): Promise<User[]> {
     return dataSource.manager.find(User);
   }
-  @Get('/:id') // => GET /api/users/:id
+  @Get('/:id')    // => GET /api/users/:id
   public async getById(@Param('id') id: string, @DSource() dataSource: DataSource): Promise<User> {
     return dataSource.manager.findOne(User, id);
   }
-  @Post('/:id') // => POST /api/users/:id
+  @Post('/:id')   // => POST /api/users/:id
   public async modify(@Body() body: { name: string; }): Promise<{ name: string; }> {
     return { name: body.name + '~~' }
   }
-  @Put('/:id') // => PUT /api/users/:id
+  @Put('/:id')    // => PUT /api/users/:id
   public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
     return { uid: id }
   }
@@ -74,8 +74,12 @@ export class UserController {
   public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
     return { uid: id }
   }
-  @Patch('/:id') // => PATCH /api/users/:id
+  @Patch('/:id')  // => PATCH /api/users/:id
   public async patch(): Promise<any> {
+    return { id: 12 }
+  }
+  @Head('/:id')   // => HEAD /api/users/:id
+  public async patch(): Promise<{ id: number; }> {
     return { id: 12 }
   }
 }
@@ -138,7 +142,7 @@ import { UserController } from './controller/User.js';
 ```
 
 ```bash
-├── src
+└── src
     ├── controller
     │   └── User.ts
     ├── entity

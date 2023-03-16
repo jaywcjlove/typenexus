@@ -83,4 +83,12 @@ const options: DataSourceOptions = {
     .expect(200)
   assert.deepEqual(req.body, { id: 12 });
 
+  console.log('\x1b[32;1m HEAD\x1b[0m /users/order \x1b[34;1m @Head\x1b[0m');
+  req = await request(app.app)
+    .head('/users/order')
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+  assert.deepEqual(req.body, { });
+
 })();
