@@ -1,9 +1,5 @@
-import { Action } from '../../Action.js'
-/**
-/**
- * Controller action type.
- */
-export type ActionType = 'get' | 'delete' | 'post'
+import { Action } from '../../Action.js';
+import { ActionType } from '../types/ActionType.js';
 
 /**
  * Action metadata used to storage information about registered action.

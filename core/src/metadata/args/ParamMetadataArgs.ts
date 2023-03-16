@@ -1,27 +1,4 @@
-
-/**
- * Controller action's parameter type.
- */
-export type ParamType =
-  | 'body'
-  | 'body-param'
-  | 'query'
-  | 'queries'
-  | 'header'
-  | 'headers'
-  | 'file'
-  | 'files'
-  | 'param'
-  | 'params'
-  | 'session'
-  | 'session-param'
-  | 'state'
-  | 'cookie'
-  | 'cookies'
-  | 'request'
-  | 'response'
-  | 'context';
-
+import { ParamType } from '../types/ParamType.js';
 
 /**
  * Controller metadata used to storage information about registered parameters.

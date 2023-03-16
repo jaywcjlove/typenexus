@@ -14,8 +14,8 @@ import { UserController } from './controller/User.js';
     database: process.env.DB_NAME || 'typenexus-base',
     synchronize: true,
     logging: true,
-    entities: ['dist/entity/*.js'],  
-    // entities: [User],     
+    entities: ['dist/entity/*.js'],   
+    // entities: [User],      
   });
 
   await app.start();

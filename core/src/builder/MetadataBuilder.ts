@@ -3,6 +3,7 @@ import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 import { ActionMetadata } from '../metadata/ActionMetadata.js';
 import { ActionMetadataArgs } from '../metadata/args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from '../metadata/ResponseHandleMetadata.js';
+import { ParamMetadata } from '../metadata/ParamMetadata.js';
 
 /**
  * Builds metadata from the given metadata arguments.
@@ -53,9 +54,22 @@ export class MetadataBuilder {
 
     return actionsWithTarget.map(actionArgs => {
       const action = new ActionMetadata(controller, actionArgs);
+      action.params = this.createParams(action);
       action.build(this.createActionResponseHandlers(action));
       return action;
     });
+  }
+
+  /**
+   * Creates param metadatas.
+   */
+  protected createParams(action: ActionMetadata): ParamMetadata[] {
+    const dta =  getMetadataArgsStorage()
+      .filterParamsWithTargetAndMethod(action.target, action.method)
+      .map(paramArgs => {
+        return new ParamMetadata(action, paramArgs)
+      });
+      return dta
   }
 
   /**

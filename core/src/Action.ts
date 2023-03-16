@@ -1,3 +1,6 @@
+import { Request, Response, NextFunction } from 'express';
+import { DataSource } from 'typeorm';
+
 /**
  * Controller action properties.
  */
@@ -5,21 +8,20 @@ export interface Action {
   /**
    * Action Request object.
    */
-  request: any;
+  request: Request;
 
   /**
    * Action Response object.
    */
-  response: any;
-
-  /**
-   * Content in which action is executed.
-   * Koa-specific property.
-   */
-  context?: any;
+  response: Response;
 
   /**
    * "Next" function used to call next middleware.
    */
-  next?: Function;
+  next?: NextFunction;
+
+  /**
+   * DataSource is a pre-defined connection configuration to a specific database. 
+   */
+  dataSource: DataSource;
 }

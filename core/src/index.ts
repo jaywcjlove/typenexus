@@ -8,9 +8,10 @@ export * from 'typeorm';
 export * from './decorator/Controller.js';
 export * from './decorator/Get.js';
 export * from './decorator/Res.js';
+export * from './decorator/Req.js';
+export * from './decorator/DSource.js';
 
 export class TypeNexus extends Driver {
-  public dataSource: DataSource;
   /** import all controllers and middleman's and error handlers (new way) */
   public controllers(classes: Function[]) {
     new Controllers(this).registerControllers(classes)

@@ -1,23 +1,27 @@
-import { Controller, Get, Res, DataSource, Repository } from 'typenexus';
-import { Response }from 'express';
+import { Controller, Get, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
+import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
 @Controller('/users')
 export class UserController {
-  private reps: Repository<User>;
-  constructor(private readonly dataSource: DataSource) {
-    console.log('dataSource:1111:', dataSource)
-    // this.reps = dataSource.getRepository(User);
-  }
   @Get()
-  public async getAll(@Res() res: Response): Promise<User[]> {
-    console.log('>::::::getAll', res, this.dataSource)
-    // return await this.dataSource.manager.find(User);
-    return Promise.resolve({ a: ''}) as any
+  public async getAll(@Req() request: Request, @Res() response: Response, @DSource() dataSource: DataSource): Promise<User[]> {
+    return dataSource.manager.find(User);
   }
-  @Get('/users/:id')
-  public async getOne(): Promise<User[]> {
+  @Get('/users/info')
+  public async getInfo(@Req() request: Request, @Res() response: Response,): Promise<any> {
+    return { id: 12 }
+  }
+  @Get('/order/:id')
+  public async getOne(): Promise<any> {
     console.log('>::::::getOne')
-    return await this.dataSource.manager.find(User);
+    return { id: 12 }
+  }
+  @Get('/posts')
+  getAllPosts(@Req() request: Request, @Res() response: Response) {
+    // some response functions don't return the response object,
+    // so it needs to be returned explicitly
+    response.redirect('/users');
+    return response
   }
 }

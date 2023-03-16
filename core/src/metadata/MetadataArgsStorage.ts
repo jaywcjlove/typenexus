@@ -45,7 +45,9 @@ export class MetadataArgsStorage {
    * Filters registered actions by a given classes.
    */
   filterActionsWithTarget(target: Function): ActionMetadataArgs[] {
-    return this.actions.filter(action => action.target === target);
+    return this.actions.filter(action => {
+      return action.target === target
+    });
   }
   /**
    * Filters response handlers by a given classes.
@@ -53,6 +55,15 @@ export class MetadataArgsStorage {
   filterResponseHandlersWithTargetAndMethod(target: Function, methodName: string): ResponseHandlerMetadataArgs[] {
     return this.responseHandlers.filter(property => {
       return property.target === target && property.method === methodName;
+    });
+  }
+
+  /**
+   * Filters parameters by a given classes.
+   */
+  filterParamsWithTargetAndMethod(target: Function, methodName: string): ParamMetadataArgs[] {
+    return this.params.filter(param => {
+      return param.object.constructor === target && param.method === methodName;
     });
   }
 }

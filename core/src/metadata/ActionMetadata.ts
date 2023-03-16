@@ -1,4 +1,4 @@
-import { ActionType } from './args/ActionMetadataArgs.js';
+import { ActionType } from './types/ActionType.js';
 import { ControllerMetadata } from './ControllerMetadata.js';
 import { ActionMetadataArgs } from './args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';

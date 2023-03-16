@@ -1,19 +1,4 @@
-/**
- * Response handler type.
- */
-export type ResponseHandlerType =
-  | 'success-code'
-  | 'error-code'
-  | 'content-type'
-  | 'header'
-  | 'rendered-template'
-  | 'redirect'
-  | 'location'
-  | 'on-null'
-  | 'on-undefined'
-  | 'response-class-transform-options'
-  | 'authorized';
-
+import { ResponseHandlerType } from '../types/ResponseHandlerType.js';
 
 /**
  * Storages information about registered response handlers.

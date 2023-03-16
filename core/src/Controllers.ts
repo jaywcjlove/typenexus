@@ -4,13 +4,19 @@ import { Driver } from './Driver.js'
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { Action } from './Action.js';
 import { isPromiseLike } from './utils/isPromiseLike.js';
+import { ActionParameterHandler } from './ActionParameterHandler.js';
 
-export class Controllers {
+export class Controllers<T extends Driver> {
   /**
    * Used to build metadata objects for controllers and middlewares.
    */
   private metadataBuilder: MetadataBuilder;
-  constructor(private driver: Driver) {
+  /**
+   * Used to check and handle controller action parameters.
+   */
+  private parameterHandler: ActionParameterHandler<T>;
+  constructor(private driver: T) {
+    this.parameterHandler = new ActionParameterHandler<T>(driver);
     this.metadataBuilder = new MetadataBuilder();
   }
   registerControllers(classes?: Function[]): this {
@@ -28,8 +34,21 @@ export class Controllers {
    * Executes given controller action.
    */
   protected executeAction(actionMetadata: ActionMetadata, action: Action) {
-    const result = actionMetadata.callMethod([], action);
-    return this.handleCallMethodResult(result, actionMetadata, action);
+    // compute all parameters
+    const paramsPromises = actionMetadata.params
+      .sort((param1, param2) => param1.index - param2.index)
+      .map(param => {
+        return this.parameterHandler.handle(action, param)
+      });
+
+    return Promise.all(paramsPromises).then((params) => {
+      const result = actionMetadata.callMethod(params, action);
+      return this.handleCallMethodResult(result, actionMetadata, action);
+    })
+    .catch(error => {
+      // otherwise simply handle error without action execution
+      return this.driver.handleError(error, actionMetadata, action);
+    });
   }
 
   /**
