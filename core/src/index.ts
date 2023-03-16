@@ -12,6 +12,7 @@ export * from './decorator/Post.js';
 export * from './decorator/Put.js';
 export * from './decorator/Get.js';
 export * from './decorator/Body.js';
+export * from './decorator/BodyParam.js';
 export * from './decorator/Param.js';
 export * from './decorator/Params.js';
 export * from './decorator/HeaderParam.js';

@@ -1,5 +1,5 @@
-import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Res, Req, DSource, DataSource } from 'typenexus';
-import { HeaderParam, HeaderParams } from 'typenexus';
+import { Controller, Get, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Res, Req, DSource, DataSource } from 'typenexus';
+import { HeaderParam, HeaderParams, Body, BodyParam } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -10,8 +10,8 @@ export class UserController {
     return dataSource.manager.find(User);
   }
   @Post()
-  public async create(@Body() body: any): Promise<{ name: string; id: number }> {
-    return { id: 12, name: body.name }
+  public async create(@Body() body: any, @BodyParam('name') name: string): Promise<{ name: string; id: number; username: string; }> {
+    return { id: 12, name: body.name, username: name }
   }
   @Get('/users/info')
   public async getInfo(@QueryParam('user') user: string, @QueryParams() queries: any): Promise<any> {

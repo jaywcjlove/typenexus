@@ -49,7 +49,7 @@ const options: DataSourceOptions = {
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
-  assert.deepEqual(req.body, {  id: 12, name: 'john' });
+  assert.deepEqual(req.body, { id: 12, name: 'john', username: 'john' });
 
   console.log('\x1b[32;1m PUT\x1b[0m /users/info/:id');
   req = await request(app.app)

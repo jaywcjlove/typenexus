@@ -206,6 +206,25 @@ type UserBody = { username: string; id: number; };
 export class UserController {
   @Post("/users") // => POST /users
   saveUser(@Body() user: UserBody) {
+    // ...
+  }
+}
+```
+
+### Inject request body parameters
+
+To inject request body parameter, use **`@BodyParam`** decorator:
+
+```typescript
+import { Controller, Post, BodyParam } from 'typeorm';
+
+type UserBody = { username: string; id: number; };
+
+@Controller()
+export class UserController {
+  @Post("/users") // => POST /users
+  saveUser(@BodyParam("name") userName: string) {
+    // ...
   }
 }
 ```
