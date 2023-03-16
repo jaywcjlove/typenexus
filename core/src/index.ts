@@ -6,9 +6,10 @@ import { Driver } from './Driver.js';
 
 export * from 'typeorm';
 export * from './decorator/Controller.js';
-export * from './decorator/Get.js';
+export * from './decorator/Delete.js';
 export * from './decorator/Post.js';
 export * from './decorator/Put.js';
+export * from './decorator/Get.js';
 export * from './decorator/Body.js';
 export * from './decorator/Param.js';
 export * from './decorator/Params.js';

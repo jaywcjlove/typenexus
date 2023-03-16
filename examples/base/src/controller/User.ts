@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, Post, Put, Res, Req, DSource, DataSource } from 'typenexus';
+import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, Post, Delete, Put, Res, Req, DSource, DataSource } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -22,6 +22,10 @@ export class UserController {
   }
   @Get('/order/:id')
   public async getOne(): Promise<any> {
+    return { id: 12 }
+  }
+  @Delete('/order/:id')
+  public async deleteOrder(): Promise<any> {
     return { id: 12 }
   }
   @Get('/posts')
