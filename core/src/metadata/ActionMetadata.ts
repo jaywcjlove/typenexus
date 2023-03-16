@@ -61,8 +61,8 @@ export class ActionMetadata {
    * Appends base route to a given regexp route.
    */
   static appendBaseRoute(baseRoute: string, route: RegExp | string) {
-    const prefix = `/${baseRoute}`.replace(/^\/+/, '/');
-    if (typeof route === 'string') return `${prefix}/${route}`.replace(/^\/+/, '/');
+    const prefix = `/${baseRoute}`.replace(/\/+/g, '/');
+    if (typeof route === 'string') return `${prefix}/${route}`.replace(/\/+/g, '/');
     if (!baseRoute || baseRoute === '') return route;
     const fullPath = `^${prefix}${route.toString().substring(1)}?$`;
     return new RegExp(fullPath, route.flags);

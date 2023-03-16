@@ -186,7 +186,7 @@ export class UserController {
 
 ### Inject request body
 
-To inject request body, use `@Body` decorator:
+To inject request body, use **`@Body`** decorator:
 
 ```typescript
 import { Controller, Post, Body } from 'typeorm';
@@ -198,6 +198,48 @@ export class UserController {
   @Post("/users") // => POST /users
   saveUser(@Body() user: UserBody) {
   }
+}
+```
+
+### Inject routing parameters
+
+You can use **`@Param`** decorator to inject parameters in your controller actions:
+
+```ts
+import { Controller, Get, Param } from 'typeorm';
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  getOne(@Param("id") id: string) {}
+}
+```
+
+If you want to inject all parameters use **`@Params()`** decorator.
+
+### Prefix all controllers routes
+
+If you want to prefix all your routes, e.g. `/api` you can use routePrefix option:
+
+```ts
+import { TypeNexus } from 'typenexus';
+import { UserController } from './controller/User.js';
+
+;(async () => {
+  const app = new TypeNexus(3033);
+  app.routePrefix = '/api'
+  // 🚨 Be sure to put it in front of `app.controllers()`
+  app.controllers([UserController]);
+})();
+```
+
+### Prefix controller with base route
+
+You can prefix all specific controller's actions with base route:
+
+```typescript
+@Controller('/users')
+export class UserController {
+  // ...
 }
 ```
 
