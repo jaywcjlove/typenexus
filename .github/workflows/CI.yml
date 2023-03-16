@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Builder Lib & Example
+        run: npm run build
+
       # - name: Run tests with Postgres
       #   env:
       #     POSTGRES_HOST: localhost
@@ -48,5 +51,4 @@ jobs:
           POSTGRES_DB: testdb
         run: |
           npm install
-          npm run build
           npm run test
