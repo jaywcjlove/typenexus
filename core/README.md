@@ -166,3 +166,22 @@ export class UserController {
   }
 }
 ```
+
+### Inject request body
+
+To inject request body, use @Body decorator:
+
+```typescript
+import { Controller, Post, Body } from 'typeorm';
+
+@Controller()
+export class UserController {
+    @Post("/users")
+    saveUser(@Body() user: User) {
+    }
+}
+```
+
+## License
+
+This package is licensed under the MIT License.
