@@ -14,7 +14,6 @@ export class UserController {
   }
   @Get('/order/:id')
   public async getOne(): Promise<any> {
-    console.log('>::::::getOne')
     return { id: 12 }
   }
   @Get('/posts')

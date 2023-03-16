@@ -11,6 +11,11 @@ export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';
 
+/**
+ * TypeNexus is a good tool for API encapsulation and management.
+ * It provides a clean and lightweight way to package TypeORM functionality,
+ * helping you build applications faster while reducing template code redundancy and type conversion work.
+ */
 export class TypeNexus extends Driver {
   /** import all controllers and middleman's and error handlers (new way) */
   public controllers(classes: Function[]) {

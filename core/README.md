@@ -14,6 +14,23 @@ TypeNexus is a good tool for API encapsulation and management. It provides a cle
 $ npm install typenexus
 ```
 
+Its important to set these options in `tsconfig.json` file of your project:
+
+```typescript
+{
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true
+}
+```
+
+Its important to set these options in `package.json` file of your project:
+
+```typescript
+{
+  "type": "module",
+}
+```
+
 ## Quick start
 
 ```javascript
@@ -107,7 +124,7 @@ import { UserController } from './controller/User.js';
 
 ### Using Request and Response objects
 
-`@Req()` decorator injects you a _Request_ object, and `@Res()` decorator injects you a _Response_ object. If you have installed typings, you can use their types:
+**`@Req()`** decorator injects you a _Request_ object, and **`@Res()`** decorator injects you a _Response_ object. If you have installed typings, you can use their types:
 
 ```typescript
 import { Controller, Req, Res, Get } from 'typeorm';
@@ -134,7 +151,7 @@ You can use framework's request and response objects directly. If you want to ha
 
 ### Using DSource objects
 
-`@DSource()` decorator injects you a [DataSource](https://typeorm.io/data-source-api) object.
+**`@DSource()`** decorator injects you a [DataSource](https://typeorm.io/data-source-api) object.
 
 ```typescript
 import { Controller, Get, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
