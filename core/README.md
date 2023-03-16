@@ -269,10 +269,14 @@ import { UserController } from './controller/User.js';
 You can prefix all specific controller's actions with base route:
 
 ```typescript
-import { Controller } from 'typeorm';
+import { Controller, Get } from 'typeorm';
 
-@Controller('/users')
+@Controller('/api')
 export class UserController {
+  @Get("/users/:id")  // => GET /api/users/12
+  public async getOne() {}
+  @Get("/users")      // => GET /api/users
+  public async getUsers() {}
   // ...
 }
 ```
