@@ -9,14 +9,14 @@ export type ParamType =
   | 'param'
   | 'params'
   | 'body'
-
-  | 'body-param'
+  | 'cookie'
+  | 'cookies'
   | 'query'
   | 'queries'
+
+  | 'body-param'
   | 'header'
   | 'headers'
   | 'session'
-  | 'session-param'
-  | 'cookie'
-  | 'cookies';
+  | 'session-param';
 

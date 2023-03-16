@@ -2,6 +2,7 @@ import { TypeNexus, DataSourceOptions } from 'typenexus';
 import request from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/controller/User.js';
+import cookies from 'cookie';
 
 const options: DataSourceOptions = { 
   type: 'postgres',
@@ -67,9 +68,17 @@ const options: DataSourceOptions = {
     .expect(200)
   assert.deepEqual(req.body, { id: 12 });
 
+  console.log('\x1b[32;1m GET\x1b[0m /users/order/:id \x1b[34;1m cookies|@Get\x1b[0m');
+  req = await request(app.app)
+    .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+  assert.deepEqual(req.body, { id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
+
   console.log('\x1b[32;1m PATCH\x1b[0m /users/order/:id');
   req = await request(app.app)
-    .delete('/users/order/34')
+    .patch('/users/order/34')
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)

@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, Post, Delete, Patch, Put, Res, Req, DSource, DataSource } from 'typenexus';
+import { Controller, Get, Body, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Res, Req, DSource, DataSource } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -21,8 +21,8 @@ export class UserController {
     return { id, params }
   }
   @Get('/order/:id')
-  public async getOne(): Promise<any> {
-    return { id: 12 }
+  public async getOne(@CookieParams() cookies: any, @CookieParam('token') token: string): Promise<any> {
+    return { id: 12, token, cookies }
   }
   @Delete('/order/:id')
   public async deleteOrder(): Promise<any> {

@@ -1,5 +1,6 @@
 import express, { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 import { DataSource } from 'typeorm';
+import cookie from 'cookie';
 import { RouteParameters } from 'express-serve-static-core';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { ParamMetadata } from './metadata/ParamMetadata.js';
@@ -88,6 +89,15 @@ export abstract class Driver {
 
       case 'headers':
         return request.headers;
+      
+      case 'cookie':
+        if (!request.headers.cookie) return;
+        const cookies = cookie.parse(request.headers.cookie);
+        return cookies[param.name];
+
+      case 'cookies':
+        if (!request.headers.cookie) return {};
+        return cookie.parse(request.headers.cookie);
 
     }
   }
