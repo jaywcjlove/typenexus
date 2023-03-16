@@ -3,6 +3,7 @@ TypeNexus
 
 [![CI](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml/badge.svg)](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml)
 [![NPM Downloads](https://img.shields.io/npm/dm/typenexus.svg?style=flat)](https://www.npmjs.com/package/typenexus)
+[![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat)](https://npmjs.org/package/typenexus)
 [![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://typeorm.io/)
 [![express@^4.18.2](https://shields.io/badge/express-^4.18.2-green?style=flat&logo=express)](http://expressjs.com/)
 
@@ -47,7 +48,7 @@ import { TypeNexus } from 'typenexus';
 `./src/controller/User.ts`
 
 ```typescript
-import { TypeNexus, Controller, Get, Param, DataSource } from 'typenexus';
+import { TypeNexus, Controller, Get, Put, Param, Body, DataSource } from 'typenexus';
 import { User } from '../entities/user.entity';
 
 @Controller('/api/users')
@@ -56,10 +57,17 @@ export class UserController {
   public async getAll(@DSource() dataSource: DataSource): Promise<User[]> {
     return dataSource.manager.find(User);
   }
-
   @Get('/:id') // => GET /api/users/:id
   public async getById(@Param('id') id: number): Promise<User> {
     return await this.connection.manager.findOne(User, id);
+  }
+  @Put('/:id') // => PUT /api/users/:id
+  public async modify(@Param('id') id: string): Promise<{ uid: string; }> {
+    return { uid: id }
+  }
+  @Post('/:id') // => POST /api/users/:id
+  public async modify(@Body() body: { name: string; }): Promise<{ name: string; }> {
+    return { name: body.name + '~~' }
   }
 }
 ```
@@ -169,16 +177,18 @@ export class UserController {
 
 ### Inject request body
 
-To inject request body, use @Body decorator:
+To inject request body, use `@Body` decorator:
 
 ```typescript
 import { Controller, Post, Body } from 'typeorm';
 
+type UserBody = { username: string; id: number; };
+
 @Controller()
 export class UserController {
-    @Post("/users")
-    saveUser(@Body() user: User) {
-    }
+  @Post("/users") // => POST /users
+  saveUser(@Body() user: UserBody) {
+  }
 }
 ```
 

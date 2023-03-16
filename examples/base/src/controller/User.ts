@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Post, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
+import { Controller, Get, Body, Param, Post, Put, Res, Req, DSource, DataSource, Repository, } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
 
@@ -15,6 +15,10 @@ export class UserController {
   @Get('/users/info')
   public async getInfo(@Req() request: Request, @Res() response: Response,): Promise<any> {
     return { id: 12 }
+  }
+  @Put('/info/:id')
+  modify(@Param('id') id: number, @Body() user: User) {
+    return { id: 12, uid: id }
   }
   @Get('/order/:id')
   public async getOne(): Promise<any> {
