@@ -11,8 +11,8 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
+          POSTGRES_PASSWORD: wcjiang
+          POSTGRES_DB: typenexus-base
         ports:
           - 5432:5432
         options: >-
@@ -37,8 +37,8 @@ jobs:
       #   env:
       #     POSTGRES_HOST: localhost
       #     POSTGRES_USER: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     POSTGRES_DB: testdb
+      #     POSTGRES_PASSWORD: wcjiang
+      #     POSTGRES_DB: typenexus-base
       #   run: |
       #     npm test
 
@@ -47,8 +47,8 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
+          POSTGRES_PASSWORD: wcjiang
+          POSTGRES_DB: typenexus-base
         run: |
           npm install
           npm run test
