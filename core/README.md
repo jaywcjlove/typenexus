@@ -7,7 +7,7 @@ TypeNexus
 [![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://typeorm.io/)
 [![express@^4.18.2](https://shields.io/badge/express-^4.18.2-green?style=flat&logo=express)](http://expressjs.com/)
 
-TypeNexus is a good tool for API encapsulation and management. It provides a clean and lightweight way to package TypeORM functionality, helping you build applications faster while reducing template code redundancy and type conversion work.
+TypeNexus is a great tool for API encapsulation and management. It offers a clean and lightweight way to bundle [TypeORM](https://github.com/typeorm/typeorm) + [Express.js](https://github.com/expressjs/express) functionality, helping you to build applications faster while reducing template code redundancy and type conversion work.
 
 ## Installation
 
@@ -83,7 +83,7 @@ export class UserController {
 
 ### ② Create Entity
 
-Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with @Entity():
+Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
 
 `./src/entities/user.entity.ts`
 
