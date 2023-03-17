@@ -167,7 +167,8 @@ import User from './entity/User.js'
 const app = new TypeNexus(3000, { .... });
 await app.connect();
 
-// You can use the DataSource example here. Please be sure to use it after `app.connect()`.
+// You can use the DataSource example here.
+// 🚨 Please be sure to use it after `app.connect()`.
 const repos = app.dataSource.getRepository(User);
 // Check if there is an admin account.
 const adminUser = await repos.findOneBy({ username: 'wcj' });
@@ -186,7 +187,7 @@ app.controllers([UserController]);
 await app.start();
 ```
 
-Use **app.dataSource** to get the _DataSource_ example.
+Use **app.dataSource** to get the _DataSource_ instance.
 
 ### What is `DataSourceOptions`
 
@@ -299,10 +300,18 @@ import { UserController } from './controller/User.js';
 
 ;(async () => {
   const app = new TypeNexus(3033);
-  app.routePrefix = '/api'
   // 🚨 Be sure to put it in front of `app.controllers()`
+  app.routePrefix = '/api'
   app.controllers([UserController]);
 })();
+```
+
+You can also achieve the same effect by configuring **`routePrefix`** in the parameters when instantiating `TypeNexus`:
+
+```typescript
+const app = new TypeNexus(3033, {
+  routePrefix: '/api'
+});
 ```
 
 ### Prefix controller with base route
