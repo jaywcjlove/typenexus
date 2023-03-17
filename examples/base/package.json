@@ -1,6 +1,6 @@
 {
   "name": "@examples/base",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "kenny wong <wowohoo@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "typenexus": "0.0.6"
+    "typenexus": "0.0.7"
   },
   "devDependencies": {
     "@types/node": "^18.14.1",
