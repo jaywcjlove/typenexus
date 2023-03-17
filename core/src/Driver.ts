@@ -1,9 +1,11 @@
 import express, { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 import { DataSource } from 'typeorm';
+import { TypeormStore } from 'connect-typeorm';
 import cookie from 'cookie';
-import { RouteParameters } from 'express-serve-static-core';
+import session from 'express-session';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { ParamMetadata } from './metadata/ParamMetadata.js';
+import { TypeNexusOptions } from './DriverOptions.js';
 import { Action } from './Action.js';
 
 export abstract class Driver {
@@ -13,17 +15,30 @@ export abstract class Driver {
   public routePrefix: string = '';
   public dataSource: DataSource;
   public app: Express = express();
-  constructor(public readonly port: number = 3000) {
+  public express: Express = this.app;
+  constructor(public readonly port: number = Number(process.env.PORT || 3000), public options?: TypeNexusOptions) {
     this.app.use(express.json());
-    this.app.set('port', process.env.PORT || this.port);
+    this.port = options?.port || this.port;
+    this.routePrefix = options?.routePrefix || this.routePrefix;
   }
-  public use<Route extends string = string>(handlers: Array<RequestHandler<RouteParameters<Route>>>) {
-    this.app.use(handlers);
-    return this.app;
+  public useSession(options?: session.SessionOptions) {
+    this.app.use(session(options))
   }
-  public set(setting: string, val: any) {
-    this.app.set(setting, val);
-    return this.app;
+  public async registerSession() {
+    if (this.options?.session) {
+      let sessionOptions = typeof this.options?.session == 'function' ? this.options?.session({ app: this, dataSource: this.dataSource }) : this.options?.session;
+      if (sessionOptions.repositoryTarget) {
+        const reps = this.dataSource.getRepository(sessionOptions.repositoryTarget);
+        const typeormStoreOptions = {
+          // limitSubquery: false, // If using MariaDB.
+          cleanupLimit: 2,
+          ttl: 86400,
+          ...sessionOptions.typeormStore,
+        }
+        sessionOptions.store = new TypeormStore(typeormStoreOptions).connect(reps)
+      }
+      this.app.use(session(sessionOptions));
+    }
   }
   public registerAction(actionMetadata: ActionMetadata, executeCallback: (options: Action) => any) {
     // prepare route and route handler function

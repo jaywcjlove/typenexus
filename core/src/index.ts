@@ -23,9 +23,12 @@ export * from './decorator/QueryParams.js';
 export * from './decorator/CookieParam.js';
 export * from './decorator/CookieParam.js';
 export * from './decorator/CookieParams.js';
+export * from './decorator/Session.js';
+export * from './decorator/SessionParam.js';
 export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';
+export * from './DriverOptions.js';
 
 /**
  * TypeNexus is a good tool for API encapsulation and management.
@@ -37,14 +40,16 @@ export class TypeNexus extends Driver {
   public controllers(classes: Function[]) {
     new Controllers(this).registerControllers(classes)
   }
-  public async connect(options: DataSourceOptions): Promise<TypeNexus> {
+  public async connect(options?: DataSourceOptions): Promise<TypeNexus> {
     try {
-      await createDatabase({ ifNotExist: true, options });
-      this.dataSource = new DataSource({ ...options });
+      const opts = { ...this.options?.dataSourceOptions, ...options } as DataSourceOptions;
+      await createDatabase({ ifNotExist: true, options: opts });
+      this.dataSource = new DataSource({ ...opts });
       const dataSource = await this.dataSource.initialize();
       if (!dataSource.isInitialized) {
         throw new Error('Initialization and establishment of initial connection/connection pool to database failed.');
       }
+      await this.registerSession()
     } catch (error) {
       console.error('Error connecting to the database', error);
       process.exit(1);

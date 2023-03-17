@@ -37,6 +37,7 @@
     "lint-staged": "^13.2.0",
     "node-ts": "^5.1.2",
     "prettier": "^2.8.4",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "supertest-session": "^4.1.0"
   }
 }

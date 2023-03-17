@@ -1,7 +1,11 @@
-import { TypeNexus, DataSourceOptions } from 'typenexus';
+import { TypeNexus, DataSourceOptions, TypeNexusOptions } from 'typenexus';
 import request from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/controller/User.js';
+
+// @ts-ignore
+import session from 'supertest-session';
+import { Session } from '../dist/entity/Session.js';
 
 const options: DataSourceOptions = { 
   type: 'postgres',
@@ -92,3 +96,33 @@ const options: DataSourceOptions = {
   assert.deepEqual(req.body, { });
 
 })();
+
+;(async () => {
+
+  const sessionOptions: TypeNexusOptions = {
+    session: () => ({
+      secret: 'secret',
+      resave: false,
+      saveUninitialized: false,
+      repositoryTarget: Session,
+      typeormStore: {
+        cleanupLimit: 2,
+        // limitSubquery: false, // If using MariaDB.
+        ttl: 86400,
+      }
+    })
+  }
+  const app = new TypeNexus(3001, sessionOptions);
+  await app.connect(options);
+
+  app.controllers([UserController]);
+  const testSession = await session(app.app);
+
+  console.log('\x1b[32;1m POST\x1b[0m /users/session \x1b[34;1m @Session/@SessionParam\x1b[0m');
+  let req = await testSession
+    .post('/users/session')
+    .send({ username: 'foo', password: 'password' })
+    .expect('Content-Type', /json/)
+    .expect(200)
+  assert.deepEqual(req.body, { id: 12, session: ['cookie'], cookie: ['path', '_expires', 'originalMaxAge', 'httpOnly'] });
+})()

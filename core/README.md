@@ -38,8 +38,9 @@ Its important to set these options in `package.json` file of your project:
 import { TypeNexus } from 'typenexus';
 
 (async () => {
-  const app = new TypeNexus(3000);
+  const app = new TypeNexus();
   await app.start();
+  // Open in browser http://localhost:3000
 })();
 ```
 
@@ -152,6 +153,79 @@ Open in browser http://localhost:3000/users. You will see This action returns al
     ├── entity
     │   └── User.ts
     └── index.ts
+```
+
+## What is `DataSourceOptions`
+
+`dataSourceOptions` is a data source configuration you pass when you create a new [`DataSource`](https://typeorm.io/data-source-options) instance. Different _RDBMS-es_ have their own specific options. 
+
+```typescript
+import { TypeNexus, TypeNexusOptions } from 'typenexus';
+const options: TypeNexusOptions = {
+  dataSourceOptions: {
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST || 'localhost',
+    port: 5432,
+    username: process.env.POSTGRES_USER || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'wcjiang',
+    database: process.env.POSTGRES_DB || 'typenexus-base',
+    synchronize: true,
+    logging: true,
+    entities: ['dist/entity/*.js'],
+    // entities: [User], 
+  },
+}
+
+;(async () => {
+  const app = new TypeNexus(3000, options);
+  await app.connect();
+  app.controllers([UserController]);
+  app.express.disable('x-powered-by');
+
+  await app.start();
+})();
+```
+
+It can also be passed as a parameter inside the app.connect() method:
+
+```typescript
+await app.connect({ ... });
+```
+
+## What is `Entity`?
+
+[`Entity`](https://typeorm.io/entities) is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with `@Entity()`:
+
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column } from "typenexus"
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @Column()
+  firstName: string
+
+  @Column()
+  lastName: string
+
+  @Column()
+  isActive: boolean
+}
+```
+
+This will create following database table:
+
+```bash
++-------------+--------------+----------------------------+
+|                          user                           |
++-------------+--------------+----------------------------+
+| id          | int(11)      | PRIMARY KEY AUTO_INCREMENT |
+| firstName   | varchar(255) |                            |
+| lastName    | varchar(255) |                            |
+| isActive    | boolean      |                            |
++-------------+--------------+----------------------------+
 ```
 
 ## More Examples
@@ -353,6 +427,85 @@ export class UserController {
 ```
 
 If you want to inject all header parameters use **`@CookieParams()`** decorator.
+
+### Inject session object
+
+To inject a session value, use **`@SessionParam`** decorator:
+
+```typescript
+@Get("/login")
+savePost(@SessionParam("user") user: User, @Body() post: Post) {}
+```
+
+If you want to inject the main session object, use **`@Session()`** without any parameters.
+
+```typescript
+@Get("/login")
+savePost(@Session() session: any, @Body() post: Post) {}
+```
+
+Express uses [`express-session`](https://www.npmjs.com/package/express-session) to handle session, so firstly you have to install it manually to use **`@Session`** decorator. Here is an example of configuring *Session*, and you need to create a database table entity for *Session* as well:
+
+```typescript
+import { TypeNexus, DataSourceOptions } from 'typenexus';
+import { TypeormStore } from '@wcj/connect-typeorm';
+import { UserController } from './controller/User.js';
+import { Session } from './entity/Session.js';
+
+const options: TypeNexusOptions = {
+  // ...
+  dataSourceOptions: { ... },
+  session: {
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    repositoryTarget: Session,
+    typeormStore: {
+      cleanupLimit: 2,
+      // limitSubquery: false, // If using MariaDB.
+      ttl: 86400,
+    }
+  }
+}
+
+;(async () => {
+  const app = new TypeNexus(3001, options);
+  await app.connect();
+  // OR: 
+  await app.connect(options.dataSourceOptions);
+
+  app.controllers([UserController]);
+  app.express.disable('x-powered-by');
+  await app.start();
+
+})();
+```
+
+Here is the database table entity for Session:
+
+```typescript
+// ./entity/Session.js
+import { Column, Entity, Index, PrimaryColumn, DeleteDateColumn } from 'typeorm';
+import { ISession } from '@wcj/connect-typeorm';
+
+import 'express-session';
+
+@Entity()
+export class Session implements ISession {
+  @Index()
+  @Column('bigint', { transformer: { from: Number, to: Number } })
+  public expiredAt = Date.now();
+
+  @PrimaryColumn('varchar', { length: 255 })
+  public id = '';
+
+  @DeleteDateColumn()
+  public destroyedAt?: Date;
+
+  @Column('text')
+  public json = '';
+}
+```
 
 ## License
 

@@ -5,7 +5,7 @@
   "author": "kenny wong <wowohoo@qq.com>",
   "license": "MIT",
   "type": "module",
-  "homepage": "http://jaywcjlove.github.io/typenexus",
+  "homepage": "https://jaywcjlove.github.io/typenexus",
   "repository": {
     "type": "git",
     "url": "https://github.com/jaywcjlove/typenexus.git"
@@ -55,9 +55,9 @@
     "@types/fs-extra": "^11.0.1",
     "@types/http-errors": "^2.0.1",
     "@types/node": "^18.14.1",
-    "@wcj/connect-typeorm": "^1.1.4",
     "@wcj/generate-password": "^1.0.3",
     "compression": "^1.7.4",
+    "connect-typeorm": "^2.0.0",
     "cookie": "^0.5.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
