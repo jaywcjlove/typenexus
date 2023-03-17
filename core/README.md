@@ -155,7 +155,40 @@ Open in browser http://localhost:3000/users. You will see This action returns al
     └── index.ts
 ```
 
-## What is `DataSourceOptions`
+### What is `DataSource`
+
+Your interaction with the database is only possible once you setup a _DataSource_. [TypeORM](https://typeorm.io)'s _DataSource_ holds your database connection settings and establishes initial database connection or connection pool depending on the _RDBMS_ you use.
+
+```typescript
+import { TypeNexus } from 'typenexus';
+import crypto from 'crypto';
+import User from './entity/User.js'
+
+const app = new TypeNexus(3000, { .... });
+await app.connect();
+
+// You can use the DataSource example here. Please be sure to use it after `app.connect()`.
+const repos = app.dataSource.getRepository(User);
+// Check if there is an admin account.
+const adminUser = await repos.findOneBy({ username: 'wcj' });
+if (!adminUser) {
+  const hashPassword = crypto.createHmac('sha256', '1234').digest('hex');
+  // Create an admin account.
+  const user = await repos.create({
+    username: 'wcj',
+    name: '管理员',
+    password: hashPassword,
+  });
+  await repos.save(user);
+}
+
+app.controllers([UserController]);
+await app.start();
+```
+
+Use **app.dataSource** to get the _DataSource_ example.
+
+### What is `DataSourceOptions`
 
 `dataSourceOptions` is a data source configuration you pass when you create a new [`DataSource`](https://typeorm.io/data-source-options) instance. Different _RDBMS-es_ have their own specific options. 
 
@@ -181,12 +214,11 @@ const options: TypeNexusOptions = {
   await app.connect();
   app.controllers([UserController]);
   app.express.disable('x-powered-by');
-
   await app.start();
 })();
 ```
 
-It can also be passed as a parameter inside the app.connect() method:
+It can also be passed as a parameter inside **`the app.connect()`** method:
 
 ```typescript
 await app.connect({ ... });
