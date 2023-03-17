@@ -1,8 +1,7 @@
-name: npm
+name: deploy
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [run-deploy]
 
 jobs:
   build:

@@ -3,7 +3,7 @@ name: Node.js CI
 on: push
 
 jobs:
-  build:
+  test:
 
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
@@ -55,3 +55,19 @@ jobs:
         run: |
           npm install
           npm run test
+
+  trigger_tests:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger tests
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const res = await github.repos.createDispatchEvent({
+              owner: 'jaywcjlove',
+              repo: 'typenexus',
+              event_type: 'run-deploy'
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
