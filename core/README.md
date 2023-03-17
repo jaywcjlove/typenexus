@@ -155,7 +155,7 @@ Open in browser http://localhost:3000/users. You will see This action returns al
     └── index.ts
 ```
 
-### What is `DataSource`
+## What is `DataSource`
 
 Your interaction with the database is only possible once you setup a _DataSource_. [TypeORM](https://typeorm.io)'s _DataSource_ holds your database connection settings and establishes initial database connection or connection pool depending on the _RDBMS_ you use.
 
