@@ -19,6 +19,7 @@ export abstract class Driver {
   constructor(public readonly port: number = Number(process.env.PORT || 3000), public options?: TypeNexusOptions) {
     this.app.use(express.json());
     this.port = options?.port || this.port;
+    this.express.set('port', this.port);
     this.routePrefix = options?.routePrefix || this.routePrefix;
   }
   public useSession(options?: session.SessionOptions) {
