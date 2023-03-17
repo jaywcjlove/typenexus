@@ -512,9 +512,11 @@ export class Session implements ISession {
 
 As always, thanks to our amazing contributors!
 
-<!--GAMFC--><!--GAMFC-END-->
+<a href="https://github.com/jaywcjlove/typenexus/graphs/contributors">
+  <img src="https://jaywcjlove.github.io/typenexus/CONTRIBUTORS.svg" />
+</a>
 
-Made with [contributors](https://github.com/jaywcjlove/typenexus).
+Made with [contributors](https://github.com/jaywcjlove/github-action-contributors).
 
 
 ## License
