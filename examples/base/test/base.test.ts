@@ -1,4 +1,4 @@
-import { TypeNexus, DataSourceOptions, TypeNexusOptions } from 'typenexus';
+import { TypeNexus, TypeNexusOptions } from 'typenexus';
 import request from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/controller/User.js';
@@ -7,22 +7,35 @@ import { UserController } from '../dist/controller/User.js';
 import session from 'supertest-session';
 import { Session } from '../dist/entity/Session.js';
 
-const options: DataSourceOptions = { 
-  type: 'postgres',
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: 5432,
-  username: process.env.POSTGRES_USER || 'postgres',
-  password: process.env.POSTGRES_PASSWORD || 'wcjiang',
-  database: process.env.POSTGRES_DB || 'typenexus-base',
-  synchronize: true,
-  logging: false,
-  entities: ['dist/entity/*.js'],
+const options: TypeNexusOptions = {
+  dataSourceOptions: {
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST || 'localhost',
+    port: 5432,
+    username: process.env.POSTGRES_USER || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || 'wcjiang',
+    database: process.env.POSTGRES_DB || 'typenexus-base',
+    synchronize: true,
+    logging: false,
+    entities: ['dist/entity/*.js'],
+  },
+  session: () => ({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    repositoryTarget: Session,
+    typeormStore: {
+      cleanupLimit: 2,
+      // limitSubquery: false, // If using MariaDB.
+      ttl: 86400,
+    }
+  })
 }
 
 ;(async () => {
-  const app = new TypeNexus(3033);
+  const app = new TypeNexus(3033, options);
   app.controllers([UserController]);
-  await app.connect(options);
+  await app.connect();
 
   console.log('\x1b[32;1m GET\x1b[0m /users \x1b[34;1m @DSource\x1b[0m');
   let req = await request(app.app)
@@ -99,21 +112,8 @@ const options: DataSourceOptions = {
 
 ;(async () => {
 
-  const sessionOptions: TypeNexusOptions = {
-    session: () => ({
-      secret: 'secret',
-      resave: false,
-      saveUninitialized: false,
-      repositoryTarget: Session,
-      typeormStore: {
-        cleanupLimit: 2,
-        // limitSubquery: false, // If using MariaDB.
-        ttl: 86400,
-      }
-    })
-  }
-  const app = new TypeNexus(3001, sessionOptions);
-  await app.connect(options);
+  const app = new TypeNexus(3001, options);
+  await app.connect();
 
   app.controllers([UserController]);
   const testSession = await session(app.app);
