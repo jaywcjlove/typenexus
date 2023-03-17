@@ -507,6 +507,16 @@ export class Session implements ISession {
 }
 ```
 
+
+## Contributors
+
+As always, thanks to our amazing contributors!
+
+<!--GAMFC--><!--GAMFC-END-->
+
+Made with [contributors](https://github.com/jaywcjlove/typenexus).
+
+
 ## License
 
 This package is licensed under the MIT License.
