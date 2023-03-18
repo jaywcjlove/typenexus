@@ -261,6 +261,44 @@ This will create following database table:
 +-------------+--------------+----------------------------+
 ```
 
+## TypeNexus Options
+
+```typescript
+import { DataSourceOptions } from 'typeorm';
+import { OptionsUrlencoded, OptionsJson, OptionsText, Options } from 'body-parser';
+
+export interface TypeNexusOptions {
+  port?: number;
+  /** Global route prefix, for example '/api'. */
+  routePrefix?: string;
+  /** DataSourceOptions is an interface with settings and options for specific DataSource. */
+  dataSourceOptions?: DataSourceOptions;
+  /** Create a session middleware */
+  session?: SessionResult | SessionCallback;
+  /** Node.js body parsing middleware. */
+  bodyParser?: {
+    /**
+     * Returns middleware that parses all bodies as a string and only looks at requests where the Content-Type header matches the type option.
+     */
+    text?: OptionsText;
+    /**
+     * Returns middleware that parses all bodies as a Buffer and only looks at requests where the Content-Type header matches the type option.
+     */
+    raw?: Options;
+    /**
+     * Returns middleware that only parses json and only looks at requests where the Content-Type header matches the type option.
+     */
+    json?: false | OptionsJson;
+    /**
+     * Returns middleware that only parses urlencoded bodies and only looks at requests where the Content-Type header matches the type option
+     * Used for parsing request bodies in application/x-www-form-urlencoded format.
+     * @default `{extended:false}`
+     */
+    urlencoded?: false | OptionsUrlencoded;
+  }
+}
+```
+
 ## More Examples
 
 ### Using Request and Response objects

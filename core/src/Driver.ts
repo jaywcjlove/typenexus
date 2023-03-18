@@ -1,7 +1,8 @@
-import express, { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { DataSource } from 'typeorm';
 import { TypeormStore } from 'connect-typeorm';
 import cookie from 'cookie';
+import compression from 'compression';
 import session from 'express-session';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { ParamMetadata } from './metadata/ParamMetadata.js';
@@ -17,13 +18,24 @@ export abstract class Driver {
   public app: Express = express();
   public express: Express = this.app;
   constructor(public readonly port: number = Number(process.env.PORT || 3000), public options?: TypeNexusOptions) {
-    this.app.use(express.json());
     this.port = options?.port || this.port;
     this.express.set('port', this.port);
     this.routePrefix = options?.routePrefix || this.routePrefix;
-  }
-  public useSession(options?: session.SessionOptions) {
-    this.app.use(session(options))
+    if (this.options.bodyParser?.json !== false) {
+      this.app.use(express.json(this.options.bodyParser?.json));
+    }
+    if (this.options.bodyParser?.text) {
+      this.app.use(express.text(this.options.bodyParser?.text));
+    }
+    if (this.options.bodyParser?.raw) {
+      this.app.use(express.raw(this.options.bodyParser?.raw));
+    }
+    if (this.options.compression !== false) {
+      this.app.use(compression(this.options.compression));
+    }
+    if (this.options.bodyParser?.urlencoded !== false) {
+      this.app.use(express.urlencoded({ extended: false, ...this.options.bodyParser?.urlencoded }))
+    }
   }
   public async registerSession() {
     if (this.options?.session) {
