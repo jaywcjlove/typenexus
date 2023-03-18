@@ -3,8 +3,6 @@
   "title": "TypeNexus",
   "scripts": {
     "prepare": "husky install",
-    "doc": "idoc",
-    "doc:watch": "idoc --watch",
     "start": "npm run start --workspace=core",
     "watch": "npm run watch --workspace=core",
     "dev": "npm run dev --workspace=core",
@@ -32,7 +30,6 @@
   "devDependencies": {
     "@types/supertest": "^2.0.12",
     "husky": "^8.0.3",
-    "idoc": "^1.21.15",
     "lerna": "^6.5.1",
     "lint-staged": "^13.2.0",
     "node-ts": "^5.1.2",
