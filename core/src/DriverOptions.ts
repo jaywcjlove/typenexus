@@ -36,9 +36,7 @@ export interface TypeNexusOptions {
      */
     urlencoded?: false | OptionsUrlencoded;
   };
-  /**
-   * Node.js compression middleware. The following compression codings are supported: deflate | gzip
-   */
+  /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
   compression?: false | CompressionOptions;
 }
 

@@ -266,6 +266,7 @@ This will create following database table:
 ```typescript
 import { DataSourceOptions } from 'typeorm';
 import { OptionsUrlencoded, OptionsJson, OptionsText, Options } from 'body-parser';
+import { SessionOptions } from "express-session";
 
 export interface TypeNexusOptions {
   port?: number;
@@ -295,8 +296,16 @@ export interface TypeNexusOptions {
      * @default `{extended:false}`
      */
     urlencoded?: false | OptionsUrlencoded;
-  }
+  };
+  /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
+  compression?: false | CompressionOptions;
 }
+```
+
+Example of parameter configuration:
+
+```typescript
+new TypeNexus(3000, { routePrefix: 'api' });
 ```
 
 ## More Examples
