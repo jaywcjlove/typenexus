@@ -18,8 +18,8 @@ jobs:
       - run: npm install
       - run: tree -I 'node_modules|.git|.github|src' -L 3 -a
 
-      - run: npm install idoc@1.23.0 -g
-      - run: idoc
+      - run: npm install idoc@1.25.0 -g
+      - run: idoc -s "TypeNexus {{version}}"
 
       - name: Generate Contributors Images
         uses: jaywcjlove/github-action-contributors@main

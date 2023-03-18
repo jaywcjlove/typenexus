@@ -1,6 +1,5 @@
 {
   "private": true,
-  "title": "TypeNexus",
   "scripts": {
     "prepare": "husky install",
     "start": "npm run start --workspace=core",
