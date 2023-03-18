@@ -1,5 +1,6 @@
 {
   "private": true,
+  "version": "0.0.7",
   "scripts": {
     "prepare": "husky install",
     "start": "npm run start --workspace=core",
