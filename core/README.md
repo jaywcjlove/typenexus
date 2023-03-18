@@ -80,7 +80,7 @@ export class UserController {
     return { id: 12 }
   }
   @Head('/:id')   // => HEAD /api/users/:id
-  public async patch(): Promise<{ id: number; }> {
+  public async head(): Promise<{ id: number; }> {
     return { id: 12 }
   }
 }
