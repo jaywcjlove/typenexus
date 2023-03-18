@@ -20,12 +20,13 @@ jobs:
 
       - run: npm install idoc@1.25.0 -g
       - run: idoc -s "TypeNexus {{version}}"
+        working-directory: core
 
       - name: Generate Contributors Images
         uses: jaywcjlove/github-action-contributors@main
         with:
           filter-author: (renovate\[bot\]|renovate-bot|dependabot\[bot\])
-          output: dist/CONTRIBUTORS.svg
+          output: core/dist/CONTRIBUTORS.svg
           avatarSize: 42
 
       - name: Deploy Website
@@ -35,7 +36,7 @@ jobs:
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: ${{steps.tag_version.outputs.tag}} ${{ github.event.head_commit.message }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./core/dist
 
       - name: Is a tag created auto?
         id: create_tag
