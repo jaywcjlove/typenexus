@@ -1124,6 +1124,96 @@ import { UserController } from &#x27;./UserController.js&#x27;;
 })();
 "><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
         <p>Alternatively, you can create a custom <a href="#global-middlewares">global middleware</a> and simply delegate its execution to the compression module.</p>
+        <h3 id="creating-your-own-express-middleware"><a aria-hidden="true" tabindex="-1" href="#creating-your-own-express-middleware" class="anchor"><span class="icon icon-link"></span></a>Creating your own express middleware</h3>
+        <p>Here is example of creating middleware for express.js:</p>
+        <ol>
+          <li>There are two ways of creating middleware:</li>
+        </ol>
+        <p>First, you can create a simple middleware function:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Request<span class="token punctuation">,</span> Response<span class="token punctuation">,</span> NextFunction <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'express'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2">
+</span><span class="code-line line-number" line="3"><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">loggingMiddleware</span><span class="token punctuation">(</span>request<span class="token operator">:</span> Request<span class="token punctuation">,</span> response<span class="token operator">:</span> Response<span class="token punctuation">,</span> next<span class="token operator">?</span><span class="token operator">:</span> NextFunction<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">any</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="4">  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'do something...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="5">  <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="6"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Request, Response, NextFunction } from &#x27;express&#x27;;
+
+export function loggingMiddleware(request: Request, response: Response, next?: NextFunction): any {
+  console.log(&#x27;do something...&#x27;);
+  next();
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>Second you can create a class:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExpressMiddlewareInterface <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2">
+</span><span class="code-line line-number" line="3"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">MyMiddleware</span> <span class="token keyword">implements</span> <span class="token class-name">ExpressMiddlewareInterface</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="4">  <span class="token comment">// interface implementation is optional</span>
+</span><span class="code-line line-number" line="5">  <span class="token function">use</span><span class="token punctuation">(</span>request<span class="token operator">:</span> Request<span class="token punctuation">,</span> response<span class="token operator">:</span> Response<span class="token punctuation">,</span> next<span class="token operator">?</span><span class="token operator">:</span> NextFunction<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">any</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'do something...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="7">    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="8">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="9"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { ExpressMiddlewareInterface } from &#x27;typenexus&#x27;;
+
+export class MyMiddleware implements ExpressMiddlewareInterface {
+  // interface implementation is optional
+  use(request: Request, response: Response, next?: NextFunction): any {
+    console.log(&#x27;do something...&#x27;);
+    next();
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <ol start="2">
+          <li>Then you can use them this way:</li>
+        </ol>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> UseBefore<span class="token punctuation">,</span> UseAfter <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'routing-controllers'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyMiddleware<span class="token punctuation">,</span> MyMiddleware2 <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./MyMiddleware'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> loggingMiddleware <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./loggingMiddleware'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="4">
+</span><span class="code-line line-number" line="5"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="6"><span class="token decorator"><span class="token at operator">@</span><span class="token function">UseBefore</span></span><span class="token punctuation">(</span>MyMiddleware<span class="token punctuation">,</span> MyMiddleware2<span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="7"><span class="token decorator"><span class="token at operator">@</span><span class="token function">UseAfter</span></span><span class="token punctuation">(</span>loggingMiddleware<span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="8"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, UseBefore, UseAfter } from &#x27;routing-controllers&#x27;;
+import { MyMiddleware, MyMiddleware2 } from &#x27;./MyMiddleware&#x27;;
+import { loggingMiddleware } from &#x27;./loggingMiddleware&#x27;;
+
+@Controller()
+@UseBefore(MyMiddleware, MyMiddleware2)
+@UseAfter(loggingMiddleware)
+export class UserController {}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <ol start="3">
+          <li>or per-action:</li>
+        </ol>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> UseBefore<span class="token punctuation">,</span> UseAfter<span class="token punctuation">,</span> Get <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'routing-controllers'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> MyMiddleware <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./MyMiddleware'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> loggingMiddleware <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./loggingMiddleware'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="4">
+</span><span class="code-line line-number" line="5"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="6"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="7">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">Get</span></span><span class="token punctuation">(</span><span class="token string">"/users/:id"</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="8">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">UseBefore</span></span><span class="token punctuation">(</span>MyMiddleware<span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="9">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">UseAfter</span></span><span class="token punctuation">(</span>loggingMiddleware<span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="10">  <span class="token function">getOne</span><span class="token punctuation">(</span><span class="token decorator"><span class="token at operator">@</span><span class="token function">Param</span></span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> id<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="11">    <span class="token comment">// ...</span>
+</span><span class="code-line line-number" line="12">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="13"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, UseBefore, UseAfter, Get } from &#x27;routing-controllers&#x27;;
+import { MyMiddleware } from &#x27;./MyMiddleware&#x27;;
+import { loggingMiddleware } from &#x27;./loggingMiddleware&#x27;;
+
+@Controller()
+export class UserController {
+  @Get(&#x22;/users/:id&#x22;)
+  @UseBefore(MyMiddleware)
+  @UseAfter(loggingMiddleware)
+  getOne(@Param(&#x22;id&#x22;) id: string) {
+    // ...
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p><strong><code>@UseBefore</code></strong> executes middleware before controller action. <strong><code>@UseAfter</code></strong> executes middleware after each controller action.</p>
         <h3 id="global-middlewares"><a aria-hidden="true" tabindex="-1" href="#global-middlewares" class="anchor"><span class="icon icon-link"></span></a>Global middlewares</h3>
         <p>Global middlewares run before each request, always. To make your middleware global mark it with <strong><code>@Middleware</code></strong> decorator and specify if it runs after or before controllers actions.</p>
         <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExpressMiddlewareInterface <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
@@ -1187,6 +1277,46 @@ const app = new TypeNexus(3002, {
 });
 app.controllers([UserController], [LoggingMiddleware]);
 "><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <h3 id="error-handlers"><a aria-hidden="true" tabindex="-1" href="#error-handlers" class="anchor"><span class="icon icon-link"></span></a>Error handlers</h3>
+        <p>Error handlers are specific only to express. Error handlers work same way as middlewares, but implement <code>ExpressErrorMiddlewareInterface</code>:</p>
+        <p>Create a class that implements the <code>ErrorMiddlewareInterface</code> interface:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Middleware<span class="token punctuation">,</span> ExpressErrorMiddlewareInterface <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> Request<span class="token punctuation">,</span> Response<span class="token punctuation">,</span> NextFunction <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'express'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Middleware</span></span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'after'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">CustomErrorHandler</span> <span class="token keyword">implements</span> <span class="token class-name">ExpressErrorMiddlewareInterface</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token function">error</span><span class="token punctuation">(</span>error<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> request<span class="token operator">:</span> Request<span class="token punctuation">,</span> response<span class="token operator">:</span> Response<span class="token punctuation">,</span> next<span class="token operator">:</span> NextFunction<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="7">    response<span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>status <span class="token operator">||</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="8">    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="9">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="10"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Middleware, ExpressErrorMiddlewareInterface } from &#x27;typenexus&#x27;;
+import { Request, Response, NextFunction } from &#x27;express&#x27;;
+
+@Middleware({ type: &#x27;after&#x27; })
+export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
+  error(error: any, request: Request, response: Response, next: NextFunction): void {
+    response.status(error.status || 500);
+    next();
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>Custom error handlers are invoked after the default error handler, so you won't be able to change response code or headers. To prevent this, you have to disable default error handler by specifying <strong>defaultErrorHandler</strong> option in <code>TypeNexusOptions</code>:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2">
+</span><span class="code-line line-number" line="3"><span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="4">  routePrefix<span class="token operator">:</span> <span class="token string">'/api'</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="5">  developmentMode<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="6">  defaultErrorHandler<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">// disable default error handler, only if you have your own error handler</span>
+</span><span class="code-line line-number" line="7"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="import { TypeNexus } from &#x27;typenexus&#x27;;
+
+const app = new TypeNexus(3002, {
+  routePrefix: &#x27;/api&#x27;,
+  developmentMode: false,
+  defaultErrorHandler: false, // disable default error handler, only if you have your own error handler
+});
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
         <h2 id="contributors"><a aria-hidden="true" tabindex="-1" href="#contributors" class="anchor"><span class="icon icon-link"></span></a>Contributors</h2>
         <p>As always, thanks to our amazing contributors!</p><a href="https://github.com/jaywcjlove/typenexus/graphs/contributors"><img src="https://jaywcjlove.github.io/typenexus/CONTRIBUTORS.svg"></a>
         <p>Made with <a href="https://github.com/jaywcjlove/github-action-contributors">contributors</a>.</p>
@@ -1235,7 +1365,9 @@ app.controllers([UserController], [LoggingMiddleware]);
             <li><a href="#using-middlewares" class="tocs-link">Using middlewares</a>
               <ol class="tocs-list is-collapsed">
                 <li><a href="#use-existing-middleware" class="tocs-link">Use existing middleware</a></li>
+                <li><a href="#creating-your-own-express-middleware" class="tocs-link">Creating your own express middleware</a></li>
                 <li><a href="#global-middlewares" class="tocs-link">Global middlewares</a></li>
+                <li><a href="#error-handlers" class="tocs-link">Error handlers</a></li>
               </ol>
             </li>
             <li><a href="#contributors" class="tocs-link">Contributors</a></li>
