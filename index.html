@@ -1042,6 +1042,88 @@ export class UserController {
 "><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
         <p>If you mark <strong><code>@CurrentUser</code></strong> as <strong>required</strong> and <code>currentUserChecker</code> logic will return empty result, then <code>TypeNexus</code> will throw authorization required error.</p>
         <h2 id="using-middlewares"><a aria-hidden="true" tabindex="-1" href="#using-middlewares" class="anchor"><span class="icon icon-link"></span></a>Using middlewares</h2>
+        <p>You can use any existing <em>express</em> middleware, or create your own. To create your middlewares there is a <strong><code>@Middleware</code></strong> decorator, and to use already exist middlewares there are <strong><code>@UseBefore</code></strong> and <strong><code>@UseAfter</code></strong> decorators.</p>
+        <h3 id="use-existing-middleware"><a aria-hidden="true" tabindex="-1" href="#use-existing-middleware" class="anchor"><span class="icon icon-link"></span></a>Use existing middleware</h3>
+        <p>There are multiple ways to use middleware. For example, lets try to use <a href="https://github.com/expressjs/compression">compression</a> middleware:</p>
+        <ol>
+          <li>Install compression middleware:</li>
+        </ol>
+        <pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line line-number" line="1">$ <span class="token function">npm</span> <span class="token function">install</span> compression
+</span></code><input type="hidden" value="$ npm install compression
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <ol start="2">
+          <li>To use middleware per-action:</li>
+        </ol>
+        <pre class="language-ts"><code class="language-ts code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> Get<span class="token punctuation">,</span> UseBefore <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"routing-controllers"</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> compression <span class="token keyword">from</span> <span class="token string">'compression'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">Get</span></span><span class="token punctuation">(</span><span class="token string">'/users/:id'</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="7">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">UseBefore</span></span><span class="token punctuation">(</span><span class="token function">compression</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="8">  <span class="token keyword">async</span> <span class="token function">getOne</span><span class="token punctuation">(</span><span class="token decorator"><span class="token at operator">@</span><span class="token function">Param</span></span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> id<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Promise</span><span class="token operator">&#x3C;</span><span class="token builtin">any</span><span class="token operator">></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="9">      <span class="token comment">// ...</span>
+</span><span class="code-line line-number" line="10">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="11"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, Get, UseBefore } from &#x22;routing-controllers&#x22;;
+import compression from &#x27;compression&#x27;;
+
+@Controller()
+export class UserController {
+  @Get(&#x27;/users/:id&#x27;)
+  @UseBefore(compression())
+  async getOne(@Param(&#x22;id&#x22;) id: string): Promise<any> {
+      // ...
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>This way compression middleware will be applied only for <code>getOne</code> controller action, and will be executed before action execution. To execute middleware after action use <strong><code>@UseAfter</code></strong> decorator instead.</p>
+        <ol start="3">
+          <li>To use middleware per-controller:</li>
+        </ol>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> UseBefore <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"routing-controllers"</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> compression <span class="token keyword">from</span> <span class="token string">'compression'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token decorator"><span class="token at operator">@</span><span class="token function">UseBefore</span></span><span class="token punctuation">(</span><span class="token function">compression</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="6"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, UseBefore } from &#x22;routing-controllers&#x22;;
+import compression from &#x27;compression&#x27;;
+
+@Controller()
+@UseBefore(compression())
+export class UserController { }
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>This way compression middleware will be applied for all actions of the <code>UserController</code> controller, and will be executed before its action execution. Same way you can use <strong><code>@UseAfter</code></strong> decorator here.</p>
+        <ol start="4">
+          <li>If you want to use compression module globally for all controllers you can simply register it during bootstrap:</li>
+        </ol>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus<span class="token punctuation">,</span> Action <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> UserController <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./UserController.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="5">  <span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">    routePrefix<span class="token operator">:</span> <span class="token string">'/api'</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="7">    developmentMode<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="8">  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="9">  app<span class="token punctuation">.</span><span class="token function">controllers</span><span class="token punctuation">(</span><span class="token punctuation">[</span>UserController<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="10">  app<span class="token punctuation">.</span>express<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token function">compression</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="11">  <span class="token keyword">await</span> app<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="12"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="import { TypeNexus, Action } from &#x27;typenexus&#x27;;
+import { UserController } from &#x27;./UserController.js&#x27;;
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    routePrefix: &#x27;/api&#x27;,
+    developmentMode: false,
+  });
+  app.controllers([UserController]);
+  app.express.use(compression());
+  await app.start();
+})();
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>Alternatively, you can create a custom <a href="#global-middlewares">global middleware</a> and simply delegate its execution to the compression module.</p>
         <h3 id="global-middlewares"><a aria-hidden="true" tabindex="-1" href="#global-middlewares" class="anchor"><span class="icon icon-link"></span></a>Global middlewares</h3>
         <p>Global middlewares run before each request, always. To make your middleware global mark it with <strong><code>@Middleware</code></strong> decorator and specify if it runs after or before controllers actions.</p>
         <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExpressMiddlewareInterface <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
@@ -1152,6 +1234,7 @@ app.controllers([UserController], [LoggingMiddleware]);
             </li>
             <li><a href="#using-middlewares" class="tocs-link">Using middlewares</a>
               <ol class="tocs-list is-collapsed">
+                <li><a href="#use-existing-middleware" class="tocs-link">Use existing middleware</a></li>
                 <li><a href="#global-middlewares" class="tocs-link">Global middlewares</a></li>
               </ol>
             </li>
