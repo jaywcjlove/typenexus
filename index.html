@@ -896,6 +896,215 @@ export class Session implements ISession {
   public json = &#x27;&#x27;;
 }
 "><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <h2 id="using-authorization-features"><a aria-hidden="true" tabindex="-1" href="#using-authorization-features" class="anchor"><span class="icon icon-link"></span></a>Using <code>authorization</code> features</h2>
+        <p><code>TypeNexus</code> comes with two decorators helping you to organize authorization in your application.</p>
+        <h3 id="authorized-decorator"><a aria-hidden="true" tabindex="-1" href="#authorized-decorator" class="anchor"><span class="icon icon-link"></span></a><code>@Authorized</code> decorator</h3>
+        <p>To make <strong><code>@Authorized</code></strong> decorator to work you need to setup special <code>TypeNexus</code> options:</p>
+        <pre class="language-ts"><code class="language-ts code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">await</span> app<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4">app<span class="token punctuation">.</span><span class="token function-variable function">authorizationChecker</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>action<span class="token operator">:</span> Action<span class="token punctuation">,</span> roles<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="5">  <span class="token comment">// here you can use request/response objects from action</span>
+</span><span class="code-line line-number" line="6">  <span class="token comment">// also if decorator defines roles it needs to access the action</span>
+</span><span class="code-line line-number" line="7">  <span class="token comment">// you can use them to provide granular access check</span>
+</span><span class="code-line line-number" line="8">  <span class="token comment">// checker must return either boolean (true or false)</span>
+</span><span class="code-line line-number" line="9">  <span class="token comment">// either promise that resolves a boolean value</span>
+</span><span class="code-line line-number" line="10">  <span class="token comment">// demo code:</span>
+</span><span class="code-line line-number" line="11">  <span class="token keyword">const</span> token <span class="token operator">=</span> action<span class="token punctuation">.</span>request<span class="token punctuation">.</span>query<span class="token punctuation">.</span>token <span class="token operator">||</span> action<span class="token punctuation">.</span>request<span class="token punctuation">.</span>body<span class="token punctuation">.</span>token <span class="token operator">||</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span>request<span class="token punctuation">.</span>headers<span class="token punctuation">.</span>authorization <span class="token operator">||</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex"><span class="token anchor function">^</span>token<span class="token char-set class-name">\s</span></span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="12">  <span class="token keyword">if</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>token <span class="token operator">!==</span> token<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="13">  <span class="token keyword">const</span> dataSource <span class="token operator">=</span> action<span class="token punctuation">.</span>dataSource<span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="14">  <span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token keyword">await</span> dataSource<span class="token punctuation">.</span>manager<span class="token punctuation">.</span><span class="token function">findOne</span><span class="token punctuation">(</span>User<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="15">    where<span class="token operator">:</span> <span class="token punctuation">{</span> username <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="16">    select<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'username'</span><span class="token punctuation">,</span> <span class="token string">'id'</span><span class="token punctuation">,</span> <span class="token string">'roles'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="17">  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="18">  <span class="token keyword">if</span> <span class="token punctuation">(</span>user <span class="token operator">&#x26;&#x26;</span> roles<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>role <span class="token operator">=></span> user<span class="token punctuation">.</span>roles<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>role<span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="19">  <span class="token comment">// @ts-ignore</span>
+</span><span class="code-line line-number" line="20">  <span class="token keyword">if</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span>request<span class="token punctuation">.</span>session<span class="token punctuation">.</span>token <span class="token operator">===</span> token<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="21">  <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="22"><span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="23">
+</span><span class="code-line line-number" line="24">app<span class="token punctuation">.</span><span class="token function">controllers</span><span class="token punctuation">(</span><span class="token punctuation">[</span>UserController<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="25"><span class="token keyword">await</span> app<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="const app = new TypeNexus(3002, { ... });
+await app.connect();
+
+app.authorizationChecker = async (action: Action, roles: string[]) => {
+  // here you can use request/response objects from action
+  // also if decorator defines roles it needs to access the action
+  // you can use them to provide granular access check
+  // checker must return either boolean (true or false)
+  // either promise that resolves a boolean value
+  // demo code:
+  const token = action.request.query.token || action.request.body.token || (action.request.headers.authorization || &#x27;&#x27;).replace(/^token\s/, &#x27;&#x27;);
+  if (action.request.session.token !== token) return false;
+  const dataSource = action.dataSource;
+  const user = await dataSource.manager.findOne(User, {
+    where: { username },
+    select: [&#x27;username&#x27;, &#x27;id&#x27;, &#x27;roles&#x27;],
+  });
+  if (user &#x26;&#x26; roles.find(role => user.roles.indexOf(role) !== -1)) return true;
+  // @ts-ignore
+  if (action.request.session.token === token) return true;
+  return false;
+}
+
+app.controllers([UserController]);
+await app.start();
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>You can use <strong><code>@Authorized</code></strong> on controller actions:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> Authorized<span class="token punctuation">,</span> Req<span class="token punctuation">,</span> Res<span class="token punctuation">,</span> Get <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typeorm'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> Response<span class="token punctuation">,</span> Request <span class="token punctuation">}</span><span class="token keyword">from</span> <span class="token string">'express'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">Authorized</span></span><span class="token punctuation">(</span><span class="token string">'POST_MODERATOR'</span><span class="token punctuation">)</span> <span class="token comment">// you can specify roles or array of roles</span>
+</span><span class="code-line line-number" line="7">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">Post</span></span><span class="token punctuation">(</span><span class="token string">'/posts'</span><span class="token punctuation">)</span> <span class="token comment">// => POST /posts</span>
+</span><span class="code-line line-number" line="8">  <span class="token function">create</span><span class="token punctuation">(</span><span class="token decorator"><span class="token at operator">@</span><span class="token function">Body</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> post<span class="token operator">:</span> Post<span class="token punctuation">,</span> <span class="token decorator"><span class="token at operator">@</span><span class="token function">Req</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> request<span class="token operator">:</span> Request<span class="token punctuation">,</span> <span class="token decorator"><span class="token at operator">@</span><span class="token function">Res</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> response<span class="token operator">:</span> Response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="9">    <span class="token comment">// ...</span>
+</span><span class="code-line line-number" line="10">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="11"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, Authorized, Req, Res, Get } from &#x27;typeorm&#x27;;
+import { Response, Request }from &#x27;express&#x27;;
+
+@Controller()
+export class UserController {
+  @Authorized(&#x27;POST_MODERATOR&#x27;) // you can specify roles or array of roles
+  @Post(&#x27;/posts&#x27;) // => POST /posts
+  create(@Body() post: Post, @Req() request: Request, @Res() response: Response) {
+    // ...
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <h3 id="currentuser-decorator"><a aria-hidden="true" tabindex="-1" href="#currentuser-decorator" class="anchor"><span class="icon icon-link"></span></a><code>@CurrentUser</code> decorator</h3>
+        <p>To make <strong><code>@CurrentUser</code></strong> decorator to work you need to setup special <code>TypeNexus</code> options:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus<span class="token punctuation">,</span> Action <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> UserController <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./UserController.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> User <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./User.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="4">
+</span><span class="code-line line-number" line="5"><span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="7">    routePrefix<span class="token operator">:</span> <span class="token string">'/api'</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="8">    developmentMode<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="9">  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="10">
+</span><span class="code-line line-number" line="11">  app<span class="token punctuation">.</span><span class="token function-variable function">currentUserChecker</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>action<span class="token operator">:</span> Action<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="12">    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">'Johny'</span><span class="token punctuation">,</span> <span class="token string">'Cage'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="13">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="14">
+</span><span class="code-line line-number" line="15">  app<span class="token punctuation">.</span><span class="token function">controllers</span><span class="token punctuation">(</span><span class="token punctuation">[</span>UserController<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="16">  <span class="token keyword">await</span> app<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="17"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="import { TypeNexus, Action } from &#x27;typenexus&#x27;;
+import { UserController } from &#x27;./UserController.js&#x27;;
+import { User } from &#x27;./User.js&#x27;;
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    routePrefix: &#x27;/api&#x27;,
+    developmentMode: false,
+  });
+
+  app.currentUserChecker = async (action: Action) => {
+    return new User(1, &#x27;Johny&#x27;, &#x27;Cage&#x27;);
+  }
+
+  app.controllers([UserController]);
+  await app.start();
+})();
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>You can use <strong><code>@CurrentUser</code></strong> on controller actions:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Controller<span class="token punctuation">,</span> CurrentUser<span class="token punctuation">,</span> Get <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> User <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./User.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token string">'/questions'</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">Get</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="7">  <span class="token keyword">public</span> <span class="token keyword">async</span> <span class="token function">all</span><span class="token punctuation">(</span><span class="token decorator"><span class="token at operator">@</span><span class="token function">CurrentUser</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> user<span class="token operator">?</span><span class="token operator">:</span> User<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Promise</span><span class="token operator">&#x3C;</span><span class="token builtin">any</span><span class="token operator">></span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="8">    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="9">      id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="10">      title<span class="token operator">:</span> <span class="token string">'Question by '</span> <span class="token operator">+</span> user<span class="token punctuation">.</span>firstName<span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="11">    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="12">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="13"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { Controller, CurrentUser, Get } from &#x27;typenexus&#x27;;
+import { User } from &#x27;./User.js&#x27;;
+
+@Controller(&#x27;/questions&#x27;)
+export class UserController {
+  @Get()
+  public async all(@CurrentUser() user?: User): Promise<any> {
+    return {
+      id: 1,
+      title: &#x27;Question by &#x27; + user.firstName,
+    };
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>If you mark <strong><code>@CurrentUser</code></strong> as <strong>required</strong> and <code>currentUserChecker</code> logic will return empty result, then <code>TypeNexus</code> will throw authorization required error.</p>
+        <h2 id="using-middlewares"><a aria-hidden="true" tabindex="-1" href="#using-middlewares" class="anchor"><span class="icon icon-link"></span></a>Using middlewares</h2>
+        <h3 id="global-middlewares"><a aria-hidden="true" tabindex="-1" href="#global-middlewares" class="anchor"><span class="icon icon-link"></span></a>Global middlewares</h3>
+        <p>Global middlewares run before each request, always. To make your middleware global mark it with <strong><code>@Middleware</code></strong> decorator and specify if it runs after or before controllers actions.</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExpressMiddlewareInterface <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> Request<span class="token punctuation">,</span> Response<span class="token punctuation">,</span> NextFunction <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'express'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Middleware</span></span><span class="token punctuation">(</span><span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'before'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</span><span class="code-line line-number" line="5"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">LoggingMiddleware</span> <span class="token keyword">implements</span> <span class="token class-name">ExpressMiddlewareInterface</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  <span class="token function">use</span><span class="token punctuation">(</span>request<span class="token operator">:</span> Request<span class="token punctuation">,</span> response<span class="token operator">:</span> Response<span class="token punctuation">,</span> next<span class="token operator">:</span> NextFunction<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="7">    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'do something...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="8">    <span class="token comment">// @ts-ignore</span>
+</span><span class="code-line line-number" line="9">    request<span class="token punctuation">.</span>test <span class="token operator">=</span> <span class="token string">'wcj'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="10">    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="11">  <span class="token punctuation">}</span>
+</span><span class="code-line line-number" line="12"><span class="token punctuation">}</span>
+</span></code><input type="hidden" value="import { ExpressMiddlewareInterface } from &#x27;typenexus&#x27;;
+import { Request, Response, NextFunction } from &#x27;express&#x27;;
+
+@Middleware({ type: &#x27;before&#x27; })
+export class LoggingMiddleware implements ExpressMiddlewareInterface {
+  use(request: Request, response: Response, next: NextFunction): void {
+    console.log(&#x27;do something...&#x27;);
+    // @ts-ignore
+    request.test = &#x27;wcj&#x27;;
+    next();
+  }
+}
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>To enable this middleware, specify it during <code>typenexus</code> initialization:</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token string">'./LoggingMiddleware.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3">
+</span><span class="code-line line-number" line="4"><span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="5">  routePrefix<span class="token operator">:</span> <span class="token string">'/api'</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="6">  developmentMode<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="7"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="import { TypeNexus } from &#x27;typenexus&#x27;;
+import &#x27;./LoggingMiddleware.js&#x27;;
+
+const app = new TypeNexus(3002, {
+  routePrefix: &#x27;/api&#x27;,
+  developmentMode: false,
+});
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
+        <p>Or register with <code>app.controllers()</code>.</p>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> LoggingMiddleware <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./LoggingMiddleware.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> UserController <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./UserController.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="4">
+</span><span class="code-line line-number" line="5"><span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">TypeNexus</span><span class="token punctuation">(</span><span class="token number">3002</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line line-number" line="6">  routePrefix<span class="token operator">:</span> <span class="token string">'/api'</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="7">  developmentMode<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line line-number" line="8"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="9">app<span class="token punctuation">.</span><span class="token function">controllers</span><span class="token punctuation">(</span><span class="token punctuation">[</span>UserController<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>LoggingMiddleware<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code><input type="hidden" value="import { TypeNexus } from &#x27;typenexus&#x27;;
+import { LoggingMiddleware } from &#x27;./LoggingMiddleware.js&#x27;;
+import { UserController } from &#x27;./UserController.js&#x27;;
+
+const app = new TypeNexus(3002, {
+  routePrefix: &#x27;/api&#x27;,
+  developmentMode: false,
+});
+app.controllers([UserController], [LoggingMiddleware]);
+"><div onclick="copied(this)" class="copied"><svg class="octicon-copy" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><svg class="octicon-check" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" height="12" width="12"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg></div></pre>
         <h2 id="contributors"><a aria-hidden="true" tabindex="-1" href="#contributors" class="anchor"><span class="icon icon-link"></span></a>Contributors</h2>
         <p>As always, thanks to our amazing contributors!</p><a href="https://github.com/jaywcjlove/typenexus/graphs/contributors"><img src="https://jaywcjlove.github.io/typenexus/CONTRIBUTORS.svg"></a>
         <p>Made with <a href="https://github.com/jaywcjlove/github-action-contributors">contributors</a>.</p>
@@ -933,6 +1142,17 @@ export class Session implements ISession {
                 <li><a href="#inject-routing-parameters" class="tocs-link">Inject routing parameters</a></li>
                 <li><a href="#inject-cookie-parameters" class="tocs-link">Inject cookie parameters</a></li>
                 <li><a href="#inject-session-object" class="tocs-link">Inject session object</a></li>
+              </ol>
+            </li>
+            <li><a href="#using-authorization-features" class="tocs-link">Using authorization features</a>
+              <ol class="tocs-list is-collapsed">
+                <li><a href="#authorized-decorator" class="tocs-link">@Authorized decorator</a></li>
+                <li><a href="#currentuser-decorator" class="tocs-link">@CurrentUser decorator</a></li>
+              </ol>
+            </li>
+            <li><a href="#using-middlewares" class="tocs-link">Using middlewares</a>
+              <ol class="tocs-list is-collapsed">
+                <li><a href="#global-middlewares" class="tocs-link">Global middlewares</a></li>
               </ol>
             </li>
             <li><a href="#contributors" class="tocs-link">Contributors</a></li>
