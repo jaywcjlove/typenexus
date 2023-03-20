@@ -71,6 +71,8 @@ jobs:
           body: |
             [![](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/typenexus@${{steps.create_tag.outputs.versionNumber}}/file/README.md)
             
+            Documentation ${{ steps.changelog.outputs.tag }}: https://raw.githack.com/jaywcjlove/typenexus/${{ steps.changelog.outputs.gh-pages-short-hash }}/index.html  
+
             ```bash
             npm i typenexus@${{steps.create_tag.outputs.versionNumber}}
             ```
