@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger tests
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         with:
           script: |
             const res = await github.repos.createDispatchEvent({
