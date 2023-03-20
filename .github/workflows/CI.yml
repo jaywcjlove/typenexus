@@ -77,7 +77,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const res = await github.repos.createDispatchEvent({
+            const res = await octokit.rest.repos.createDispatchEvent({
               owner: 'jaywcjlove',
               repo: 'typenexus',
               event_type: 'run-deploy'
