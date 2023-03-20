@@ -125,12 +125,12 @@ export abstract class Driver {
         return request.headers;
       
       case 'cookie':
-        if (!request.headers.cookie) return;
+        if (!request.headers?.cookie) return;
         const cookies = cookie.parse(request.headers.cookie);
         return cookies[param.name];
 
       case 'cookies':
-        if (!request.headers.cookie) return {};
+        if (!request.headers?.cookie) return {};
         return cookie.parse(request.headers.cookie);
 
     }

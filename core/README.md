@@ -125,8 +125,7 @@ import { UserController } from './controller/User.js';
 
 ;(async () => {
   const app = new TypeNexus();
-  app.controllers([UserController])
-
+  // ① Performs connection to the database.
   await app.connect({ 
     type: 'postgres',
     host: process.env.HOST || 'localhost',
@@ -140,7 +139,9 @@ import { UserController } from './controller/User.js';
     // OR: 
     // entities: [User],      
   });
-
+  // ② 🚨 Please be sure to use it after `app.connect()`.
+  app.controllers([UserController]);
+  // ③ Listen for connections.
   await app.start();
 
 })();
@@ -185,6 +186,7 @@ if (!adminUser) {
   await repos.save(user);
 }
 
+// 🚨 Please be sure to use it after `app.connect()`.
 app.controllers([UserController]);
 await app.start();
 ```
@@ -538,7 +540,6 @@ Express uses [`express-session`](https://www.npmjs.com/package/express-session) 
 
 ```typescript
 import { TypeNexus, DataSourceOptions } from 'typenexus';
-import { TypeormStore } from '@wcj/connect-typeorm';
 import { UserController } from './controller/User.js';
 import { Session } from './entity/Session.js';
 
@@ -560,12 +561,14 @@ const options: TypeNexusOptions = {
 
 ;(async () => {
   const app = new TypeNexus(3001, options);
+  // ① Performs connection to the database.
   await app.connect();
   // OR: 
-  await app.connect(options.dataSourceOptions);
+  // await app.connect(options.dataSourceOptions);
 
+  // ② 🚨 Please be sure to use it after `app.connect()`.
   app.controllers([UserController]);
-  app.express.disable('x-powered-by');
+  // ③ Listen for connections.
   await app.start();
 
 })();
@@ -576,9 +579,7 @@ Here is the database table entity for Session:
 ```typescript
 // ./entity/Session.js
 import { Column, Entity, Index, PrimaryColumn, DeleteDateColumn } from 'typeorm';
-import { ISession } from '@wcj/connect-typeorm';
-
-import 'express-session';
+import { ISession } from 'connect-typeorm';
 
 @Entity()
 export class Session implements ISession {

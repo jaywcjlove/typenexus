@@ -36,10 +36,12 @@ export * from './DriverOptions.js';
  * helping you build applications faster while reducing template code redundancy and type conversion work.
  */
 export class TypeNexus extends Driver {
-  /** import all controllers and middleman's and error handlers (new way) */
-  public controllers(classes: Function[]) {
-    new Controllers(this).registerControllers(classes)
-  }
+  /**
+   * Performs connection to the database.
+   * This method should be called once on application bootstrap.
+   * This method not necessarily creates database connection (depend on database type),
+   * but it also can setup a connection pool with database to use.
+   */
   public async connect(options?: DataSourceOptions): Promise<TypeNexus> {
     try {
       const opts = { ...this.options?.dataSourceOptions, ...options } as DataSourceOptions;
@@ -56,6 +58,16 @@ export class TypeNexus extends Driver {
     }
     return Promise.resolve(this);
   }
+  /**
+   * import all controllers and middleman's and error handlers (new way)
+   * 🚨 Please be sure to use it after `app.connect()`.
+   */
+  public controllers(classes: Function[]) {
+    new Controllers(this).registerControllers(classes)
+  }
+  /**
+   * Listen for connections.
+   */
   public async start(): Promise<TypeNexus> {
     await new Promise(resolve => this.app.listen(this.port, resolve as () => void));
     console.log(
