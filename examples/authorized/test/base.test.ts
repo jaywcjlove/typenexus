@@ -1,4 +1,4 @@
-import { TypeNexus, TypeNexusOptions, Action } from 'typenexus';
+import { TypeNexus, Action } from 'typenexus';
 import supertest from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/UserController.js';
@@ -26,5 +26,4 @@ import { UserController } from '../dist/UserController.js';
     .expect(401)
   assert.deepEqual(Object.keys(result.body), [ 'name', 'message' ]);
   assert.deepEqual(result.body.name, 'AuthorizationRequiredError');
-
 })();

@@ -1,5 +1,5 @@
-import { Controller, ContentType, Get, Param, Post, Delete, Res, Req, DSource, DataSource } from 'typenexus';
-import { Body, BodyParam, Authorized, SessionParam } from 'typenexus';
+import { Controller, Get } from 'typenexus';
+import { Authorized } from 'typenexus';
 
 @Controller('/questions')
 export class UserController {

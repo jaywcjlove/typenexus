@@ -36,6 +36,13 @@ export * from './DriverOptions.js';
 
 export * from './Action.js';
 
+export * from './http-error/HttpError.js';
+export * from './http-error/InternalServerError.js';
+export * from './http-error/BadRequestError.js';
+export * from './http-error/ForbiddenError.js';
+export * from './http-error/NotFoundError.js';
+export * from './http-error/UnauthorizedError.js';
+
 /**
  * TypeNexus is a good tool for API encapsulation and management.
  * It provides a clean and lightweight way to package TypeORM functionality,

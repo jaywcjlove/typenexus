@@ -21,8 +21,7 @@ export class ActionParameterHandler<T extends Driver> {
     // get parameter value from request and normalize it
     const value = this.normalizeParamValue(this.driver.getParamFromRequest(action, param), param);
     if (isPromiseLike(value)) return value.then(value => this.handleValue(value, action, param));
-    // if (param.type === 'body') return value;
-    return value;
+    return this.handleValue(value, action, param);
   }
   /**
    * Normalizes parameter value.

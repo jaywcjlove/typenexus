@@ -10,9 +10,15 @@ export class HttpError extends Error {
     super();
     Object.setPrototypeOf(this, HttpError.prototype);
 
+    // Disable stack trace information
+    Error.captureStackTrace(this, this.constructor);
+
     if (httpCode) this.httpCode = httpCode;
     if (message) this.message = message;
-
-    this.stack = new Error().stack;
+    // this.stack = new Error().stack;
+  }
+  // define a `stack` accessor and return null
+  get stack(): any {
+    return null;
   }
 }

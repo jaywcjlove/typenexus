@@ -3,6 +3,10 @@
 
 ### 👉 Get List
 
-# @name list
 GET {{baseUrl}}/questions
+Content-Type: application/json
+
+### 👉 Get List
+
+GET {{baseUrl}}/questions/detail
 Content-Type: application/json
