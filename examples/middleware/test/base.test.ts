@@ -22,7 +22,7 @@ import { UserController, LoggingMiddleware, CustomErrorHandler } from '../dist/U
     .expect(200)
 
   assert.deepEqual(Object.keys(result.body), [ 'id', 'title' ]);
-  assert.deepEqual(result.body.title, 'Question wcj');
+  assert.deepEqual(result.body.title, 'Question wcjfetch-logo');
   
   log('GET', '/api/questions/detail');
   result = await agent

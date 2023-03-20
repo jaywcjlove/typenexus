@@ -230,7 +230,7 @@ export abstract class Driver {
         });
       } else if (use.middleware.prototype && use.middleware.prototype.error) {
         // if this is function instance of ErrorMiddlewareInterface
-        middlewareFunctions.push(function (error: any, request: any, response: any, next: NextFunction) {
+        middlewareFunctions.push(function (error: any, request: Request, response: Response, next: NextFunction) {
           return getFromContainer<ExpressErrorMiddlewareInterface>(use.middleware).error(
             error,
             request,
