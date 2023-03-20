@@ -758,6 +758,70 @@ import { UserController } from './UserController.js';
 
 Alternatively, you can create a custom [global middleware](#global-middlewares) and simply delegate its execution to the compression module.
 
+### Creating your own express middleware
+
+Here is example of creating middleware for express.js:
+
+1. There are two ways of creating middleware:
+
+First, you can create a simple middleware function:
+
+```typescript
+import { Request, Response, NextFunction } from 'express';
+
+export function loggingMiddleware(request: Request, response: Response, next?: NextFunction): any {
+  console.log('do something...');
+  next();
+}
+```
+
+Second you can create a class:
+
+```typescript
+import { ExpressMiddlewareInterface } from 'typenexus';
+
+export class MyMiddleware implements ExpressMiddlewareInterface {
+  // interface implementation is optional
+  use(request: Request, response: Response, next?: NextFunction): any {
+    console.log('do something...');
+    next();
+  }
+}
+```
+
+2. Then you can use them this way:
+
+```typescript
+import { Controller, UseBefore, UseAfter } from 'routing-controllers';
+import { MyMiddleware, MyMiddleware2 } from './MyMiddleware';
+import { loggingMiddleware } from './loggingMiddleware';
+
+@Controller()
+@UseBefore(MyMiddleware, MyMiddleware2)
+@UseAfter(loggingMiddleware)
+export class UserController {}
+```
+
+3. or per-action:
+
+```typescript
+import { Controller, UseBefore, UseAfter, Get } from 'routing-controllers';
+import { MyMiddleware } from './MyMiddleware';
+import { loggingMiddleware } from './loggingMiddleware';
+
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  @UseBefore(MyMiddleware)
+  @UseAfter(loggingMiddleware)
+  getOne(@Param("id") id: string) {
+    // ...
+  }
+}
+```
+
+**`@UseBefore`** executes middleware before controller action. **`@UseAfter`** executes middleware after each controller action.
+
 ### Global middlewares
 
 Global middlewares run before each request, always. To make your middleware global mark it with **`@Middleware`** decorator and specify if it runs after or before controllers actions.
@@ -803,6 +867,36 @@ const app = new TypeNexus(3002, {
 app.controllers([UserController], [LoggingMiddleware]);
 ```
 
+### Error handlers
+
+Error handlers are specific only to express. Error handlers work same way as middlewares, but implement `ExpressErrorMiddlewareInterface`:
+
+Create a class that implements the `ErrorMiddlewareInterface` interface:
+
+```typescript
+import { Middleware, ExpressErrorMiddlewareInterface } from 'typenexus';
+import { Request, Response, NextFunction } from 'express';
+
+@Middleware({ type: 'after' })
+export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
+  error(error: any, request: Request, response: Response, next: NextFunction): void {
+    response.status(error.status || 500);
+    next();
+  }
+}
+```
+
+Custom error handlers are invoked after the default error handler, so you won't be able to change response code or headers. To prevent this, you have to disable default error handler by specifying **defaultErrorHandler** option in `TypeNexusOptions`:
+
+```typescript
+import { TypeNexus } from 'typenexus';
+
+const app = new TypeNexus(3002, {
+  routePrefix: '/api',
+  developmentMode: false,
+  defaultErrorHandler: false, // disable default error handler, only if you have your own error handler
+});
+```
 
 ## Contributors
 

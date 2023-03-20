@@ -19,6 +19,12 @@ export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
   }
 }
 
+export function loggingMiddleware(request: Request, response: Response, next?: NextFunction): any {
+  // @ts-ignore
+  request.logging = 'logging';
+  next();
+}
+
 class FetchLoggingMiddleware implements ExpressMiddlewareInterface {
   use(request: Request, response: Response, next: NextFunction): void {
     console.log(request.method, request.path);
@@ -31,12 +37,12 @@ class FetchLoggingMiddleware implements ExpressMiddlewareInterface {
 @Controller('/questions')
 export class UserController {
   @Get()
-  @UseBefore(FetchLoggingMiddleware)
+  @UseBefore(FetchLoggingMiddleware, loggingMiddleware)
   public async all(@Req() req: Request): Promise<any> {
     return {
       id: 1,
       // @ts-ignore
-      title: 'Question ' + req.test + req.xxx,
+      title: 'Question ' + req.test + req.xxx + req.logging,
     };
   }
   @Get('/detail')
