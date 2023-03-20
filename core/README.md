@@ -44,7 +44,7 @@ import { TypeNexus } from 'typenexus';
 })();
 ```
 
-### ① Create API
+### ❶ Create API
 
 `./src/controller/UserController.ts`
 
@@ -88,7 +88,7 @@ export class UserController {
 
 This class will register routes specified in method decorators in your server framework [Express.js](https://github.com/expressjs/express).
 
-### ② Create Entity
+### ❷ Create Entity
 
 Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
 
@@ -115,7 +115,7 @@ export class User {
 }
 ```
 
-### ③ Create Server
+### ❸ Create Server
 
 `./src/entities/user.entity.ts`
 
@@ -125,7 +125,7 @@ import { UserController } from './controller/User.js';
 
 ;(async () => {
   const app = new TypeNexus();
-  // ① Performs connection to the database.
+  // ❶ Performs connection to the database.
   await app.connect({ 
     type: 'postgres',
     host: process.env.HOST || 'localhost',
@@ -139,9 +139,9 @@ import { UserController } from './controller/User.js';
     // OR: 
     // entities: [User],      
   });
-  // ② 🚨 Please be sure to use it after `app.connect()`.
+  // ❷ 🚨 Please be sure to use it after `app.connect()`.
   app.controllers([UserController]);
-  // ③ Listen for connections.
+  // ❸ Listen for connections.
   await app.start();
 
 })();
@@ -561,14 +561,14 @@ const options: TypeNexusOptions = {
 
 ;(async () => {
   const app = new TypeNexus(3001, options);
-  // ① Performs connection to the database.
+  // ❶ Performs connection to the database.
   await app.connect();
   // OR: 
   // await app.connect(options.dataSourceOptions);
 
-  // ② 🚨 Please be sure to use it after `app.connect()`.
+  // ❷ 🚨 Please be sure to use it after `app.connect()`.
   app.controllers([UserController]);
-  // ③ Listen for connections.
+  // ❸ Listen for connections.
   await app.start();
 
 })();
