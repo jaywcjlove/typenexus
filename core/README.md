@@ -696,6 +696,68 @@ If you mark **`@CurrentUser`** as **required** and `currentUserChecker` logic wi
 
 ## Using middlewares
 
+You can use any existing _express_ middleware, or create your own. To create your middlewares there is a **`@Middleware`** decorator, and to use already exist middlewares there are **`@UseBefore`** and **`@UseAfter`** decorators.
+
+### Use existing middleware
+
+There are multiple ways to use middleware. For example, lets try to use [compression](https://github.com/expressjs/compression) middleware:
+
+1. Install compression middleware: 
+
+```bash
+$ npm install compression
+```
+
+2. To use middleware per-action:
+
+```ts
+import { Controller, Get, UseBefore } from "routing-controllers";
+import compression from 'compression';
+
+@Controller()
+export class UserController {
+  @Get('/users/:id')
+  @UseBefore(compression())
+  async getOne(@Param("id") id: string): Promise<any> {
+      // ...
+  }
+}
+```
+
+This way compression middleware will be applied only for `getOne` controller action, and will be executed before action execution. To execute middleware after action use **`@UseAfter`** decorator instead.
+
+3. To use middleware per-controller:
+
+```typescript
+import { Controller, UseBefore } from "routing-controllers";
+import compression from 'compression';
+
+@Controller()
+@UseBefore(compression())
+export class UserController { }
+```
+
+This way compression middleware will be applied for all actions of the `UserController` controller, and will be executed before its action execution. Same way you can use **`@UseAfter`** decorator here.
+
+4. If you want to use compression module globally for all controllers you can simply register it during bootstrap:
+
+```typescript
+import { TypeNexus, Action } from 'typenexus';
+import { UserController } from './UserController.js';
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    routePrefix: '/api',
+    developmentMode: false,
+  });
+  app.controllers([UserController]);
+  app.express.use(compression());
+  await app.start();
+})();
+```
+
+Alternatively, you can create a custom [global middleware](#global-middlewares) and simply delegate its execution to the compression module.
+
 ### Global middlewares
 
 Global middlewares run before each request, always. To make your middleware global mark it with **`@Middleware`** decorator and specify if it runs after or before controllers actions.
