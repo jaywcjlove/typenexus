@@ -694,6 +694,54 @@ export class UserController {
 
 If you mark **`@CurrentUser`** as **required** and `currentUserChecker` logic will return empty result, then `TypeNexus` will throw authorization required error.
 
+## Using middlewares
+
+### Global middlewares
+
+Global middlewares run before each request, always. To make your middleware global mark it with **`@Middleware`** decorator and specify if it runs after or before controllers actions.
+
+```typescript
+import { ExpressMiddlewareInterface } from 'typenexus';
+import { Request, Response, NextFunction } from 'express';
+
+@Middleware({ type: 'before' })
+export class LoggingMiddleware implements ExpressMiddlewareInterface {
+  use(request: Request, response: Response, next: NextFunction): void {
+    console.log('do something...');
+    // @ts-ignore
+    request.test = 'wcj';
+    next();
+  }
+}
+```
+
+To enable this middleware, specify it during `typenexus` initialization:
+
+```typescript
+import { TypeNexus } from 'typenexus';
+import './LoggingMiddleware.js';
+
+const app = new TypeNexus(3002, {
+  routePrefix: '/api',
+  developmentMode: false,
+});
+```
+
+Or register with `app.controllers()`.
+
+```typescript
+import { TypeNexus } from 'typenexus';
+import { LoggingMiddleware } from './LoggingMiddleware.js';
+import { UserController } from './UserController.js';
+
+const app = new TypeNexus(3002, {
+  routePrefix: '/api',
+  developmentMode: false,
+});
+app.controllers([UserController], [LoggingMiddleware]);
+```
+
+
 ## Contributors
 
 As always, thanks to our amazing contributors!

@@ -24,7 +24,7 @@ export interface TypeNexusOptions {
   /**
    * Indicates if TypeNexus should operate in development mode.
    */
-  developmentMode: boolean;
+  developmentMode?: boolean;
   /** Node.js body parsing middleware. */
   bodyParser?: {
     /**
