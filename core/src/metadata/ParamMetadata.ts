@@ -40,6 +40,11 @@ export class ParamMetadata {
    */
   target: any;
 
+  /**
+   * Indicates if this parameter is required or not
+   */
+  required: boolean;
+
   constructor(actionMetadata: ActionMetadata, args: ParamMetadataArgs) {
     this.actionMetadata = actionMetadata;
 
@@ -48,6 +53,7 @@ export class ParamMetadata {
     this.object = args.object;
     this.index = args.index;
     this.type = args.type;
+    this.required = args.required;
     this.name = args.name || '';
 
   }

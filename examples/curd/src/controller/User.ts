@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Post, Delete, Res, Req, DSource, DataSource } from 'typenexus';
-import { Body, BodyParam, SessionParam } from 'typenexus';
+import { Controller, ContentType, Get, Param, Post, Delete, Res, Req, DSource, DataSource } from 'typenexus';
+import { Body, BodyParam, Authorized, SessionParam } from 'typenexus';
 import { Response, Request }from 'express';
 import crypto from 'crypto';
 import { User } from '../entity/User.js';
@@ -14,14 +14,10 @@ interface UserResult {
   token?: string;
 }
 
-
-declare global {
-  namespace Express {
-  }
-}
-
 @Controller('/users')
 export class UserController {
+  @ContentType('application/json')
+  @Authorized()
   @Get()
   public async all(@DSource() dataSource: DataSource): Promise<User[]> {
     return dataSource.manager.find(User);

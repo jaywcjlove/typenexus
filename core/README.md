@@ -598,6 +598,101 @@ export class Session implements ISession {
 }
 ```
 
+## Using `authorization` features
+
+`TypeNexus` comes with two decorators helping you to organize authorization in your application.
+
+### `@Authorized` decorator
+
+To make **`@Authorized`** decorator to work you need to setup special `TypeNexus` options:
+
+```ts
+const app = new TypeNexus(3002, { ... });
+await app.connect();
+
+app.authorizationChecker = async (action: Action, roles: string[]) => {
+  // here you can use request/response objects from action
+  // also if decorator defines roles it needs to access the action
+  // you can use them to provide granular access check
+  // checker must return either boolean (true or false)
+  // either promise that resolves a boolean value
+  // demo code:
+  const token = action.request.query.token || action.request.body.token || (action.request.headers.authorization || '').replace(/^token\s/, '');
+  if (action.request.session.token !== token) return false;
+  const dataSource = action.dataSource;
+  const user = await dataSource.manager.findOne(User, {
+    where: { username },
+    select: ['username', 'id', 'roles'],
+  });
+  if (user && roles.find(role => user.roles.indexOf(role) !== -1)) return true;
+  // @ts-ignore
+  if (action.request.session.token === token) return true;
+  return false;
+}
+
+app.controllers([UserController]);
+await app.start();
+```
+
+You can use **`@Authorized`** on controller actions:
+
+```typescript
+import { Controller, Authorized, Req, Res, Get } from 'typeorm';
+import { Response, Request }from 'express';
+
+@Controller()
+export class UserController {
+  @Authorized('POST_MODERATOR') // you can specify roles or array of roles
+  @Post('/posts') // => POST /posts
+  create(@Body() post: Post, @Req() request: Request, @Res() response: Response) {
+    // ...
+  }
+}
+```
+
+### `@CurrentUser` decorator
+
+To make **`@CurrentUser`** decorator to work you need to setup special `TypeNexus` options:
+
+```typescript
+import { TypeNexus, Action } from 'typenexus';
+import { UserController } from './UserController.js';
+import { User } from './User.js';
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    routePrefix: '/api',
+    developmentMode: false,
+  });
+
+  app.currentUserChecker = async (action: Action) => {
+    return new User(1, 'Johny', 'Cage');
+  }
+
+  app.controllers([UserController]);
+  await app.start();
+})();
+```
+
+You can use **`@CurrentUser`** on controller actions:
+
+```typescript
+import { Controller, CurrentUser, Get } from 'typenexus';
+import { User } from './User.js';
+
+@Controller('/questions')
+export class UserController {
+  @Get()
+  public async all(@CurrentUser() user?: User): Promise<any> {
+    return {
+      id: 1,
+      title: 'Question by ' + user.firstName,
+    };
+  }
+}
+```
+
+If you mark **`@CurrentUser`** as **required** and `currentUserChecker` logic will return empty result, then `TypeNexus` will throw authorization required error.
 
 ## Contributors
 

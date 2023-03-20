@@ -69,6 +69,18 @@ jobs:
           npm install
           npm run test
 
+      - name: Run example authorized tests with Postgres 
+        working-directory: examples/authorized
+        run: |
+          npm install
+          npm run test
+
+      - name: Run example current-user tests with Postgres 
+        working-directory: examples/current-user
+        run: |
+          npm install
+          npm run test
+
   trigger_tests:
     needs: test
     runs-on: ubuntu-latest

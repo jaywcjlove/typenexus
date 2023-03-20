@@ -13,6 +13,8 @@ export type ParamType =
   | 'cookies'
   | 'query'
   | 'queries'
+  
+  | 'current-user'
 
   | 'body-param'
   | 'header'

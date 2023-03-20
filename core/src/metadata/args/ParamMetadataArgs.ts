@@ -28,4 +28,9 @@ export interface ParamMetadataArgs {
    * Parameter name.
    */
   name?: string;
+
+  /**
+   * Indicates if this parameter is required or not
+   */
+  required?: boolean;
 }

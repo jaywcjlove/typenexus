@@ -1,5 +1,7 @@
 import { ControllerMetadataArgs } from './args/ControllerMetadataArgs.js'
+import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';
 import { ActionMetadata } from './ActionMetadata.js';
+import { UseMetadata } from './UseMetadata.js';
 import { Action } from '../Action.js';
 
 /**
@@ -78,6 +80,21 @@ export class ControllerMetadata {
    * Controller type. Can be default or json-typed. Json-typed controllers operate with json requests and responses.
    */
   type: 'default' | 'json';
+
+  /**
+   * Indicates if this action uses Authorized decorator.
+   */
+  isAuthorizedUsed: boolean;
+
+  /**
+   * Middleware "use"-s applied to a whole controller.
+   */
+  uses: UseMetadata[];
+
+  /**
+   * Roles set by @Authorized decorator.
+   */
+  authorizedRoles: any[];
   constructor(args: ControllerMetadataArgs) {
     this.target = args.target;
     this.route = args.route;
@@ -89,5 +106,14 @@ export class ControllerMetadata {
    */
   getInstance(action: Action): any {
     return getFromContainer(this.target, action);
+  }
+  /**
+   * Builds everything controller metadata needs.
+   * Controller metadata should be used only after its build.
+   */
+  build(responseHandlers: ResponseHandlerMetadata[]) {
+    const authorizedHandler = responseHandlers.find(handler => handler.type === 'authorized' && !handler.method);
+    this.isAuthorizedUsed = !!authorizedHandler;
+    this.authorizedRoles = [].concat((authorizedHandler && authorizedHandler.value) || []);
   }
 }

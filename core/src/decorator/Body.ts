@@ -4,7 +4,7 @@ import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
  * Allows to inject a request body value to the controller action parameter.
  * Must be applied on a controller action parameter.
  */
-export function Body(route: string | RegExp = ''): Function {
+export function Body(route: string | RegExp = ''): ParameterDecorator {
   return function (object: Object, methodName: string, index: number) {
     getMetadataArgsStorage().params.push({
       type: 'body',

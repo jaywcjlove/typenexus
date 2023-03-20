@@ -1,0 +1,14 @@
+@baseUrl = http://localhost:3002/api
+@contentType = application/json
+
+### 👉 Get
+
+GET {{baseUrl}}/questions
+Content-Type: application/json
+
+
+### 👉 POST
+
+POST {{baseUrl}}/questions
+Content-Type: application/json
+

@@ -69,7 +69,6 @@
     "http-errors": "^2.0.0",
     "pg": "~8.10.0",
     "reflect-metadata": "^0.1.13",
-    "routing-controllers": "^0.10.2",
     "typeorm": "^0.3.12",
     "typeorm-extension": "^2.5.2"
   }

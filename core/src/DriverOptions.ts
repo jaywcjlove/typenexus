@@ -1,6 +1,7 @@
 import { DataSource, DataSourceOptions, EntityTarget } from 'typeorm';
 import { OptionsUrlencoded, OptionsJson, OptionsText, Options } from 'body-parser';
 import { CompressionOptions } from 'compression';
+import { Request, Response, NextFunction } from 'express';
 import { ISession } from 'connect-typeorm';
 import { SessionOptions } from "express-session";
 import session from 'express-session';
@@ -15,6 +16,15 @@ export interface TypeNexusOptions {
   dataSourceOptions?: DataSourceOptions;
   /** Create a session middleware */
   session?: SessionResult | SessionCallback;
+  /**
+   * Indicates if default TypeNexus's error handler is enabled or not.
+   * Enabled by default.
+   */
+  defaultErrorHandler?: boolean;
+  /**
+   * Indicates if TypeNexus should operate in development mode.
+   */
+  developmentMode: boolean;
   /** Node.js body parsing middleware. */
   bodyParser?: {
     /**
@@ -51,3 +61,26 @@ export interface SessionResult extends session.SessionOptions {
 }
 
 export type SessionCallback = (params: { app: Driver; dataSource: DataSource }) => SessionResult;
+
+
+/**
+ * Express error middlewares can implement this interface.
+ */
+export interface ExpressErrorMiddlewareInterface {
+  /**
+   * Called before response.send is being called. The data passed to method is the data passed to .send method.
+   * Note that you must return same (or changed) data and it will be passed to .send method.
+   */
+  error(error: any, request: Request, response: Response, next: NextFunction): void;
+}
+/**
+ * Used to register middlewares.
+ * This signature is used for express middlewares.
+ */
+export interface ExpressMiddlewareInterface {
+  /**
+   * Called before controller action is being executed.
+   * This signature is used for Express Middlewares.
+   */
+  use(request: Request, response: Response, next: NextFunction): any;
+}

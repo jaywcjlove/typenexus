@@ -3,6 +3,7 @@ import { Session } from './entity/Session.js';
 
 export const config: TypeNexusOptions = {
   routePrefix: '/api',
+  developmentMode: false,
   dataSourceOptions: {
     type: 'postgres',
     host: process.env.POSTGRES_HOST || 'localhost',

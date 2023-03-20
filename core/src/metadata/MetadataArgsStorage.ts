@@ -1,9 +1,9 @@
-import { ControllerMetadataArgs } from './args/ControllerMetadataArgs.js'
-import { ControllerMetadata } from './ControllerMetadata.js'
-import { ActionMetadataArgs } from './args/ActionMetadataArgs.js'
-import { ResponseHandlerMetadataArgs } from './args/ResponseHandleMetadataArgs.js'
-import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js'
-import { ParamMetadataArgs } from './args/ParamMetadataArgs.js'
+import { ControllerMetadataArgs } from './args/ControllerMetadataArgs.js';
+import { ActionMetadataArgs } from './args/ActionMetadataArgs.js';
+import { MiddlewareMetadataArgs } from './args/MiddlewareMetadataArgs.js';
+import { ResponseHandlerMetadataArgs } from './args/ResponseHandleMetadataArgs.js';
+import { ParamMetadataArgs } from './args/ParamMetadataArgs.js';
+import { UseMetadataArgs } from './args/UseMetadataArgs.js';
 
 /**
  * Gets metadata args storage.
@@ -22,6 +22,10 @@ export class MetadataArgsStorage {
    */
   controllers: ControllerMetadataArgs[] = [];
   /**
+   * Registered middleware metadata args.
+   */
+  middlewares: MiddlewareMetadataArgs[] = [];
+  /**
    * Registered action metadata args.
    */
   actions: ActionMetadataArgs[] = [];
@@ -33,6 +37,11 @@ export class MetadataArgsStorage {
    * Registered response handler metadata args.
    */
   responseHandlers: ResponseHandlerMetadataArgs[] = [];
+
+  /**
+   * Registered "use middleware" metadata args.
+   */
+  uses: UseMetadataArgs[] = [];
   /**
    * Filters registered controllers by a given classes.
    */
@@ -66,4 +75,28 @@ export class MetadataArgsStorage {
       return param.object.constructor === target && param.method === methodName;
     });
   }
+  /**
+   * Filters response handlers by a given class.
+   */
+  filterResponseHandlersWithTarget(target: Function): ResponseHandlerMetadataArgs[] {
+    return this.responseHandlers.filter(property => {
+      return property.target === target;
+    });
+  }
+
+  /**
+   * Filters registered "use middlewares" by a given target class and method name.
+   */
+  filterUsesWithTargetAndMethod(target: Function, methodName: string): UseMetadataArgs[] {
+    return this.uses.filter(use => {
+      return use.target === target && use.method === methodName;
+    });
+  }
+  /**
+   * Filters registered middlewares by a given classes.
+   */
+  filterMiddlewareMetadatasForClasses(classes: Function[]): MiddlewareMetadataArgs[] {
+    return classes.map(cls => this.middlewares.find(mid => mid.target === cls)).filter(midd => midd !== undefined); // this might be not needed if all classes where decorated with `@Middleware`
+  }
+
 }

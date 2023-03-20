@@ -4,6 +4,7 @@ import { ActionMetadataArgs } from './args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';
 import { Action } from '../Action.js';
 import { ParamMetadata } from './ParamMetadata.js';
+import { UseMetadata } from './UseMetadata.js';
 
 /**
  * Action metadata.
@@ -43,6 +44,25 @@ export class ActionMetadata {
    * Full route to this action (includes controller base route).
    */
   fullRoute: string | RegExp;
+
+  /**
+   * Indicates if this action uses Authorized decorator.
+   */
+  isAuthorizedUsed: boolean;
+
+  /**
+   * Roles set by @Authorized decorator.
+   */
+  authorizedRoles: any[];
+
+  /**
+   * Indicates if controller of this action is json-typed.
+   */
+  isJsonTyped: boolean;
+  /**
+   * Action's use metadatas.
+   */
+  uses: UseMetadata[];
   constructor( controllerMetadata: ControllerMetadata, args: ActionMetadataArgs) {
     this.controllerMetadata = controllerMetadata;
     this.route = args.route;
@@ -55,7 +75,18 @@ export class ActionMetadata {
    * Action metadata can be used only after its build.
    */
   build(responseHandlers: ResponseHandlerMetadata[]) {
+    const authorizedHandler = responseHandlers.find(handler => handler.type === 'authorized');
+    const contentTypeHandler = responseHandlers.find(handler => handler.type === 'content-type');
+    this.isJsonTyped =
+      contentTypeHandler !== undefined
+        ? /json/.test(contentTypeHandler.value)
+        : this.controllerMetadata.type === 'json';
+
     this.fullRoute = this.buildFullRoute();
+    this.isAuthorizedUsed = this.controllerMetadata.isAuthorizedUsed || !!authorizedHandler;
+    this.authorizedRoles = (this.controllerMetadata.authorizedRoles || []).concat(
+      (authorizedHandler && authorizedHandler.value) || []
+    );
   }
   /**
    * Appends base route to a given regexp route.

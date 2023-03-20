@@ -5,7 +5,10 @@ import { Controllers } from './Controllers.js';
 import { Driver } from './Driver.js';
 
 export * from 'typeorm';
+export * from './decorator/Authorized.js';
+export * from './decorator/ContentType.js';
 export * from './decorator/Controller.js';
+export * from './decorator/CurrentUser.js';
 export * from './decorator/Delete.js';
 export * from './decorator/Patch.js';
 export * from './decorator/Post.js';
@@ -16,6 +19,7 @@ export * from './decorator/Body.js';
 export * from './decorator/BodyParam.js';
 export * from './decorator/Param.js';
 export * from './decorator/Params.js';
+export * from './decorator/Middleware.js';
 export * from './decorator/HeaderParam.js';
 export * from './decorator/HeaderParams.js';
 export * from './decorator/QueryParam.js';
@@ -29,6 +33,8 @@ export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';
 export * from './DriverOptions.js';
+
+export * from './Action.js';
 
 /**
  * TypeNexus is a good tool for API encapsulation and management.
@@ -62,8 +68,11 @@ export class TypeNexus extends Driver {
    * import all controllers and middleman's and error handlers (new way)
    * 🚨 Please be sure to use it after `app.connect()`.
    */
-  public controllers(classes: Function[]) {
-    new Controllers(this).registerControllers(classes)
+  public controllers(classes: Function[], middlewareClasses?: Function[]) {
+    new Controllers(this)
+      .registerMiddlewares('before', middlewareClasses, this.options)
+      .registerControllers(classes)
+      .registerMiddlewares('after', middlewareClasses, this.options)
   }
   /**
    * Listen for connections.

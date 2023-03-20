@@ -1,0 +1,3 @@
+Authorized Sample
+===
+

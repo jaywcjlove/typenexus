@@ -1,6 +1,6 @@
-import express, { Express, RequestHandler } from 'express';
-import { MetadataBuilder } from './builder/MetadataBuilder.js'
-import { Driver } from './Driver.js'
+import { MetadataBuilder } from './builder/MetadataBuilder.js';
+import { Driver } from './Driver.js';
+import { TypeNexusOptions } from './DriverOptions.js';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { Action } from './Action.js';
 import { isPromiseLike } from './utils/isPromiseLike.js';
@@ -31,6 +31,16 @@ export class Controllers<T extends Driver> {
     return this;
   }
   /**
+   * Registers middleware that run before controller actions.
+   */
+  registerMiddlewares(type: 'before' | 'after', classes: Function[], option: TypeNexusOptions): this {
+    this.metadataBuilder.buildMiddlewareMetadata(classes)
+    .filter(middleware => middleware.global && middleware.type === type)
+    .sort((middleware1, middleware2) => middleware2.priority - middleware1.priority)
+    .forEach(middleware => this.driver.registerMiddleware(middleware, option));
+    return this;
+  }
+  /**
    * Executes given controller action.
    */
   protected executeAction(actionMetadata: ActionMetadata, action: Action) {
@@ -46,7 +56,6 @@ export class Controllers<T extends Driver> {
       return this.handleCallMethodResult(result, actionMetadata, action);
     })
     .catch(error => {
-      // otherwise simply handle error without action execution
       return this.driver.handleError(error, actionMetadata, action);
     });
   }
