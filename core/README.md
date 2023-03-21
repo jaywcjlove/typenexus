@@ -598,6 +598,54 @@ export class Session implements ISession {
 }
 ```
 
+### Set Redirect
+
+You can set a `Redirect` header for any action:
+
+```typescript
+import { Controller, Get } from 'typenexus';
+import { Redirect } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Get('/users')
+  @Redirect("http://github.com")
+  public async detail() {}
+}
+```
+
+You can override the `Redirect` header by returning a string value:
+
+```typescript
+import { Controller, Get } from 'typenexus';
+import { Redirect } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Get('/users')
+  @Redirect("http://github.com")
+  public async detail() {
+    return "https://bing.com";
+  }
+}
+```
+
+You can use template to generate the `Redirect` header:
+
+```typescript
+import { Controller, Get } from 'typenexus';
+import { Redirect } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Get('/users')
+  @Redirect("http://github.com/:owner/:repo")
+  public async detail() { 
+    return { owner: "jaywcjlove", repo: "typenexus" };
+  }
+}
+```
+
 ### Controlling empty responses
 
 If your controller returns `void` or `Promise<void>` or undefined it will throw you _404_ error. To prevent this if you need to specify what status code you want to return using **`@OnUndefined`** decorator.

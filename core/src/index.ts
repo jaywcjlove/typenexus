@@ -34,6 +34,7 @@ export * from './decorator/SessionParam.js';
 export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';
+export * from './decorator/Redirect.js';
 export * from './decorator/UseAfter.js';
 export * from './decorator/UseBefore.js';
 export * from './DriverOptions.js';

@@ -78,6 +78,11 @@ export class ActionMetadata {
    * Http code to be set on successful response.
    */
   successHttpCode: number;
+
+  /**
+   * Specifies redirection url for this action.
+   */
+  redirect: string;
   constructor(controllerMetadata: ControllerMetadata, args: ActionMetadataArgs, private globalOptions: TypeNexusOptions) {
     this.controllerMetadata = controllerMetadata;
     this.route = args.route;
@@ -95,8 +100,10 @@ export class ActionMetadata {
     const undefinedResultHandler = responseHandlers.find(handler => handler.type === 'on-undefined');
     const nullResultHandler = responseHandlers.find(handler => handler.type === 'on-null');
     const successCodeHandler = responseHandlers.find(handler => handler.type === 'success-code');
+    const redirectHandler = responseHandlers.find(handler => handler.type === 'redirect');
 
     if (successCodeHandler) this.successHttpCode = successCodeHandler.value;
+    if (redirectHandler) this.redirect = redirectHandler.value;
 
     this.undefinedResultCode = undefinedResultHandler
       ? undefinedResultHandler.value

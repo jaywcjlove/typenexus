@@ -16,6 +16,7 @@ import { getFromContainer } from './metadata/ControllerMetadata.js';
 import { isPromiseLike } from './utils/isPromiseLike.js';
 import { Action } from './Action.js';
 import { AuthorizationCheckerNotDefinedError } from './http-error/AuthorizationCheckerNotDefinedError.js';
+import pathTemplater from 'path-templater';
 
 export abstract class Driver {
   /**
@@ -131,7 +132,17 @@ export abstract class Driver {
       return;
     }
 
-    if (result === undefined && action.undefinedResultCode) {
+    if (action.redirect) {
+      // if redirect is set then do it
+      if (typeof result === 'string') {
+        options.response.redirect(result);
+      } else if (result instanceof Object) {
+        options.response.redirect(pathTemplater(action.redirect, result));
+      } else {
+        options.response.redirect(action.redirect);
+      }
+      options.next();
+    } else if (result === undefined && action.undefinedResultCode) {
       if (action.undefinedResultCode instanceof Function) {
         throw new (action.undefinedResultCode as any)(options);
       }
@@ -147,12 +158,12 @@ export abstract class Driver {
       }
     } else if (action.successHttpCode) {
       options.response.status(action.successHttpCode);
+    } else {
+      if (action.controllerMetadata.type === 'json') {
+        options.response.json(result);
+      }
+      options.next!();
     }
-
-    if (action.controllerMetadata.type === 'json') {
-      options.response.json(result);
-    }
-    options.next!();
   }
   /**
    * Handles result of failed executed controller action.
