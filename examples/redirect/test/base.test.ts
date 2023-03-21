@@ -39,4 +39,13 @@ import { UserController } from '../dist/UserController.js';
   assert.deepEqual(result.redirect, false);
   assert.deepEqual(result.header.location, 'https://bing.com');
 
+  log('GET', '/api/users/12');
+  result = await agent
+    .get('/api/users/location')
+    .set('Accept', 'application/json')
+    .expect(200)
+
+  assert.deepEqual(result.redirect, false);
+  assert.deepEqual(result.header['cache-control'], 'none');
+
 })();

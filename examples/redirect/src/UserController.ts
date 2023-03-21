@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Location } from 'typenexus';
+import { Controller, Get, HttpCode, Location, Header, Param } from 'typenexus';
 import { Redirect } from 'typenexus';
 
 @Controller()
@@ -23,4 +23,10 @@ export class UserController {
   @HttpCode(201)
   @Location("https://bing.com")
   public location() {}
+
+  @Get("/users/:id")
+  @Header("Cache-Control", "none")
+  public async getOne(@Param('id') id: string): Promise<any> {
+    // ...
+  }
 }

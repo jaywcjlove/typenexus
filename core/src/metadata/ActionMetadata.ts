@@ -170,8 +170,12 @@ export class ActionMetadata {
    */
   private buildHeaders(responseHandlers: ResponseHandlerMetadata[]) {
     const locationHandler = responseHandlers.find(handler => handler.type === 'location');
+    const contentTypeHandler = responseHandlers.find(handler => handler.type === 'content-type');
+    const headerHandlers = responseHandlers.filter(handler => handler.type === 'header');
     const headers: ActionMetadata['headers'] = {};
     if (locationHandler) headers['Location'] = locationHandler.value;
+    if (contentTypeHandler) headers['Content-type'] = contentTypeHandler.value;
+    if (headerHandlers) headerHandlers.map(handler => (headers[handler.value] = handler.secondaryValue));
     return headers;
   }
 }

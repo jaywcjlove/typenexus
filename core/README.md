@@ -752,6 +752,23 @@ export class UserController {
 }
 ```
 
+### Set custom headers
+
+You can set any custom header in a response:
+
+```typescript
+import { Controller, Get, Header, Param } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  @Header("Cache-Control", "none")
+  public async getOne(@Param('id') id: string): Promise<string> {
+    // ...
+  }
+}
+```
+
 ## Using `authorization` features
 
 `TypeNexus` comes with two decorators helping you to organize authorization in your application.
