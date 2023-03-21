@@ -15,9 +15,9 @@ export class Controllers<T extends Driver> {
    * Used to check and handle controller action parameters.
    */
   private parameterHandler: ActionParameterHandler<T>;
-  constructor(private driver: T) {
+  constructor(private driver: T, private options: TypeNexusOptions) {
     this.parameterHandler = new ActionParameterHandler<T>(driver);
-    this.metadataBuilder = new MetadataBuilder();
+    this.metadataBuilder = new MetadataBuilder(this.options);
   }
   registerControllers(classes?: Function[]): this {
     const controllers = this.metadataBuilder.buildControllerMetadata(classes);

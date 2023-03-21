@@ -6,12 +6,13 @@ import { ActionMetadataArgs } from '../metadata/args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from '../metadata/ResponseHandleMetadata.js';
 import { ParamMetadata } from '../metadata/ParamMetadata.js';
 import { UseMetadata } from '../metadata/UseMetadata.js';
+import { TypeNexusOptions } from '../DriverOptions.js';
 
 /**
  * Builds metadata from the given metadata arguments.
  */
 export class MetadataBuilder {
-  constructor() {}
+  constructor(private options: TypeNexusOptions) {}
   /**
    * Builds controller metadata from a registered controller metadata args.
    */
@@ -72,7 +73,7 @@ export class MetadataBuilder {
     }
 
     return actionsWithTarget.map(actionArgs => {
-      const action = new ActionMetadata(controller, actionArgs);
+      const action = new ActionMetadata(controller, actionArgs, this.options);
       action.params = this.createParams(action);
       action.uses = this.createActionUses(action);
       action.build(this.createActionResponseHandlers(action));

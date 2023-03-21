@@ -5,6 +5,7 @@ import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';
 import { Action } from '../Action.js';
 import { ParamMetadata } from './ParamMetadata.js';
 import { UseMetadata } from './UseMetadata.js';
+import { TypeNexusOptions } from '../DriverOptions.js';
 
 /**
  * Action metadata.
@@ -63,7 +64,21 @@ export class ActionMetadata {
    * Action's use metadatas.
    */
   uses: UseMetadata[];
-  constructor( controllerMetadata: ControllerMetadata, args: ActionMetadataArgs) {
+  /**
+   * Http code to be used on undefined action returned content.
+   */
+  undefinedResultCode: number | Function;
+
+  /**
+   * Http code to be used on null action returned content.
+   */
+  nullResultCode: number | Function;
+
+  /**
+   * Http code to be set on successful response.
+   */
+  successHttpCode: number;
+  constructor(controllerMetadata: ControllerMetadata, args: ActionMetadataArgs, private globalOptions: TypeNexusOptions) {
     this.controllerMetadata = controllerMetadata;
     this.route = args.route;
     this.target = args.target;
@@ -77,6 +92,20 @@ export class ActionMetadata {
   build(responseHandlers: ResponseHandlerMetadata[]) {
     const authorizedHandler = responseHandlers.find(handler => handler.type === 'authorized');
     const contentTypeHandler = responseHandlers.find(handler => handler.type === 'content-type');
+    const undefinedResultHandler = responseHandlers.find(handler => handler.type === 'on-undefined');
+    const nullResultHandler = responseHandlers.find(handler => handler.type === 'on-null');
+    const successCodeHandler = responseHandlers.find(handler => handler.type === 'success-code');
+
+    if (successCodeHandler) this.successHttpCode = successCodeHandler.value;
+
+    this.undefinedResultCode = undefinedResultHandler
+      ? undefinedResultHandler.value
+      : this.globalOptions.defaults && this.globalOptions.defaults.undefinedResultCode;
+
+    this.nullResultCode = nullResultHandler
+      ? nullResultHandler.value
+      : this.globalOptions.defaults && this.globalOptions.defaults.nullResultCode;
+
     this.isJsonTyped =
       contentTypeHandler !== undefined
         ? /json/.test(contentTypeHandler.value)

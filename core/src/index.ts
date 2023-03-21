@@ -18,6 +18,8 @@ export * from './decorator/Head.js';
 export * from './decorator/Body.js';
 export * from './decorator/BodyParam.js';
 export * from './decorator/Param.js';
+export * from './decorator/OnUndefined.js';
+export * from './decorator/OnNull.js';
 export * from './decorator/Params.js';
 export * from './decorator/Middleware.js';
 export * from './decorator/HeaderParam.js';
@@ -78,7 +80,7 @@ export class TypeNexus extends Driver {
    * 🚨 Please be sure to use it after `app.connect()`.
    */
   public controllers(classes: Function[], middlewareClasses?: Function[]) {
-    new Controllers(this)
+    new Controllers(this, this.options)
       .registerMiddlewares('before', middlewareClasses, this.options)
       .registerControllers(classes)
       .registerMiddlewares('after', middlewareClasses, this.options)

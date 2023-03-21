@@ -48,6 +48,21 @@ export interface TypeNexusOptions {
   };
   /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
   compression?: false | CompressionOptions;
+  /**
+   * Default settings
+   */
+  defaults?: {
+    /**
+     * If set, all null responses will return specified status code by default
+     */
+    nullResultCode?: number;
+
+    /**
+     * If set, all undefined responses will return specified status code by default
+     */
+    undefinedResultCode?: number;
+
+  }
 }
 
 export interface SessionResult extends session.SessionOptions {

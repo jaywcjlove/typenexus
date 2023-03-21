@@ -130,6 +130,25 @@ export abstract class Driver {
       options.next!();
       return;
     }
+
+    if (result === undefined && action.undefinedResultCode) {
+      if (action.undefinedResultCode instanceof Function) {
+        throw new (action.undefinedResultCode as any)(options);
+      }
+      options.response.status(action.undefinedResultCode);
+    } else if (result === null) {
+      if (action.nullResultCode) {
+        if (action.nullResultCode instanceof Function) {
+          throw new (action.nullResultCode as any)(options);
+        }
+        options.response.status(action.nullResultCode);
+      } else {
+        options.response.status(204);
+      }
+    } else if (action.successHttpCode) {
+      options.response.status(action.successHttpCode);
+    }
+
     if (action.controllerMetadata.type === 'json') {
       options.response.json(result);
     }
