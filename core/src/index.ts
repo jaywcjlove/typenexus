@@ -38,6 +38,7 @@ export * from './decorator/Redirect.js';
 export * from './decorator/UseAfter.js';
 export * from './decorator/UseBefore.js';
 export * from './decorator/Location.js';
+export * from './decorator/HttpCode.js';
 export * from './DriverOptions.js';
 
 export * from './Action.js';

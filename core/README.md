@@ -660,6 +660,21 @@ export class UserController {
 }
 ```
 
+### Set custom HTTP code
+
+You can explicitly set a returned HTTP code for any action:
+
+```typescript
+import { Controller, Post, HttpCode } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Post('/users')
+  @HttpCode(201)
+  public async saveUser() {}
+}
+```
+
 ### Controlling empty responses
 
 If your controller returns `void` or `Promise<void>` or undefined it will throw you _404_ error. To prevent this if you need to specify what status code you want to return using **`@OnUndefined`** decorator.
@@ -697,7 +712,7 @@ export class UserController {
 You can also specify error class you want to use if it returned `undefined`:
 
 ```typescript
-import { HttpError } from 'routing-controllers';
+import { HttpError } from 'typeorm';
 
 export class UserNotFoundError extends HttpError {
   constructor() {
@@ -850,7 +865,7 @@ $ npm install compression
 2. To use middleware per-action:
 
 ```ts
-import { Controller, Get, UseBefore } from "routing-controllers";
+import { Controller, Get, UseBefore } from "typeorm";
 import compression from 'compression';
 
 @Controller()
@@ -868,7 +883,7 @@ This way compression middleware will be applied only for `getOne` controller act
 3. To use middleware per-controller:
 
 ```typescript
-import { Controller, UseBefore } from "routing-controllers";
+import { Controller, UseBefore } from "typeorm";
 import compression from 'compression';
 
 @Controller()
@@ -931,7 +946,7 @@ export class MyMiddleware implements ExpressMiddlewareInterface {
 2. Then you can use them this way:
 
 ```typescript
-import { Controller, UseBefore, UseAfter } from 'routing-controllers';
+import { Controller, UseBefore, UseAfter } from 'typeorm';
 import { MyMiddleware, MyMiddleware2 } from './MyMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
 
@@ -944,7 +959,7 @@ export class UserController {}
 3. or per-action:
 
 ```typescript
-import { Controller, UseBefore, UseAfter, Get } from 'routing-controllers';
+import { Controller, UseBefore, UseAfter, Get } from 'typeorm';
 import { MyMiddleware } from './MyMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
 

@@ -34,7 +34,7 @@ import { UserController } from '../dist/UserController.js';
   result = await agent
     .get('/api/redirect/location')
     .set('Accept', 'application/json')
-    .expect(200)
+    .expect(201)
 
   assert.deepEqual(result.redirect, false);
   assert.deepEqual(result.header.location, 'https://bing.com');
