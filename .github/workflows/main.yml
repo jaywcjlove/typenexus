@@ -58,8 +58,8 @@ jobs:
 
       - name: package.json info
         uses: jaywcjlove/github-action-package@main
-        working-directory: core
         with:
+          path: core/package.json
           unset: scripts,nodemonConfig,devDependencies
 
       - run: npm publish --access public
