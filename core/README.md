@@ -598,13 +598,29 @@ export class Session implements ISession {
 }
 ```
 
-### Set Redirect
+### Set Location
 
-You can set a `Redirect` header for any action:
+You can set a **`Location`** header for any action:
 
 ```typescript
-import { Controller, Get } from 'typenexus';
-import { Redirect } from 'typenexus';
+import { Controller, Get, Location } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Get('/users')
+  @Location("https://bing.com")
+  public async detail() {}
+}
+```
+
+Sets the response Location HTTP header to the specified path parameter.
+
+### Set Redirect
+
+You can set a **`Redirect`** header for any action:
+
+```typescript
+import { Controller, Get, Redirect } from 'typenexus';
 
 @Controller()
 export class UserController {
@@ -614,11 +630,10 @@ export class UserController {
 }
 ```
 
-You can override the `Redirect` header by returning a string value:
+You can override the **`Redirect`** header by returning a string value:
 
 ```typescript
-import { Controller, Get } from 'typenexus';
-import { Redirect } from 'typenexus';
+import { Controller, Get, Redirect } from 'typenexus';
 
 @Controller()
 export class UserController {
@@ -630,11 +645,10 @@ export class UserController {
 }
 ```
 
-You can use template to generate the `Redirect` header:
+You can use template to generate the **`Redirect`** header:
 
 ```typescript
-import { Controller, Get } from 'typenexus';
-import { Redirect } from 'typenexus';
+import { Controller, Get, Redirect } from 'typenexus';
 
 @Controller()
 export class UserController {

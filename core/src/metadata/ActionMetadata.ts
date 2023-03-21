@@ -83,6 +83,11 @@ export class ActionMetadata {
    * Specifies redirection url for this action.
    */
   redirect: string;
+
+  /**
+   * Response headers to be set.
+   */
+  headers: { [name: string]: any };
   constructor(controllerMetadata: ControllerMetadata, args: ActionMetadataArgs, private globalOptions: TypeNexusOptions) {
     this.controllerMetadata = controllerMetadata;
     this.route = args.route;
@@ -119,6 +124,7 @@ export class ActionMetadata {
         : this.controllerMetadata.type === 'json';
 
     this.fullRoute = this.buildFullRoute();
+    this.headers = this.buildHeaders(responseHandlers);
     this.isAuthorizedUsed = this.controllerMetadata.isAuthorizedUsed || !!authorizedHandler;
     this.authorizedRoles = (this.controllerMetadata.authorizedRoles || []).concat(
       (authorizedHandler && authorizedHandler.value) || []
@@ -157,5 +163,15 @@ export class ActionMetadata {
   callMethod(params: any[], action: Action) {
     const controllerInstance = this.controllerMetadata.getInstance(action);
     return controllerInstance[this.method].apply(controllerInstance, params);
+  }
+
+  /**
+   * Builds action response headers.
+   */
+  private buildHeaders(responseHandlers: ResponseHandlerMetadata[]) {
+    const locationHandler = responseHandlers.find(handler => handler.type === 'location');
+    const headers: ActionMetadata['headers'] = {};
+    if (locationHandler) headers['Location'] = locationHandler.value;
+    return headers;
   }
 }

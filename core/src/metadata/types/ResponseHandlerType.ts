@@ -10,5 +10,4 @@ export type ResponseHandlerType =
   | 'location'
   | 'on-null'
   | 'on-undefined'
-  | 'response-class-transform-options'
   | 'authorized';

@@ -132,17 +132,7 @@ export abstract class Driver {
       return;
     }
 
-    if (action.redirect) {
-      // if redirect is set then do it
-      if (typeof result === 'string') {
-        options.response.redirect(result);
-      } else if (result instanceof Object) {
-        options.response.redirect(pathTemplater(action.redirect, result));
-      } else {
-        options.response.redirect(action.redirect);
-      }
-      options.next();
-    } else if (result === undefined && action.undefinedResultCode) {
+    if (result === undefined && action.undefinedResultCode) {
       if (action.undefinedResultCode instanceof Function) {
         throw new (action.undefinedResultCode as any)(options);
       }
@@ -158,6 +148,23 @@ export abstract class Driver {
       }
     } else if (action.successHttpCode) {
       options.response.status(action.successHttpCode);
+    }
+
+    // apply http headers
+    Object.keys(action.headers).forEach(name => {
+      options.response.header(name, action.headers[name]);
+    });
+
+    if (action.redirect) {
+      // if redirect is set then do it
+      if (typeof result === 'string') {
+        options.response.redirect(result);
+      } else if (result instanceof Object) {
+        options.response.redirect(pathTemplater(action.redirect, result));
+      } else {
+        options.response.redirect(action.redirect);
+      }
+      options.next();
     } else {
       if (action.controllerMetadata.type === 'json') {
         options.response.json(result);

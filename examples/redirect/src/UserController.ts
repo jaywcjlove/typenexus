@@ -1,4 +1,4 @@
-import { Controller, Get } from 'typenexus';
+import { Controller, Get, Location } from 'typenexus';
 import { Redirect } from 'typenexus';
 
 @Controller()
@@ -18,4 +18,8 @@ export class UserController {
   public one() {
     return "https://bing.com";
   }
+
+  @Get("/redirect/location")
+  @Location("https://bing.com")
+  public location() {}
 }

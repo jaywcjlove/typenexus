@@ -30,13 +30,13 @@ import { UserController } from '../dist/UserController.js';
   assert.deepEqual(result.redirect, true);
   assert.deepEqual(result.header.location, 'http://github.com');
 
-  log('GET', '/api/redirect/bing');
+  log('GET', '/api/redirect/location');
   result = await agent
-    .get('/api/redirect/bing')
+    .get('/api/redirect/location')
     .set('Accept', 'application/json')
-    .expect(302)
+    .expect(200)
 
-  assert.deepEqual(result.redirect, true);
+  assert.deepEqual(result.redirect, false);
   assert.deepEqual(result.header.location, 'https://bing.com');
 
 })();
