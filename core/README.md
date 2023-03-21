@@ -598,6 +598,83 @@ export class Session implements ISession {
 }
 ```
 
+### Controlling empty responses
+
+If your controller returns `void` or `Promise<void>` or undefined it will throw you _404_ error. To prevent this if you need to specify what status code you want to return using **`@OnUndefined`** decorator.
+
+```typescript
+import { Controller, Param, Delete, OnUndefined, DSource, DataSource } from 'typeorm';
+import { User } from '../entity/User.js';
+
+@Controller()
+export class UserController {
+  @Delete("/users/:id")
+  @OnUndefined(204)
+  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
+    return dataSource.manager.findOneBy(User, { id });
+  }
+}
+```
+
+**`@OnUndefined`** is also useful when you return some object which can or cannot be **undefined**. In this example **`findOneBy`** returns **undefined** in the case if user with given id was not found. This action will return `404` in the case if user was not found, and regular `200` in the case if it was found.
+
+```typescript
+import { Controller, Param, Delete, OnUndefined, DSource, DataSource } from 'typeorm';
+import { User } from '../entity/User.js';
+
+@Controller()
+export class UserController {
+  @Delete("/users/:id")
+  @OnUndefined(404)
+  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
+    return dataSource.manager.findOneBy(User, { id });
+  }
+}
+```
+
+You can also specify error class you want to use if it returned `undefined`:
+
+```typescript
+import { HttpError } from 'routing-controllers';
+
+export class UserNotFoundError extends HttpError {
+  constructor() {
+    super(404, 'User not found!');
+  }
+}
+```
+
+```typescript
+import { Controller, Param, Delete, OnUndefined, DSource, DataSource } from 'typeorm';
+import { User } from '../entity/User.js';
+
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  @OnUndefined(UserNotFoundError)
+  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
+    return dataSource.manager.findOneBy(User, { id });
+  }
+}
+```
+
+If controller action returns `null` you can use **`@OnNull`** decorator instead.
+
+```typescript
+import { Controller, Get, OnNull, Param } from 'typeorm';
+
+@Controller()
+export class UserController {
+  @Get('/questions/:id')
+  @OnNull(404)
+  public async detail(@Param('id') id: string): Promise<string> {
+    return new Promise((ok, fail) => {
+      ok(null);
+    });
+  }
+}
+```
+
 ## Using `authorization` features
 
 `TypeNexus` comes with two decorators helping you to organize authorization in your application.

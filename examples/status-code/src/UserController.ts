@@ -1,11 +1,17 @@
-import { Controller, Get, Param, OnUndefined, OnNull } from 'typenexus';
+import { Controller, Get, Param, OnUndefined, OnNull, HttpError } from 'typenexus';
 
-@Controller('/questions')
+export class UserNotFoundError extends HttpError {
+  constructor() {
+    super(404, 'User not found!');
+  }
+}
+
+@Controller()
 export class UserController {
-  @Get()
+  @Get('/questions')
   @OnUndefined(204)
   public async all() {}
-  @Get('/:id')
+  @Get('/questions/:id')
   @OnNull(404)
   public async detail(@Param('id') id: string): Promise<string> {
     return new Promise((ok, fail) => {
@@ -19,5 +25,10 @@ export class UserController {
         ok(undefined);
       }
     });
+  }
+  @Get("/users/:id")
+  @OnUndefined(UserNotFoundError)
+  saveUser(@Param("id") id: number): null {
+    return undefined;
   }
 }

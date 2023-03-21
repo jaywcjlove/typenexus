@@ -43,4 +43,11 @@ import { UserController } from '../dist/UserController.js';
     .set('Accept', 'application/json')
     .expect(200)
 
+  log('GET', '/api/users/4');
+  result = await agent
+    .get('/api/users/4')
+    .set('Accept', 'application/json')
+    .expect(404)
+  assert.equal(result.body.message, 'User not found!');
+
 })();
