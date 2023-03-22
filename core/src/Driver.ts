@@ -51,8 +51,8 @@ export abstract class Driver {
     this.options.port = typeof portOrOptions === 'number' ? portOrOptions : options.port;
     this.options.port && this.express.set('port', this.options.port);
     this.options.defaultErrorHandler = options.defaultErrorHandler !== undefined ? options.defaultErrorHandler : true;
-    this.options.currentUserChecker = this.currentUserChecker || this.options.currentUserChecker;
-    this.options.authorizationChecker = this.authorizationChecker || this.options.authorizationChecker;
+    this.currentUserChecker =  this.options.currentUserChecker || this.currentUserChecker;
+    this.authorizationChecker = this.options.authorizationChecker || this.authorizationChecker;
 
     if (this.options.bodyParser?.json !== false) {
       this.app.use(express.json(this.options.bodyParser?.json));
@@ -93,8 +93,8 @@ export abstract class Driver {
       defaultMiddleware.push((request, response, next) => {
         const action: Action = { request, response, next, dataSource: this.dataSource };
         try {
-          if (!this.options.authorizationChecker) throw new AuthorizationCheckerNotDefinedError();
-          const checkResult = this.options.authorizationChecker(action, actionMetadata.authorizedRoles);
+          if (!this.authorizationChecker) throw new AuthorizationCheckerNotDefinedError();
+          const checkResult = this.authorizationChecker(action, actionMetadata.authorizedRoles);
           const handleError = (result: any) => {
             if (!result) {
               const error =
