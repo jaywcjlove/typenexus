@@ -32,6 +32,9 @@
     "TypeScript",
     "ORM"
   ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "nodemonConfig": {
     "ignore": [
       "lib",
