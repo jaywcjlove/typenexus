@@ -1,0 +1,7 @@
+@baseUrl = http://localhost:3002/api
+@contentType = application/json
+
+### 👉 Get
+
+GET {{baseUrl}}/blogs
+Content-Type: application/json
