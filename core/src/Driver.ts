@@ -23,8 +23,10 @@ export abstract class Driver {
    * Global application prefix.
    */
   public routePrefix: string = '';
-  private isDefaultErrorHandlingEnabled: boolean = true;
-  private developmentMode: boolean = true;
+  /**
+   * DataSource is a pre-defined connection configuration to a specific database.
+   * You can have multiple data sources connected (with multiple connections in it), connected to multiple databases in your application.
+   */
   public dataSource: DataSource;
   public app: Express = express();
   public express: Express = this.app;
@@ -32,14 +34,21 @@ export abstract class Driver {
    * Special function used to check user authorization roles per request.
    * Must return true or promise with boolean true resolved for authorization to succeed.
    */
-  authorizationChecker?: (action: Action, roles: any[]) => Promise<boolean> | boolean;
-  currentUserChecker?: (action: Action) => Promise<any> | any;
+  public authorizationChecker?: TypeNexusOptions['authorizationChecker'];
+  /**
+   * Special function used to get currently authorized user.
+   */
+  public currentUserChecker?: TypeNexusOptions['currentUserChecker'];
   constructor(public readonly port: number = Number(process.env.PORT || 3000), public options?: TypeNexusOptions) {
     this.port = options?.port || this.port;
     this.express.set('port', this.port);
     this.routePrefix = options?.routePrefix || this.routePrefix;
-    this.isDefaultErrorHandlingEnabled = options.defaultErrorHandler !== undefined ? options.defaultErrorHandler : true;
-    this.developmentMode = options.developmentMode !== undefined ? options.developmentMode : true;
+
+    this.options.defaultErrorHandler = options.defaultErrorHandler !== undefined ? options.defaultErrorHandler : true;
+    this.options.currentUserChecker = this.currentUserChecker || this.options.currentUserChecker;
+    this.options.authorizationChecker = this.authorizationChecker || this.options.authorizationChecker;
+
+    // this.developmentMode = options.developmentMode !== undefined ? options.developmentMode : true;
     if (this.options.bodyParser?.json !== false) {
       this.app.use(express.json(this.options.bodyParser?.json));
     }
@@ -79,8 +88,8 @@ export abstract class Driver {
       defaultMiddleware.push((request, response, next) => {
         const action: Action = { request, response, next, dataSource: this.dataSource };
         try {
-          if (!this.authorizationChecker) throw new AuthorizationCheckerNotDefinedError();
-          const checkResult = this.authorizationChecker(action, actionMetadata.authorizedRoles);
+          if (!this.options.authorizationChecker) throw new AuthorizationCheckerNotDefinedError();
+          const checkResult = this.options.authorizationChecker(action, actionMetadata.authorizedRoles);
           const handleError = (result: any) => {
             if (!result) {
               const error =
@@ -192,7 +201,7 @@ export abstract class Driver {
    * Handles result of failed executed controller action.
    */
   handleError(error: any, action: ActionMetadata | undefined, options: Action): any {
-    if (this.isDefaultErrorHandlingEnabled) {
+    if (this.options.defaultErrorHandler) {
       const response = options.response;
       // set http code
       // note that we can't use error instanceof HttpError properly anymore because of new typescript emit process
@@ -336,7 +345,7 @@ export abstract class Driver {
     }
   }
   protected processJsonError(error: any) {
-    if (!this.isDefaultErrorHandlingEnabled) return error;
+    if (!this.options.defaultErrorHandler) return error;
 
     if (typeof error.toJSON === 'function') return error.toJSON();
 
@@ -346,7 +355,7 @@ export abstract class Driver {
       processedError.name = name;
 
       if (error.message) processedError.message = error.message;
-      if (error.stack && this.developmentMode) processedError.stack = error.stack;
+      if (error.stack && this.options.developmentMode) processedError.stack = error.stack;
 
       Object.keys(error)
         .filter(
@@ -365,10 +374,10 @@ export abstract class Driver {
   }
 
   protected processTextError(error: any) {
-    if (!this.isDefaultErrorHandlingEnabled) return error;
+    if (!this.options.defaultErrorHandler) return error;
 
     if (error instanceof Error) {
-      if (this.developmentMode && error.stack) {
+      if (this.options.developmentMode && error.stack) {
         return error.stack;
       } else if (error.message) {
         return error.message;

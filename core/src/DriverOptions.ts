@@ -7,6 +7,7 @@ import { SessionOptions } from "express-session";
 import session from 'express-session';
 import { TypeormStore, Ttl } from 'connect-typeorm';
 import { Driver } from './Driver.js';
+import { Action } from './Action.js';
 
 export interface TypeNexusOptions {
   port?: number;
@@ -61,8 +62,16 @@ export interface TypeNexusOptions {
      * If set, all undefined responses will return specified status code by default
      */
     undefinedResultCode?: number;
-
-  }
+  };
+  /**
+   * Special function used to check user authorization roles per request.
+   * Must return true or promise with boolean true resolved for authorization to succeed.
+   */
+  authorizationChecker?: (action: Action, roles: any[]) => Promise<boolean> | boolean;
+  /**
+   * Special function used to get currently authorized user.
+   */
+  currentUserChecker?: (action: Action) => Promise<any> | any;
 }
 
 export interface SessionResult extends session.SessionOptions {

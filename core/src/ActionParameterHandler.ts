@@ -37,9 +37,9 @@ export class ActionParameterHandler<T extends Driver> {
 
     // if its current-user decorator then get its value
     if (param.type === 'current-user') {
-      if (!this.driver.currentUserChecker) throw new CurrentUserCheckerNotDefinedError();
+      if (!this.driver.options.currentUserChecker) throw new CurrentUserCheckerNotDefinedError();
 
-      value = this.driver.currentUserChecker(action);
+      value = this.driver.options.currentUserChecker(action);
     }
     // check cases when parameter is required but its empty and throw errors in this case
     if (param.required) {

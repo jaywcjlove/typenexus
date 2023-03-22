@@ -325,6 +325,15 @@ export interface TypeNexusOptions {
      */
     undefinedResultCode?: number;
   };
+  /**
+   * Special function used to check user authorization roles per request.
+   * Must return true or promise with boolean true resolved for authorization to succeed.
+   */
+  authorizationChecker?: (action: Action, roles: any[]) => Promise<boolean> | boolean;
+  /**
+   * Special function used to get currently authorized user.
+   */
+  currentUserChecker?: (action: Action) => Promise<any> | any;
 }
 ```
 
@@ -866,7 +875,7 @@ const __dirname = path.dirname(__filename);
 })();
 ```
 
-## Throw HTTP errors
+### Throw HTTP errors
 
 If you want to return errors with specific error codes, there is an easy way:
 
