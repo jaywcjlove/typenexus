@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <% posts.forEach(function(user){ %>
+      <h1><%= user.title %></h1>
+      <p><%= user.content %></p>
+    <% }); %>
+  </body>
+</html>

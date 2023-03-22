@@ -165,6 +165,20 @@ export abstract class Driver {
         options.response.redirect(action.redirect);
       }
       options.next();
+    } else if (action.renderedTemplate) {
+      // if template is set then render it
+      const renderOptions = result && result instanceof Object ? result : {};
+
+      options.response.render(action.renderedTemplate, renderOptions, (err: any, html: string) => {
+        if (err && action.isJsonTyped) {
+          return options.next(err);
+        } else if (err && !action.isJsonTyped) {
+          return options.next(err);
+        } else if (html) {
+          options.response.send(html);
+        }
+        options.next();
+      });
     } else {
       if (action.isJsonTyped) {
         options.response.json(result);

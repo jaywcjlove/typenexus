@@ -682,6 +682,81 @@ export class UserController {
 }
 ```
 
+### Render templates
+
+If you are using server-side rendering you can **`render`** any template:
+
+```typescript
+import { Controller, Get, Redirect } from 'typenexus';
+
+@Controller()
+export class UserController {
+  @Get("/users/:id")
+  @Render("index")
+  getOne() {
+    return {
+      param1: "these params are used"
+    };
+  }
+}
+
+```
+
+To use rendering ability make sure to configure `express` properly. To use rendering ability with `express` you will need to use a rendering 3rd party such as [ejs](https://ejs.co/), [pug](https://pugjs.org/) is the only render middleware that has been tested.
+
+```bash
+$ npm install ejs
+```
+
+The directory where the template files are located. Eg: `app.set('views', './views')`. This defaults to the **views** directory in the application root directory.
+
+```typescript
+app.express.set('views', path.join(__dirname, 'views'));
+```
+
+The template engine to use. For example, to use the `ejs` template engine: `app.set('view engine', 'ejs')`.
+
+```typescript
+app.express.set('view engine', 'ejs');
+```
+
+Create a `ejs` template file named **`index.ejs`** in the views directory, with the following content:
+
+```ejs
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+  </body>
+</html>
+```
+
+Complete entry example: 
+
+```typescript
+import { TypeNexus } from 'typenexus';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { UserController, CustomErrorHandler } from './UserController.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    defaultErrorHandler: false,
+  });
+  app.express.set('views', path.join(__dirname, 'views'));
+  app.express.set('view engine', 'ejs');
+  app.controllers([UserController], [CustomErrorHandler]);
+  await app.start();
+})();
+```
+
 ### Set custom HTTP code
 
 You can explicitly set a returned HTTP code for any action:

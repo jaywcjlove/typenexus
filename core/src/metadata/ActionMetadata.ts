@@ -85,6 +85,11 @@ export class ActionMetadata {
   redirect: string;
 
   /**
+   * Rendered template to be used for this controller action.
+   */
+  renderedTemplate: string;
+
+  /**
    * Response headers to be set.
    */
   headers: { [name: string]: any };
@@ -106,9 +111,11 @@ export class ActionMetadata {
     const nullResultHandler = responseHandlers.find(handler => handler.type === 'on-null');
     const successCodeHandler = responseHandlers.find(handler => handler.type === 'success-code');
     const redirectHandler = responseHandlers.find(handler => handler.type === 'redirect');
+    const renderedTemplateHandler = responseHandlers.find(handler => handler.type === 'rendered-template');
 
     if (successCodeHandler) this.successHttpCode = successCodeHandler.value;
     if (redirectHandler) this.redirect = redirectHandler.value;
+    if (renderedTemplateHandler) this.renderedTemplate = renderedTemplateHandler.value;
 
     this.undefinedResultCode = undefinedResultHandler
       ? undefinedResultHandler.value
