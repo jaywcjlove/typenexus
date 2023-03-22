@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { createDatabase } from 'typeorm-extension';
+import localIpUrl from 'local-ip-url'
 import { Controllers } from './Controllers.js';
 import { Driver } from './Driver.js';
 
@@ -95,13 +96,18 @@ export class TypeNexus extends Driver {
   /**
    * Listen for connections.
    */
-  public async start(): Promise<TypeNexus> {
-    await new Promise(resolve => this.app.listen(this.port, resolve as () => void));
+  public async start(port: number = 3000): Promise<TypeNexus> {
+    this.options.port = Number(process.env.PORT || this.options.port || port);
+    this.express.set('port', this.options.port);
+    // console.log('????', localIpUrl())
+    await new Promise(resolve => this.app.listen(this.options.port, resolve as () => void));
     console.log(
-      '\n  App is running at\x1b[32;1m http://localhost:%d\x1b[0m in %s mode',
+      '\n  App is running at\x1b[32;1m http://localhost:%d\x1b[0m in %s mode\n',
       this.app.get('port'),
       this.app.get('env'),
     );
+    console.log(`   Local:            \x1b[32;1m http://localhost:%d\x1b[0m`, this.app.get('port'))
+    console.log(`   On Your Network:  \x1b[32;1m http://%s:%d\x1b[0m\n`, localIpUrl(), this.app.get('port'))
     console.log('  Press\x1b[33;1m CTRL-C\x1b[0m to stop\n');
     return this;
   }

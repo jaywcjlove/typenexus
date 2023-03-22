@@ -30,7 +30,7 @@ const ormOptions: DataSourceOptions = {
       }
     }
   }
-  const app = new TypeNexus(3000, options);
+  const app = new TypeNexus(options);
   await app.connect();
   app.controllers([UserController]);
   app.express.disable('x-powered-by');

@@ -310,11 +310,14 @@ export interface TypeNexusOptions {
      */
     urlencoded?: false | OptionsUrlencoded;
   };
+  /**
+   * Indicates if cors are enabled.
+   * This requires installation of additional module (cors for express).
+   */
+  cors?: boolean | CorsOptions;
   /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
   compression?: false | CompressionOptions;
-  /**
-   * Default settings
-   */
+  /** Default settings */
   defaults?: {
     /**
      * If set, all null responses will return specified status code by default
@@ -936,6 +939,44 @@ class DbError extends HttpError {
     };
   }
 }
+```
+
+### Enable CORS
+
+Since CORS is a feature that is used almost in any web-api application, you can enable it in routing-controllers options.
+
+```typescript
+import { TypeNexus, Action } from 'typenexus';
+import { UserController } from './UserController.js';
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    cors: true,
+  });
+
+  app.controllers([UserController]);
+  await app.start();
+
+})();
+```
+
+You can also configure [**cors**](https://github.com/expressjs/cors): 
+
+```typescript
+import { TypeNexus, Action } from 'typenexus';
+import { UserController } from './UserController.js';
+
+;(async () => {
+  const app = new TypeNexus(3002, {
+    cors: {
+      // options from cors documentation
+    },
+  });
+
+  app.controllers([UserController]);
+  await app.start();
+
+})();
 ```
 
 ## Using `authorization` features

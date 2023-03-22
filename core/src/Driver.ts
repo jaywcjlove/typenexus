@@ -4,6 +4,7 @@ import { TypeormStore } from 'connect-typeorm';
 import cookie from 'cookie';
 import compression from 'compression';
 import session from 'express-session';
+import cors from 'cors';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { AuthorizationRequiredError } from './http-error/AuthorizationRequiredError.js';
 import { AccessDeniedError } from './http-error/AccessDeniedError.js';
@@ -39,16 +40,20 @@ export abstract class Driver {
    * Special function used to get currently authorized user.
    */
   public currentUserChecker?: TypeNexusOptions['currentUserChecker'];
-  constructor(public readonly port: number = Number(process.env.PORT || 3000), public options?: TypeNexusOptions) {
-    this.port = options?.port || this.port;
-    this.express.set('port', this.port);
+  constructor(portOrOptions: number | TypeNexusOptions = 3000, public options: TypeNexusOptions = {}) {
+    if (typeof portOrOptions === 'object') {
+      this.options = portOrOptions;
+    }
+    if (this.options.cors) {
+      this.express.use(this.options.cors === true ? cors() : cors(this.options.cors));
+    }
     this.routePrefix = options?.routePrefix || this.routePrefix;
-
+    this.options.port = typeof portOrOptions === 'number' ? portOrOptions : options.port;
+    this.options.port && this.express.set('port', this.options.port);
     this.options.defaultErrorHandler = options.defaultErrorHandler !== undefined ? options.defaultErrorHandler : true;
     this.options.currentUserChecker = this.currentUserChecker || this.options.currentUserChecker;
     this.options.authorizationChecker = this.authorizationChecker || this.options.authorizationChecker;
 
-    // this.developmentMode = options.developmentMode !== undefined ? options.developmentMode : true;
     if (this.options.bodyParser?.json !== false) {
       this.app.use(express.json(this.options.bodyParser?.json));
     }

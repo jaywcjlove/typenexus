@@ -2,9 +2,6 @@ import { TypeNexus, TypeNexusOptions } from 'typenexus';
 import request from 'supertest';
 import assert from 'node:assert/strict';
 import { UserController } from '../dist/controller/User.js';
-
-// @ts-ignore
-import session from 'supertest-session';
 import { Session } from '../dist/entity/Session.js';
 
 const options: TypeNexusOptions = {
@@ -29,13 +26,18 @@ const options: TypeNexusOptions = {
       // limitSubquery: false, // If using MariaDB.
       ttl: 86400,
     }
-  }
+  },
+  cors: {
+    origin: 'http://localhost:3001',
+    credentials: true,
+  },
 }
 
 ;(async () => {
-  const app = new TypeNexus(3033, options);
+  const app = new TypeNexus(options);
   await app.connect();
   app.controllers([UserController]);
+  const log = (method: string = 'GET', url: string, info?: string) => console.log(...[`\x1b[32;1m ${method}\x1b[0m`, url, info ? `\x1b[34;1m ${info}\x1b[0m` : '']);
 
   console.log('\x1b[32;1m GET\x1b[0m /users \x1b[34;1m @DSource\x1b[0m');
   let req = await request(app.app)
@@ -122,5 +124,14 @@ const options: TypeNexusOptions = {
     .expect('Content-Type', /html/)
     .expect(200)
   assert.deepEqual(req.text, '<html>Test</html>');
+
+  log('GET', '/users/order/:id', ' ');
+  req = await request(app.app)
+    .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+  assert.deepEqual(req.body, { id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
+  assert.equal(req.header['access-control-allow-origin'], 'http://localhost:3001');
 
 })();

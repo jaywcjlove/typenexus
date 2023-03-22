@@ -6,6 +6,7 @@ import { ISession } from 'connect-typeorm';
 import { SessionOptions } from "express-session";
 import session from 'express-session';
 import { TypeormStore, Ttl } from 'connect-typeorm';
+import { CorsOptions } from 'cors';
 import { Driver } from './Driver.js';
 import { Action } from './Action.js';
 
@@ -47,6 +48,11 @@ export interface TypeNexusOptions {
      */
     urlencoded?: false | OptionsUrlencoded;
   };
+  /**
+   * Indicates if cors are enabled.
+   * This requires installation of additional module (cors for express).
+   */
+  cors?: boolean | CorsOptions;
   /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
   compression?: false | CompressionOptions;
   /**
