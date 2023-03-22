@@ -116,4 +116,11 @@ const options: TypeNexusOptions = {
     .expect(200)
   assert.deepEqual(req.body, { id: 12, session: ['cookie'], cookie: ['path', '_expires', 'originalMaxAge', 'httpOnly'] });
 
+  console.log('\x1b[32;1m POST\x1b[0m /users/session \x1b[34;1m @Session/@SessionParam\x1b[0m');
+  req = await request(app.app)
+    .get('/users/text-html')
+    .expect('Content-Type', /html/)
+    .expect(200)
+  assert.deepEqual(req.text, '<html>Test</html>');
+
 })();

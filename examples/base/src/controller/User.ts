@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Head, Res, Req, DSource, DataSource } from 'typenexus';
+import { Controller, ContentType, Get, Param, Params, QueryParam, QueryParams, CookieParam, CookieParams, Post, Delete, Patch, Put, Head, Res, Req, DSource, DataSource } from 'typenexus';
 import { HeaderParam, HeaderParams, Body, BodyParam, Session, SessionParam } from 'typenexus';
 import { Response, Request }from 'express';
 import { User } from '../entity/User.js';
@@ -47,5 +47,11 @@ export class UserController {
     // so it needs to be returned explicitly
     response.redirect('/users');
     return response
+  }
+
+  @Get('/text-html')
+  @ContentType('text/html')
+  returnHtml(): string {
+    return '<html>Test</html>';
   }
 }

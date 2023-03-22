@@ -166,8 +166,10 @@ export abstract class Driver {
       }
       options.next();
     } else {
-      if (action.controllerMetadata.type === 'json') {
+      if (action.isJsonTyped) {
         options.response.json(result);
+      } else {
+        options.response.send(result);
       }
       options.next!();
     }
