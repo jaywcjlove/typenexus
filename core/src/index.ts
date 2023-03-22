@@ -46,9 +46,11 @@ export * from './DriverOptions.js';
 export * from './Action.js';
 
 export * from './http-error/HttpError.js';
-export * from './http-error/InternalServerError.js';
 export * from './http-error/BadRequestError.js';
 export * from './http-error/ForbiddenError.js';
+export * from './http-error/InternalServerError.js';
+export * from './http-error/MethodNotAllowedError.js';
+export * from './http-error/NotAcceptableError.js';
 export * from './http-error/NotFoundError.js';
 export * from './http-error/UnauthorizedError.js';
 
