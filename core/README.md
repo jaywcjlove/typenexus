@@ -280,6 +280,15 @@ export interface TypeNexusOptions {
   dataSourceOptions?: DataSourceOptions;
   /** Create a session middleware */
   session?: SessionResult | SessionCallback;
+  /**
+   * Indicates if default TypeNexus's error handler is enabled or not.
+   * Enabled by default.
+   */
+  defaultErrorHandler?: boolean;
+  /**
+   * Indicates if TypeNexus should operate in development mode.
+   */
+  developmentMode?: boolean;
   /** Node.js body parsing middleware. */
   bodyParser?: {
     /**
@@ -303,6 +312,19 @@ export interface TypeNexusOptions {
   };
   /** Node.js compression middleware. The following compression codings are supported: deflate | gzip */
   compression?: false | CompressionOptions;
+  /**
+   * Default settings
+   */
+  defaults?: {
+    /**
+     * If set, all null responses will return specified status code by default
+     */
+    nullResultCode?: number;
+    /**
+     * If set, all undefined responses will return specified status code by default
+     */
+    undefinedResultCode?: number;
+  };
 }
 ```
 
