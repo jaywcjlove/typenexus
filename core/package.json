@@ -46,7 +46,7 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
-    "tsbb": "^3.7.9"
+    "tsbb": "^4.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0",
