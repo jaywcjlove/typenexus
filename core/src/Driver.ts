@@ -222,8 +222,9 @@ export abstract class Driver {
       } else {
         response.send(this.processTextError(error)); // todo: no need to do it because express by default does it
       }
+    } else {
+      options.next!(error);
     }
-    options.next!(error);
   }
   /**
    * Gets param from the request.

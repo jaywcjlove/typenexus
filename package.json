@@ -4,7 +4,6 @@
     "prepare": "husky install",
     "start": "npm run start --workspace=core",
     "watch": "npm run watch --workspace=core",
-    "dev": "npm run dev --workspace=core",
     "build": "lerna exec --scope @examples/* --scope typenexus -- npm run build",
     "version": "lerna version --exact --force-publish --no-push --no-git-tag-version",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
