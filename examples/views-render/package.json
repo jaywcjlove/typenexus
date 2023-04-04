@@ -6,12 +6,18 @@
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "dev": "nodemon --inspect dist/index.js",
-    "watch": "tsbb watch --disable-babel",
-    "build": "tsbb build --disable-babel",
-    "test": "ts-node-esm ./test/main.test.ts"
+    "watch": "tsbb watch",
+    "build": "tsbb build",
+    "test": "tsbb test",
+    "coverage": "tsbb test --coverage --bail"
   },
   "author": "kenny wong <wowohoo@qq.com>",
   "license": "MIT",
+  "jest": {
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/?!(.*)"
+    ]
+  },
   "dependencies": {
     "ejs": "^3.1.9",
     "typenexus": "0.3.1"
@@ -19,8 +25,7 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "supertest": "^6.3.3",
-    "supertest-session": "^4.1.0",
     "ts-node": "^10.9.1",
-    "tsbb": "^3.7.9"
+    "tsbb": "^4.1.2"
   }
 }

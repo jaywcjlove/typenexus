@@ -59,7 +59,7 @@ jobs:
           POSTGRES_PASSWORD: wcjiang
         run: |
           npm install
-          npm run test
+          npm run coverage
 
       - name: Run example CURD tests with Postgres 
         working-directory: examples/curd
@@ -72,39 +72,39 @@ jobs:
           POSTGRES_PASSWORD: wcjiang
         run: |
           npm install
-          npm run test
+          npm run coverage
 
       - name: Run example authorized tests
         working-directory: examples/authorized
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example current-user tests
         working-directory: examples/current-user
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example status-code tests
         working-directory: examples/status-code
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example http-errors tests
         working-directory: examples/http-errors
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example middleware tests
         working-directory: examples/middleware
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example redirect tests
         working-directory: examples/redirect
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example status-code tests
         working-directory: examples/status-code
-        run: npm run test
+        run: npm run coverage
 
       - name: Run example views-render tests
         working-directory: examples/views-render
-        run: npm run test
+        run: npm run coverage
 
   trigger_tests:
     needs: test

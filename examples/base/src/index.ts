@@ -1,6 +1,7 @@
 import { TypeNexus, TypeNexusOptions, DataSourceOptions } from 'typenexus';
 import { UserController } from './controller/User.js';
 import { Session } from './entity/Session.js';
+import { User } from './entity/User.js';
 
 const ormOptions: DataSourceOptions = {
   type: 'postgres',
@@ -11,8 +12,8 @@ const ormOptions: DataSourceOptions = {
   database: process.env.POSTGRES_DB || 'typenexus-base',
   synchronize: true,
   logging: true,
-  entities: ['dist/entity/*.js'],
-  // entities: [User], 
+  // entities: ['dist/entity/*.js'],
+  entities: [User, Session], 
 }
 
 ;(async () => {

@@ -1,38 +1,43 @@
+/** @jest-environment node */
 import { TypeNexus } from 'typenexus';
 import supertest from 'supertest';
-import assert from 'node:assert/strict';
 import { UserController, LoggingMiddleware, CustomErrorHandler } from '../dist/UserController.js';
 
-;(async () => {
-  const app = new TypeNexus(3002, {
-    routePrefix: '/api',
-    developmentMode: false,
+describe('API request test case', () => {
+  let app: TypeNexus;
+  let agent: supertest.SuperAgentTest;
+  beforeAll(() => {
+    app = new TypeNexus(3002, {
+      routePrefix: '/api',
+      developmentMode: false,
+    });
+    app.controllers([UserController], [LoggingMiddleware, CustomErrorHandler]);  
+    agent = supertest.agent(app.app);
   });
 
-  app.controllers([UserController], [LoggingMiddleware, CustomErrorHandler]);
+  test('GET /api/questions', async () => {
+    const result = await agent
+      .get('/api/questions')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
 
-  const log = (method: string = 'GET', url: string, info?: string) => console.log(...[`\x1b[32;1m ${method}\x1b[0m`, url, info ? `\x1b[34;1m ${info}\x1b[0m` : '']);
-
-  log('GET', '/api/questions');
-  const agent = supertest.agent(app.app);
-  let result = await agent
-    .get('/api/questions')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-
-  assert.deepEqual(Object.keys(result.body), [ 'id', 'title' ]);
-  assert.deepEqual(result.body.title, 'Question wcjfetch-logologging');
-  
-  log('GET', '/api/questions/detail');
-  result = await agent
-    .get('/api/questions/detail')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(403)
-
-  assert.deepEqual(result.body, {
-    name: 'ForbiddenError',
-    message: 'Nooooo this message will be lost'
+    expect(Object.keys(result.body)).toEqual([ 'id', 'title' ]);
+    expect(result.body.title).toEqual('Question wcjfetch-logologging');
   });
-})();
+
+  test('GET /api/questions/detail', async () => {
+    const result = await agent
+      .get('/api/questions/detail')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(403)
+
+    expect(result.body).toEqual({
+      name: 'ForbiddenError',
+      message: 'Nooooo this message will be lost'
+    });
+  });
+});
+
+

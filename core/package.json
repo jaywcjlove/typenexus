@@ -14,8 +14,8 @@
   "exports": "./lib/index.js",
   "scripts": {
     "start": "npm run watch",
-    "watch": "tsbb watch --disable-babel",
-    "build": "tsbb build --disable-babel",
+    "watch": "tsbb watch",
+    "build": "tsbb build",
     "test": "tsbb test",
     "coverage": "tsbb test --coverage --bail"
   },
@@ -46,7 +46,7 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
-    "tsbb": "^3.7.9"
+    "tsbb": "^4.1.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0",

@@ -1,8 +1,9 @@
+/** @jest-environment node */
 import { TypeNexus, TypeNexusOptions } from 'typenexus';
-import request from 'supertest';
-import assert from 'node:assert/strict';
+import supertest from 'supertest';
 import { UserController } from '../dist/controller/User.js';
 import { Session } from '../dist/entity/Session.js';
+import { User } from '../dist/entity/User.js';
 
 const options: TypeNexusOptions = {
   dataSourceOptions: {
@@ -14,7 +15,8 @@ const options: TypeNexusOptions = {
     database: process.env.POSTGRES_DB || 'typenexus-base',
     synchronize: true,
     logging: false,
-    entities: ['dist/entity/*.js'],
+    // entities: ['dist/entity/*.js'],
+    entities: [Session, User],
   },
   session: {
     secret: 'secret',
@@ -33,105 +35,122 @@ const options: TypeNexusOptions = {
   },
 }
 
-;(async () => {
-  const app = new TypeNexus(options);
-  await app.connect();
-  app.controllers([UserController]);
-  const log = (method: string = 'GET', url: string, info?: string) => console.log(...[`\x1b[32;1m ${method}\x1b[0m`, url, info ? `\x1b[34;1m ${info}\x1b[0m` : '']);
+describe('API request test case', () => {
+  let app: TypeNexus;
+  beforeAll(async () => {
+    app = new TypeNexus(options);
+    await app.connect();
+    app.controllers([UserController]);
+  });
 
-  console.log('\x1b[32;1m GET\x1b[0m /users \x1b[34;1m @DSource\x1b[0m');
-  let req = await request(app.app)
-    .get('/users')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.equal(Array.isArray(req.body), true);
-  assert.deepEqual(req.body, []);
+  it('GET /users \x1b[34;1m @DSource\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual([]);
+    expect(Array.isArray(req.body)).toBeTruthy();
+  });
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&age=18  \x1b[34;1m @QueryParam/@QueryParams\x1b[0m');
-  req = await request(app.app)
-    .get('/users/users/info?user=wcj&age=18')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, user: 'wcj', queries: { user: 'wcj', age: '18' } });
+  it('GET /users/users/info?user=wcj&age=18 \x1b[34;1m @QueryParam/@QueryParams\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users/users/info?user=wcj&age=18')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, user: 'wcj', queries: { user: 'wcj', age: '18' } });
+  });
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/users/info?user=wcj&user=jay \x1b[34;1m user=[]\x1b[0m');
-  req = await request(app.app)
-    .get('/users/users/info?user=wcj&user=jay')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, user: ['wcj', 'jay'], queries: { user: ['wcj', 'jay'] } });
+  it('GET /users/users/info?user=wcj&user=jay \x1b[34;1m user=[]\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users/users/info?user=wcj&user=jay')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, user: ['wcj', 'jay'], queries: { user: ['wcj', 'jay'] } });
+  });
 
-  console.log('\x1b[32;1m POST\x1b[0m /users');
-  req = await request(app.app)
-    .post('/users')
-    .send({ name: 'john' })
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, name: 'john', username: 'john' });
+  it('POST /users \x1b[34;1m user=[]\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .post('/users')
+      .send({ name: 'john' })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, name: 'john', username: 'john' });
+  });
 
-  console.log('\x1b[32;1m PUT\x1b[0m /users/info/:id');
-  req = await request(app.app)
-    .put('/users/info/34')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: '34', params: { id: '34' } });
+  it('PUT /users/info/:id', async () => {
+    const req = await supertest.agent(app.app)
+      .put('/users/info/34')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: '34', params: { id: '34' } });
+  });
+  
+  it('DELETE /users/order/:id \x1b[34;1m @HeaderParams/@HeaderParam\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .delete('/users/order/34')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, accept: 'application/json', keys: ['host', 'accept-encoding', 'accept', 'connection'] });
+  });
+  
+  it('GET /users/order/:id \x1b[34;1m cookies|@Get\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
+  });
+  
+  test('PATCH /users/order/:id', async () => {
+    const req = await supertest.agent(app.app)
+      .patch('/users/order/34')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12 });
+  });
+  
+  test('HEAD /users/order \x1b[34;1m @Head\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .head('/users/order')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ });
+  });
+  
+  test('POST /users/session \x1b[34;1m @Session/@SessionParam\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .post('/users/session')
+      .send({ username: 'foo', password: 'password' })
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, session: ['cookie'], cookie: ['path', '_expires', 'originalMaxAge', 'httpOnly'] });
+  });
+  
+  
+  test('GET /users/order/:id', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+    expect(req.body).toEqual({ id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
+    expect(req.header['access-control-allow-origin']).toEqual('http://localhost:3001');
+  });
 
-  console.log('\x1b[32;1m DELETE\x1b[0m /users/order/:id \x1b[34;1m @HeaderParams/@HeaderParam\x1b[0m');
-  req = await request(app.app)
-    .delete('/users/order/34')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, accept: 'application/json', keys: ['host', 'accept-encoding', 'accept', 'connection'] });
+  test('POST /users/text-html \x1b[34;1m @Session/@SessionParam\x1b[0m', async () => {
+    const req = await supertest.agent(app.app)
+      .get('/users/text-html')
+      .set('Accept', 'text/html')
+      .expect('Content-Type', /html/)
+      .expect(200)
+      console.log('req.text:', req.text)
+    expect(req.text).toEqual('<html>Test</html>');
+  });
+});
 
-  console.log('\x1b[32;1m GET\x1b[0m /users/order/:id \x1b[34;1m cookies|@Get\x1b[0m');
-  req = await request(app.app)
-    .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
-
-  console.log('\x1b[32;1m PATCH\x1b[0m /users/order/:id');
-  req = await request(app.app)
-    .patch('/users/order/34')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12 });
-
-  console.log('\x1b[32;1m HEAD\x1b[0m /users/order \x1b[34;1m @Head\x1b[0m');
-  req = await request(app.app)
-    .head('/users/order')
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { });
-
-  console.log('\x1b[32;1m POST\x1b[0m /users/session \x1b[34;1m @Session/@SessionParam\x1b[0m');
-  req = await request(app.app)
-    .post('/users/session')
-    .send({ username: 'foo', password: 'password' })
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, session: ['cookie'], cookie: ['path', '_expires', 'originalMaxAge', 'httpOnly'] });
-
-  console.log('\x1b[32;1m POST\x1b[0m /users/session \x1b[34;1m @Session/@SessionParam\x1b[0m');
-  req = await request(app.app)
-    .get('/users/text-html')
-    .expect('Content-Type', /html/)
-    .expect(200)
-  assert.deepEqual(req.text, '<html>Test</html>');
-
-  log('GET', '/users/order/:id', ' ');
-  req = await request(app.app)
-    .get('/users/order/34').set('Cookie', ['token=YourAccessToken', 'userId=123'])
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-  assert.deepEqual(req.body, { id: 12, token: 'YourAccessToken', cookies: { token: 'YourAccessToken', userId: '123' } });
-  assert.equal(req.header['access-control-allow-origin'], 'http://localhost:3001');
-
-})();
