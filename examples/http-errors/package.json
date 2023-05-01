@@ -1,6 +1,6 @@
 {
   "name": "@examples/http-errors",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "typenexus": "0.3.1"
+    "typenexus": "0.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
