@@ -16,14 +16,15 @@ interface UserResult {
 
 @Controller('/users')
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @ContentType('application/json')
   @Authorized()
   @Get()
-  public async all(@DSource() dataSource: DataSource): Promise<User[]> {
-    return dataSource.manager.find(User);
+  public async all(): Promise<User[]> {
+    return this.dataSource.manager.find(User);
   }
   @Post('/login')
-  public async login(@DSource() dataSource: DataSource, @BodyParam('username') username: string, @BodyParam('password') password: string, @Res() res: Response, @Req() req: Request): Promise<User | UserResult> {
+  public async login(@BodyParam('username') username: string, @BodyParam('password') password: string, @Res() res: Response, @Req() req: Request): Promise<User | UserResult> {
     if (!username) {
       res.status(332);
       return { code: 1, message: '请输入登录账号' };
@@ -34,7 +35,7 @@ export class UserController {
     }
 
     const hashPassword = crypto.createHmac('sha256', password).digest('hex');
-    const userInfo = await dataSource.manager.findOne(User, {
+    const userInfo = await this.dataSource.manager.findOne(User, {
         where: { username, password: hashPassword },
         select: ['username', 'id', 'name', 'createAt', 'deleteAt'],
     });
@@ -61,8 +62,8 @@ export class UserController {
     return { code: 401, message: 'Expired, please login again!' }
   }
   @Get('/:userId')
-  public async detail(@DSource() dataSource: DataSource, @Param('userId') userId: string, @Res() res: Response): Promise<User | UserResult> {
-    const info = await dataSource.manager.findOneBy(User, {
+  public async detail(@Param('userId') userId: string, @Res() res: Response): Promise<User | UserResult> {
+    const info = await this.dataSource.manager.findOneBy(User, {
       id: userId as unknown as number
     });
     if (!info) res.status(404);
@@ -79,13 +80,13 @@ export class UserController {
     return destroy();
   }
   @Post()
-  public async create(@DSource() dataSource: DataSource, @Body() body: User, @Res() res: Response) {
+  public async create(@Body() body: User, @Res() res: Response) {
     if (body.password) {
       body.password = crypto.createHmac('sha256', body.password).digest('hex');
     }
-    const userEntity = dataSource.manager.create(User, { ...body });
+    const userEntity = this.dataSource.manager.create(User, { ...body });
     try {
-      const userInfo = await dataSource.manager.save(userEntity)
+      const userInfo = await this.dataSource.manager.save(userEntity)
       delete userInfo.password;
       return userInfo;
     } catch (error) {
@@ -94,8 +95,8 @@ export class UserController {
     }
   }
   @Delete('/:userId')
-  public async remove(@DSource() dataSource: DataSource, @Param('userId') userId: string, @Res() res: Response) {
-    const result = await dataSource.manager.softDelete(User, userId);
+  public async remove(@Param('userId') userId: string, @Res() res: Response) {
+    const result = await this.dataSource.manager.softDelete(User, userId);
     res.status(result.affected ? 200 : 404);
     return result.affected ? { message: 'Deletion successful!' } : { message: 'Deletion failed!' };
   }

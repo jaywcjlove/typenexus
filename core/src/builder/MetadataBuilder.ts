@@ -2,9 +2,9 @@ import { ControllerMetadata } from '../metadata/ControllerMetadata.js';
 import { MiddlewareMetadata } from '../metadata/MiddlewareMetadata.js';
 import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 import { ActionMetadata } from '../metadata/ActionMetadata.js';
-import { ActionMetadataArgs } from '../metadata/args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from '../metadata/ResponseHandleMetadata.js';
 import { ParamMetadata } from '../metadata/ParamMetadata.js';
+import { ParamConstructorMetadata } from '../metadata/ParamConstructorMetadata.js';
 import { UseMetadata } from '../metadata/UseMetadata.js';
 import { TypeNexusOptions } from '../DriverOptions.js';
 
@@ -55,30 +55,31 @@ export class MetadataBuilder {
    * Creates action metadata.
    */
   protected createActions(controller: ControllerMetadata): ActionMetadata[] {
-    let target = controller.target;
-    const actionsWithTarget: ActionMetadataArgs[] = [];
-    while (target) {
-      const actions = getMetadataArgsStorage()
-        .filterActionsWithTarget(target)
-        .filter(action => {
-          return actionsWithTarget.map(a => a.method).indexOf(action.method) === -1;
+    const actionsWithTarget: ActionMetadata[] = [];
+    for (let target = controller.target; target; target = Object.getPrototypeOf(target)) {
+      const actions = getMetadataArgsStorage().filterActionsWithTarget(target);
+      const methods = actionsWithTarget.map(a => a.method);
+      actions
+        .filter(({ method }) => !methods.includes(method))
+        .forEach(actionArgs => {
+          const action = new ActionMetadata(controller, { ...actionArgs, target: controller.target }, this.options);
+          action.params = this.createParams(action);
+          action.paramsConstructor = this.createParamsConstructor(action);
+          action.uses = this.createActionUses(action);
+          action.build(this.createActionResponseHandlers(action));
+          actionsWithTarget.push(action);
         });
-
-      actions.forEach(a => {
-        a.target = controller.target;
-        actionsWithTarget.push(a);
-      });
-
-      target = Object.getPrototypeOf(target);
     }
+    return actionsWithTarget;
+  }
 
-    return actionsWithTarget.map(actionArgs => {
-      const action = new ActionMetadata(controller, actionArgs, this.options);
-      action.params = this.createParams(action);
-      action.uses = this.createActionUses(action);
-      action.build(this.createActionResponseHandlers(action));
-      return action;
-    });
+  /**
+   * Creates constructor param metadatas.
+   */
+  protected createParamsConstructor(action: ActionMetadata): ParamConstructorMetadata[] {
+    return getMetadataArgsStorage()
+      .filterParamsConstructorWithTargetAndMethod('constructor')
+      .map(paramArgs => new ParamConstructorMetadata(action, paramArgs));
   }
 
   /**

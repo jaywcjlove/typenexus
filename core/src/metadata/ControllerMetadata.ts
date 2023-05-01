@@ -19,24 +19,25 @@ export interface UseContainerOptions {
   fallbackOnErrors?: boolean;
 }
 
-
-let userContainer: { get<T>(someClass: ClassConstructor<T> | Function, action?: Action): T };
+let userContainer: UserContainer;
 let userContainerOptions: UseContainerOptions;
-export type ClassConstructor<T> = { new (...args: any[]): T };
+export type ClassConstructor<T, K = unknown> = { new (...args: K[]): T };
 
+interface UserContainer {
+  get<T, K = unknown>(someClass: ClassConstructor<T, K> | Function, params?: K[], action?: Action): T
+}
 /**
  * Container to be used by this library for inversion control. If container was not implicitly set then by default
  * container simply creates a new instance of the given class.
  */
-const defaultContainer: { get<T>(someClass: ClassConstructor<T> | Function): T } = new (class {
+const defaultContainer: UserContainer = new (class {
   private instances: { type: Function; object: any }[] = [];
-  get<T>(someClass: ClassConstructor<T>): T {
+  get<T, K = unknown>(someClass: ClassConstructor<T, K>, paramsConstructor: K[] = []): T {
     let instance = this.instances.find(instance => instance.type === someClass);
     if (!instance) {
-      instance = { type: someClass, object: new someClass() };
+      instance = { type: someClass, object: new someClass(...paramsConstructor) };
       this.instances.push(instance);
     }
-
     return instance.object;
   }
 })();
@@ -46,10 +47,10 @@ const defaultContainer: { get<T>(someClass: ClassConstructor<T> | Function): T }
  * @param someClass A class constructor to resolve
  * @param action The request/response context that `someClass` is being resolved for
  */
-export function getFromContainer<T>(someClass: ClassConstructor<T> | Function, action?: Action): T {
+export function getFromContainer<T, K = unknown>(someClass: ClassConstructor<T, K> | Function, action?: Action, paramsConstructor?: any[]): T {
   if (userContainer) {
     try {
-      const instance = userContainer.get(someClass, action);
+      const instance = userContainer.get(someClass, paramsConstructor || [], action);
       if (instance) return instance;
 
       if (!userContainerOptions || !userContainerOptions.fallback) return instance;
@@ -57,7 +58,7 @@ export function getFromContainer<T>(someClass: ClassConstructor<T> | Function, a
       if (!userContainerOptions || !userContainerOptions.fallbackOnErrors) throw error;
     }
   }
-  return defaultContainer.get<T>(someClass);
+  return defaultContainer.get<T, K>(someClass, paramsConstructor || []);
 }
 
 
@@ -104,8 +105,8 @@ export class ControllerMetadata {
    * Gets instance of the controller.
    * @param action Details around the request session
    */
-  getInstance(action: Action): any {
-    return getFromContainer(this.target, action);
+  getInstance(action: Action, paramsConstructor?: any[]): any {
+    return getFromContainer(this.target, action, paramsConstructor);
   }
   /**
    * Builds everything controller metadata needs.

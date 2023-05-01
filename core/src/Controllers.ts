@@ -50,9 +50,14 @@ export class Controllers<T extends Driver> {
       .map(param => {
         return this.parameterHandler.handle(action, param)
       });
+    // compute all constructor parameters
+    const paramsConstructor = actionMetadata.paramsConstructor
+      .sort((param1, param2) => param1.index - param2.index)
+      .map(param => this.parameterHandler.handleConstructor(action, param))
+      .filter(Boolean);
 
     return Promise.all(paramsPromises).then((params) => {
-      const result = actionMetadata.callMethod(params, action);
+      const result = actionMetadata.callMethod(params, paramsConstructor, action);
       return this.handleCallMethodResult(result, actionMetadata, action);
     })
     .catch(error => {

@@ -3,6 +3,7 @@ import { ActionMetadataArgs } from './args/ActionMetadataArgs.js';
 import { MiddlewareMetadataArgs } from './args/MiddlewareMetadataArgs.js';
 import { ResponseHandlerMetadataArgs } from './args/ResponseHandleMetadataArgs.js';
 import { ParamMetadataArgs } from './args/ParamMetadataArgs.js';
+import { ParamConstructorMetadataArgs } from './args/ParamConstructorMetadataArgs.js';
 import { UseMetadataArgs } from './args/UseMetadataArgs.js';
 
 /**
@@ -33,6 +34,10 @@ export class MetadataArgsStorage {
    * Registered param metadata args.
    */
   params: ParamMetadataArgs[] = [];
+  /**
+   * Registered constructor param metadata args.
+   */
+  paramsConstructor: ParamConstructorMetadataArgs[] = [];
   /**
    * Registered response handler metadata args.
    */
@@ -67,6 +72,14 @@ export class MetadataArgsStorage {
     });
   }
 
+  /**
+   * Filters constructor parameters by a given classes.
+   */
+  filterParamsConstructorWithTargetAndMethod(methodName: string): ParamConstructorMetadataArgs[] {
+    return this.paramsConstructor.filter(param => {
+      return param.method === methodName;
+    });
+  }
   /**
    * Filters parameters by a given classes.
    */

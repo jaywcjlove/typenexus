@@ -1,0 +1,8 @@
+@baseUrl = http://localhost:3002/api/users
+@contentType = application/json
+
+### 👉 Get User List
+
+# @name list
+GET {{baseUrl}}
+Content-Type: application/json

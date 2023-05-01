@@ -55,13 +55,14 @@ import { User } from '../entities/user.entity';
 
 @Controller('/api/users')
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @Get()          // => GET /api/users
-  public async getAll(@DSource() dataSource: DataSource): Promise<User[]> {
-    return dataSource.manager.find(User);
+  public async getAll(): Promise<User[]> {
+    return this.dataSource.manager.find(User);
   }
   @Get('/:id')    // => GET /api/users/:id
-  public async getById(@Param('id') id: string, @DSource() dataSource: DataSource): Promise<User> {
-    return dataSource.manager.findOne(User, id);
+  public async getById(@Param('id') id: string): Promise<User> {
+    return this.dataSource.manager.findOne(User, id);
   }
   @Post('/:id')   // => POST /api/users/:id
   public async modify(@Body() body: { name: string; }): Promise<{ name: string; }> {
@@ -420,6 +421,26 @@ export class UserController {
 
 **`@DSource()`** decorator injects you a [DataSource](https://typeorm.io/data-source-api) object.
 
+Support constructor **`@DSource()`** decorator
+
+```typescript
+import { Controller, Get, DSource, DataSource } from 'typenexus';
+import { Response, Request }from 'express';
+import { User } from '../entity/User.js';
+
+@Controller('/users')
+export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
+  @ContentType('application/json')
+  @Get() // => GET /users
+  public async getUsers(): Promise<User[]> {
+    return this.dataSource.manager.find(User);
+  }
+}
+```
+
+Support parameter **`@DSource()`** decorator
+
 ```typescript
 import { Controller, Get, DSource, DataSource } from 'typenexus';
 import { Response, Request }from 'express';
@@ -719,10 +740,11 @@ import { User } from '../entity/User.js';
 
 @Controller()
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @Delete("/users/:id")
   @OnUndefined(204)
-  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
-    return dataSource.manager.findOneBy(User, { id });
+  async remove(@Param("id") id: string): Promise<void> {
+    return this.dataSource.manager.findOneBy(User, { id });
   }
 }
 ```
@@ -735,10 +757,11 @@ import { User } from '../entity/User.js';
 
 @Controller()
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @Delete("/users/:id")
   @OnUndefined(404)
-  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
-    return dataSource.manager.findOneBy(User, { id });
+  async remove(@Param("id") id: string): Promise<void> {
+    return this.dataSource.manager.findOneBy(User, { id });
   }
 }
 ```
@@ -761,10 +784,11 @@ import { User } from '../entity/User.js';
 
 @Controller()
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @Get("/users/:id")
   @OnUndefined(UserNotFoundError)
-  async remove(@Param("id") id: string, @DSource() dataSource: DataSource): Promise<void> {
-    return dataSource.manager.findOneBy(User, { id });
+  async remove(@Param("id") id: string): Promise<void> {
+    return this.dataSource.manager.findOneBy(User, { id });
   }
 }
 ```

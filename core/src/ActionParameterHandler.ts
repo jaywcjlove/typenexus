@@ -1,5 +1,7 @@
+import { DataSource } from 'typeorm';
 import { Driver } from './Driver.js'
 import { ParamMetadata } from './metadata/ParamMetadata.js';
+import { ParamConstructorMetadata } from './metadata/ParamConstructorMetadata.js';
 import { Action } from './Action.js';
 import { isPromiseLike } from './utils/isPromiseLike.js';
 import { CurrentUserCheckerNotDefinedError } from './http-error/CurrentUserCheckerNotDefinedError.js';
@@ -10,6 +12,12 @@ import { AuthorizationRequiredError } from './http-error/AuthorizationRequiredEr
  */
 export class ActionParameterHandler<T extends Driver> {
   constructor(private driver: T) {}
+  /**
+   * Handles action constructor parameter.
+   */
+  handleConstructor(action: Action, param: ParamConstructorMetadata): DataSource {
+    if (param.type === 'data-source') return action.dataSource;
+  }
   /**
    * Handles action parameter.
    */

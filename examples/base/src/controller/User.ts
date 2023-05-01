@@ -5,9 +5,10 @@ import { User } from '../entity/User.js';
 
 @Controller('/users')
 export class UserController {
+  constructor(@DSource() private dataSource: DataSource) {}
   @Get()
-  public async getAll(@Req() request: Request, @Res() response: Response, @DSource() dataSource: DataSource): Promise<User[]> {
-    return dataSource.manager.find(User);
+  public async getAll(@Req() request: Request, @Res() response: Response): Promise<User[]> {
+    return this.dataSource.manager.find(User);
   }
   @Post()
   public async create(@Body() body: any, @BodyParam('name') name: string): Promise<{ name: string; id: number; username: string; }> {

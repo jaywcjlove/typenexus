@@ -4,6 +4,7 @@ import { ActionMetadataArgs } from './args/ActionMetadataArgs.js';
 import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';
 import { Action } from '../Action.js';
 import { ParamMetadata } from './ParamMetadata.js';
+import { ParamConstructorMetadata } from './ParamConstructorMetadata.js';
 import { UseMetadata } from './UseMetadata.js';
 import { TypeNexusOptions } from '../DriverOptions.js';
 
@@ -40,6 +41,11 @@ export class ActionMetadata {
    * Action's parameters.
    */
   params: ParamMetadata[];
+
+  /**
+   * Action's constructor parameters.
+   */
+  paramsConstructor: ParamConstructorMetadata[] = [];
 
   /**
    * Full route to this action (includes controller base route).
@@ -167,8 +173,8 @@ export class ActionMetadata {
    * Calls action method.
    * Action method is an action defined in a user controller.
    */
-  callMethod(params: any[], action: Action) {
-    const controllerInstance = this.controllerMetadata.getInstance(action);
+  callMethod(params: any[], paramsConstructor: any[], action: Action) {
+    const controllerInstance = this.controllerMetadata.getInstance(action, paramsConstructor);
     return controllerInstance[this.method].apply(controllerInstance, params);
   }
 
