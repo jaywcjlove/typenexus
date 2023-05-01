@@ -61,6 +61,19 @@ jobs:
           npm install
           npm run coverage
 
+      - name: Constructor Decorator Sample test with Postgres 
+        working-directory: examples/constructor-decorator
+        env:
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: wcjiang
+        run: |
+          npm install
+          npm run coverage
+
       - name: Run example CURD tests with Postgres 
         working-directory: examples/curd
         env:
