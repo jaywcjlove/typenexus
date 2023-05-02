@@ -1,6 +1,6 @@
 {
   "name": "@examples/authorized",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "typenexus": "0.4.0"
+    "typenexus": "0.4.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
