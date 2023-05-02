@@ -328,7 +328,6 @@ export abstract class Driver {
         middlewareFunctions.push((request: Request, response: Response, next: NextFunction) => {
           try {
             const useResult = getFromContainer<ExpressMiddlewareInterface>(use.middleware).use(request, response, next);
-            console.log('prepareMiddlewares:error', useResult);
             if (isPromiseLike(useResult)) {
               useResult.catch((error: any) => {
                 this.handleError(error, undefined, { request, response, next, dataSource: this.dataSource });
@@ -375,7 +374,6 @@ export abstract class Driver {
       middlewareWrapper = (request: Request, response: Response, next: NextFunction) => {
         try {
           const useResult = (middleware.instance as ExpressMiddlewareInterface).use(request, response, next);
-          console.log('registerMiddleware:error', useResult);
           if (isPromiseLike(useResult)) {
             useResult.catch((error: any) => {
               this.handleError(error, undefined, { request, response, next, dataSource: this.dataSource });

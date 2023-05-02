@@ -22,7 +22,9 @@ export class UserController {
   @Get("/redirect/location")
   @HttpCode(201)
   @Location("https://bing.com")
-  public location() {}
+  public location(): any {
+    return {}
+  }
 
   @Get("/users/:id")
   @Header("Cache-Control", "none")

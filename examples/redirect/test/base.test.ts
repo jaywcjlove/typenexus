@@ -41,17 +41,19 @@ describe('API request test case', () => {
       .set('Accept', 'application/json')
       .expect(201)
 
+    expect(result.body).toEqual({});
     expect(result.redirect).toEqual(false);
     expect(result.header.location).toEqual('https://bing.com');
   });
 
-  test('GET /api/users/12', async () => {
+  test('GET /api/users/location', async () => {
     const result = await agent
       .get('/api/users/location')
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(404)
 
     expect(result.redirect).toEqual(false);
+    expect(result.body).toEqual({ name: 'NotFoundError' });
     expect(result.header['cache-control']).toEqual('none');
   });
 });
