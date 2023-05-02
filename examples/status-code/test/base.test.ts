@@ -48,7 +48,9 @@ describe('API request test case', () => {
     const result = await agent
       .get('/api/questions/4')
       .set('Accept', 'application/json')
-      .expect(200)
+      .expect(404)
+    expect(result.body.message).toEqual(undefined);
+      console.log(result.body)
   });
 
   test('GET /api/users/4', async () => {
