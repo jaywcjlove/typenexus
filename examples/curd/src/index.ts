@@ -44,7 +44,6 @@ declare module 'express-session' {
     // either promise that resolves a boolean value
     // demo code:
     const token = action.request.query.token || action.request.body.token || (action.request.headers.authorization || '').replace(/^token\s/, '');
-    // @ts-ignore
     if (action.request.session.token === token) return true;
     return false;
   }

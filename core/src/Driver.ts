@@ -5,6 +5,7 @@ import cookie from 'cookie';
 import compression from 'compression';
 import session from 'express-session';
 import cors from 'cors';
+import pathTemplater from 'path-templater';
 import { ActionMetadata } from './metadata/ActionMetadata.js';
 import { AuthorizationRequiredError } from './http-error/AuthorizationRequiredError.js';
 import { AccessDeniedError } from './http-error/AccessDeniedError.js';
@@ -17,7 +18,7 @@ import { getFromContainer } from './metadata/ControllerMetadata.js';
 import { isPromiseLike } from './utils/isPromiseLike.js';
 import { Action } from './Action.js';
 import { AuthorizationCheckerNotDefinedError } from './http-error/AuthorizationCheckerNotDefinedError.js';
-import pathTemplater from 'path-templater';
+import { NotFoundError } from './http-error/NotFoundError.js';
 
 export abstract class Driver {
   /**
@@ -127,7 +128,23 @@ export abstract class Driver {
     const routeHandler = (request: Request, response: Response, next: NextFunction) => {
       return executeCallback({ request, response, next, dataSource: this.dataSource });
     };
-    this.app[actionMetadata.type.toLowerCase() as keyof Express](...[route, ...beforeMiddlewares, ...defaultMiddleware, routeHandler, ...afterMiddlewares]);
+
+    // This ensures that a request is only processed once to prevent unhandled rejections saying
+    // "Can't set headers after they are sent"
+    // Some examples of reasons a request may cause multiple route calls:
+    // * Express calls the "get" route automatically when we call the "head" route:
+    //   Reference: https://expressjs.com/en/4x/api.html#router.METHOD
+    //   This causes a double execution on our side.
+    // * Multiple routes match the request (e.g. GET /users/me matches both @All(/users/me) and @Get(/users/:id)).
+    // The following middleware only starts an action processing if the request has not been processed before.
+    const routeGuard = function routeGuard(request: any, response: any, next: Function) {
+      if (!request.routingControllersStarted) {
+        request.routingControllersStarted = true;
+        return next();
+      }
+    };
+
+    this.app[actionMetadata.type.toLowerCase() as keyof Express](...[route, routeGuard, ...beforeMiddlewares, ...defaultMiddleware, routeHandler, ...afterMiddlewares]);
   }
   /**
    * Handles result of successfully executed controller action.
@@ -145,7 +162,6 @@ export abstract class Driver {
       options.next!();
       return;
     }
-
     if (result === undefined && action.undefinedResultCode) {
       if (action.undefinedResultCode instanceof Function) {
         throw new (action.undefinedResultCode as any)(options);
@@ -193,6 +209,34 @@ export abstract class Driver {
         }
         options.next();
       });
+    } else if (result === undefined) {
+      // throw NotFoundError on undefined response
+      if (action.undefinedResultCode) {
+        if (action.isJsonTyped) {
+          options.response.json();
+        } else {
+          options.response.send();
+        }
+        options.next();
+      } else {
+        throw new NotFoundError();
+      }
+    } else if (result === null) {
+      // send null response
+      if (action.isJsonTyped) {
+        options.response.json(null);
+      } else {
+        options.response.send(null);
+      }
+      options.next();
+    } else if (result instanceof Buffer) {
+      // check if it's binary data (Buffer)
+      options.response.end(result, 'binary');
+    } else if (result instanceof Uint8Array) {
+      // check if it's binary data (typed array)
+      options.response.end(Buffer.from(result as any), 'binary');
+    } else if (result.pipe instanceof Function) {
+      result.pipe(options.response);
     } else {
       if (action.isJsonTyped) {
         options.response.json(result);
@@ -284,6 +328,7 @@ export abstract class Driver {
         middlewareFunctions.push((request: Request, response: Response, next: NextFunction) => {
           try {
             const useResult = getFromContainer<ExpressMiddlewareInterface>(use.middleware).use(request, response, next);
+            console.log('prepareMiddlewares:error', useResult);
             if (isPromiseLike(useResult)) {
               useResult.catch((error: any) => {
                 this.handleError(error, undefined, { request, response, next, dataSource: this.dataSource });
@@ -330,6 +375,7 @@ export abstract class Driver {
       middlewareWrapper = (request: Request, response: Response, next: NextFunction) => {
         try {
           const useResult = (middleware.instance as ExpressMiddlewareInterface).use(request, response, next);
+          console.log('registerMiddleware:error', useResult);
           if (isPromiseLike(useResult)) {
             useResult.catch((error: any) => {
               this.handleError(error, undefined, { request, response, next, dataSource: this.dataSource });

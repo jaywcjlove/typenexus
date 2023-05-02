@@ -14,7 +14,7 @@ export const config: TypeNexusOptions = {
     synchronize: true,
     logging: true,
     entities: ['dist/entity/*.js'],
-    // entities: [User], 
+    // entities: [User],                             
   },
   session: {
     secret: 'secret',

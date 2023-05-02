@@ -73,7 +73,7 @@ describe('API request test case', () => {
     authToken = result.body.token;
   });
 
-  it('GET /api/users?token=xxx \x1b[34;1m auth\x1b[0m', async () => {
+  it('GET /api/users?token=xxx \x1b[34;1m @Authorized()\x1b[0m', async () => {
     const result = await agent
       .get(`/api/users?token=${authToken}`)
       .set('Accept', 'application/json')
@@ -83,6 +83,15 @@ describe('API request test case', () => {
     expect(result.body[0].id).toEqual(1);
     expect(result.body[0].name).toEqual('admin');
     expect(result.body[0].username).toEqual('wcj');
+  });
+
+  it('GET /api/users/verify?token=xxx', async () => {
+    const result = await agent
+      .get(`/api/users/verify?token=${authToken}`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      expect(Object.keys(result.body)).toEqual([ 'token', 'id', 'username', 'name', 'deleteAt', 'createAt' ]);
   });
 
 });
