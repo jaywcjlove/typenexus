@@ -11,4 +11,12 @@ export class UserController {
       title: 'Question #1',
     };
   }
+  @Authorized()
+  @Get('/info')
+  public async info(): Promise<any> {
+    return {
+      id: 1,
+      title: 'Question #2',
+    };
+  }
 }

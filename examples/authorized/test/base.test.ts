@@ -1,7 +1,16 @@
 /** @jest-environment node */
-import { TypeNexus, Action } from 'typenexus';
+import { TypeNexus, Action, HttpError } from 'typenexus';
 import supertest from 'supertest';
 import { UserController } from '../dist/UserController.js';
+
+export class AuthorizationCheckerNotDefinedError extends HttpError {
+  name = 'AuthorizationError';
+  constructor(message: string = '') {
+    super(401);
+    Object.setPrototypeOf(this, AuthorizationCheckerNotDefinedError.prototype);
+    if (message) this.message = message;
+  }
+}
 
 describe('API request test case', () => {
   let app: TypeNexus;
@@ -11,6 +20,9 @@ describe('API request test case', () => {
       developmentMode: false,
     });
     app.authorizationChecker = async (action: Action, roles: string[]) => {
+      if (action.request.path === '/api/questions/info') {
+        throw new AuthorizationCheckerNotDefinedError('Failed to verify token!')
+      }
       return false;
     }
   });
@@ -25,5 +37,21 @@ describe('API request test case', () => {
       .expect(401);
     expect(result.body.name).toEqual('AuthorizationRequiredError');
     expect(Object.keys(result.body)).toEqual([ 'name', 'message' ]);
+  });
+
+  test('GET /api/questions/info', async () => {
+    app.controllers([UserController]);
+    const result = await supertest.agent(app.app)
+      .get('/api/questions/info')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(401);
+
+    expect(result.body.name).toEqual('AuthorizationError');
+    expect(result.body).toEqual({
+      name: 'AuthorizationError',
+      message: 'Failed to verify token!',
+    });
   });
 });
