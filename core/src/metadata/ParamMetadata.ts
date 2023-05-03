@@ -1,4 +1,3 @@
-
 import { ActionMetadata } from './ActionMetadata.js';
 import { ParamMetadataArgs } from './args/ParamMetadataArgs.js';
 import { ParamType } from './types/ParamType.js';
@@ -55,6 +54,5 @@ export class ParamMetadata {
     this.type = args.type;
     this.required = args.required;
     this.name = args.name || '';
-
   }
 }

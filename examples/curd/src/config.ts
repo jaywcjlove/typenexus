@@ -14,7 +14,7 @@ export const config: TypeNexusOptions = {
     synchronize: true,
     logging: true,
     entities: ['dist/entity/*.js'],
-    // entities: [User],                             
+    // entities: [User],
   },
   session: {
     secret: 'secret',
@@ -25,12 +25,12 @@ export const config: TypeNexusOptions = {
       cleanupLimit: 2,
       // limitSubquery: false, // If using MariaDB.
       ttl: 86400,
-    }
+    },
   },
-}
+};
 
 export const adminAccount = {
   username: 'wcj',
   name: 'admin',
-  password: '1234'
-}
+  password: '1234',
+};

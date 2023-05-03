@@ -6,7 +6,7 @@ import { UserController, CustomErrorHandler } from './UserController.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-;(async () => {
+(async () => {
   const app = new TypeNexus(3002, {
     developmentMode: false,
     defaultErrorHandler: false,

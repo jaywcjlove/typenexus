@@ -8,7 +8,7 @@ export class CurrentUserCheckerNotDefinedError extends InternalServerError {
 
   constructor() {
     super(
-      `Cannot use @CurrentUser decorator. Please define currentUserChecker function in TypeNexus action before using it.`
+      `Cannot use @CurrentUser decorator. Please define currentUserChecker function in TypeNexus action before using it.`,
     );
     Object.setPrototypeOf(this, CurrentUserCheckerNotDefinedError.prototype);
   }

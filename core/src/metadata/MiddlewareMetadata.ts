@@ -50,8 +50,6 @@ export class MiddlewareMetadata {
    * Gets middleware instance from the container.
    */
   get instance(): ExpressMiddlewareInterface | ExpressErrorMiddlewareInterface {
-    return getFromContainer<ExpressMiddlewareInterface | ExpressErrorMiddlewareInterface>(
-      this.target
-    );
+    return getFromContainer<ExpressMiddlewareInterface | ExpressErrorMiddlewareInterface>(this.target);
   }
 }

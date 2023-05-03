@@ -21,7 +21,7 @@ export interface Action {
   next?: NextFunction;
 
   /**
-   * DataSource is a pre-defined connection configuration to a specific database. 
+   * DataSource is a pre-defined connection configuration to a specific database.
    */
   dataSource: DataSource;
 }

@@ -1,4 +1,3 @@
-
 /**
  * Controller action's parameter type.
  */
@@ -13,12 +12,9 @@ export type ParamType =
   | 'cookies'
   | 'query'
   | 'queries'
-  
   | 'current-user'
-
   | 'body-param'
   | 'header'
   | 'headers'
   | 'session'
   | 'session-param';
-

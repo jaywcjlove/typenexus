@@ -1,6 +1,6 @@
 import { Controller, ContentType, Get, Param, Post, Delete, Res, Req, DSource, DataSource } from 'typenexus';
 import { Body, BodyParam, Authorized, SessionParam } from 'typenexus';
-import { Response, Request }from 'express';
+import { Response, Request } from 'express';
 import crypto from 'crypto';
 import { User } from '../entity/User.js';
 
@@ -24,7 +24,12 @@ export class UserController {
     return this.dataSource.manager.find(User);
   }
   @Post('/login')
-  public async login(@BodyParam('username') username: string, @BodyParam('password') password: string, @Res() res: Response, @Req() req: Request): Promise<User | UserResult> {
+  public async login(
+    @BodyParam('username') username: string,
+    @BodyParam('password') password: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ): Promise<User | UserResult> {
     if (!username) {
       res.status(332);
       return { code: 1, message: '请输入登录账号' };
@@ -36,8 +41,8 @@ export class UserController {
 
     const hashPassword = crypto.createHmac('sha256', password).digest('hex');
     const userInfo = await this.dataSource.manager.findOne(User, {
-        where: { username, password: hashPassword },
-        select: ['username', 'id', 'name', 'createAt', 'deleteAt'],
+      where: { username, password: hashPassword },
+      select: ['username', 'id', 'name', 'createAt', 'deleteAt'],
     });
     if (!userInfo) {
       res.status(401);
@@ -54,29 +59,34 @@ export class UserController {
     return { ...userInfo, token };
   }
   @Get('/verify')
-  public async verify(@SessionParam('token') token: string, @SessionParam('userInfo') userInfo: User, @Res() res: Response): Promise<User | UserResult> {
+  public async verify(
+    @SessionParam('token') token: string,
+    @SessionParam('userInfo') userInfo: User,
+    @Res() res: Response,
+  ): Promise<User | UserResult> {
     if (token) {
       return { token, ...userInfo };
     }
     res.status(401);
-    return { code: 401, message: 'Expired, please login again!' }
+    return { code: 401, message: 'Expired, please login again!' };
   }
   @Get('/:userId')
   public async detail(@Param('userId') userId: string, @Res() res: Response): Promise<User | UserResult> {
     const info = await this.dataSource.manager.findOneBy(User, {
-      id: userId as unknown as number
+      id: userId as unknown as number,
     });
     if (!info) res.status(404);
     return info;
   }
   @Post('/logout')
   public async logout(@Req() req: Request, @Res() res: Response) {
-    const destroy = () => new Promise((resolve, reject) => {
-      req.session.destroy((error) => {
-        res.status(error ? 500 : 200);
-        error ? reject({ ... error }) : resolve({ message: 'Logout successful!' })
-      })
-    })
+    const destroy = () =>
+      new Promise((resolve, reject) => {
+        req.session.destroy((error) => {
+          res.status(error ? 500 : 200);
+          error ? reject({ ...error }) : resolve({ message: 'Logout successful!' });
+        });
+      });
     return destroy();
   }
   @Post()
@@ -86,7 +96,7 @@ export class UserController {
     }
     const userEntity = this.dataSource.manager.create(User, { ...body });
     try {
-      const userInfo = await this.dataSource.manager.save(userEntity)
+      const userInfo = await this.dataSource.manager.save(userEntity);
       delete userInfo.password;
       return userInfo;
     } catch (error) {

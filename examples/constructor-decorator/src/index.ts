@@ -4,7 +4,7 @@ import { config, adminAccount } from './config.js';
 import { UserController } from './controller/User.js';
 import { User } from './entity/User.js';
 
-;(async () => {
+(async () => {
   const app = new TypeNexus(3002, config);
   await app.connect();
 

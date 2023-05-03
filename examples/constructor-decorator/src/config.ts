@@ -13,12 +13,12 @@ export const config: TypeNexusOptions = {
     synchronize: true,
     logging: true,
     entities: ['dist/entity/*.js'],
-    // entities: [User], 
+    // entities: [User],
   },
-}
+};
 
 export const adminAccount = {
   username: 'wcj',
   name: 'admin',
-  password: '1234'
-}
+  password: '1234',
+};

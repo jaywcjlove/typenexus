@@ -1,4 +1,3 @@
-
 import { ActionMetadata } from './ActionMetadata.js';
 import { ParamConstructorMetadataArgs } from './args/ParamConstructorMetadataArgs.js';
 import { ConstructorType } from './types/ConstructorType.js';
@@ -55,6 +54,5 @@ export class ParamConstructorMetadata {
     this.type = args.type;
     this.required = args.required;
     this.name = args.name || '';
-
   }
 }

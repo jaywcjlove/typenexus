@@ -1,4 +1,3 @@
-
 import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 
 /**
@@ -12,6 +11,6 @@ export function Get(route: string | RegExp = ''): PropertyDecorator {
       target: object.constructor,
       method: methodName as string,
       route,
-    })
+    });
   };
 }

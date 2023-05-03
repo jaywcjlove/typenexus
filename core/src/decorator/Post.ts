@@ -7,7 +7,7 @@ import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 export function Post(route: string | RegExp = ''): PropertyDecorator {
   return function (object: Object, methodName: string | symbol) {
     getMetadataArgsStorage().actions.push({
-      type: 'post', 
+      type: 'post',
       target: object.constructor,
       method: methodName as string,
       route,

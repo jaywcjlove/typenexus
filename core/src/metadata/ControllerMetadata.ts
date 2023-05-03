@@ -1,4 +1,4 @@
-import { ControllerMetadataArgs } from './args/ControllerMetadataArgs.js'
+import { ControllerMetadataArgs } from './args/ControllerMetadataArgs.js';
 import { ResponseHandlerMetadata } from './ResponseHandleMetadata.js';
 import { ActionMetadata } from './ActionMetadata.js';
 import { UseMetadata } from './UseMetadata.js';
@@ -24,7 +24,7 @@ let userContainerOptions: UseContainerOptions;
 export type ClassConstructor<T, K = unknown> = { new (...args: K[]): T };
 
 interface UserContainer {
-  get<T, K = unknown>(someClass: ClassConstructor<T, K> | Function, params?: K[], action?: Action): T
+  get<T, K = unknown>(someClass: ClassConstructor<T, K> | Function, params?: K[], action?: Action): T;
 }
 /**
  * Container to be used by this library for inversion control. If container was not implicitly set then by default
@@ -33,7 +33,7 @@ interface UserContainer {
 const defaultContainer: UserContainer = new (class {
   private instances: { type: Function; object: any }[] = [];
   get<T, K = unknown>(someClass: ClassConstructor<T, K>, paramsConstructor: K[] = []): T {
-    let instance = this.instances.find(instance => instance.type === someClass);
+    let instance = this.instances.find((instance) => instance.type === someClass);
     if (!instance) {
       instance = { type: someClass, object: new someClass(...paramsConstructor) };
       this.instances.push(instance);
@@ -47,7 +47,11 @@ const defaultContainer: UserContainer = new (class {
  * @param someClass A class constructor to resolve
  * @param action The request/response context that `someClass` is being resolved for
  */
-export function getFromContainer<T, K = unknown>(someClass: ClassConstructor<T, K> | Function, action?: Action, paramsConstructor?: any[]): T {
+export function getFromContainer<T, K = unknown>(
+  someClass: ClassConstructor<T, K> | Function,
+  action?: Action,
+  paramsConstructor?: any[],
+): T {
   if (userContainer) {
     try {
       const instance = userContainer.get(someClass, paramsConstructor || [], action);
@@ -60,7 +64,6 @@ export function getFromContainer<T, K = unknown>(someClass: ClassConstructor<T, 
   }
   return defaultContainer.get<T, K>(someClass, paramsConstructor || []);
 }
-
 
 /**
  * Controller metadata.
@@ -113,7 +116,7 @@ export class ControllerMetadata {
    * Controller metadata should be used only after its build.
    */
   build(responseHandlers: ResponseHandlerMetadata[]) {
-    const authorizedHandler = responseHandlers.find(handler => handler.type === 'authorized' && !handler.method);
+    const authorizedHandler = responseHandlers.find((handler) => handler.type === 'authorized' && !handler.method);
     this.isAuthorizedUsed = !!authorizedHandler;
     this.authorizedRoles = [].concat((authorizedHandler && authorizedHandler.value) || []);
   }

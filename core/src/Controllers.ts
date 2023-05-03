@@ -22,22 +22,23 @@ export class Controllers<T extends Driver> {
   registerControllers(classes?: Function[]): this {
     const controllers = this.metadataBuilder.buildControllerMetadata(classes);
     controllers.map((controller) => {
-      controller.actions.forEach(actionMetadata => {
+      controller.actions.forEach((actionMetadata) => {
         this.driver.registerAction(actionMetadata, (action) => {
-          this.executeAction(actionMetadata, action)
+          this.executeAction(actionMetadata, action);
         });
-      })
-    })
+      });
+    });
     return this;
   }
   /**
    * Registers middleware that run before controller actions.
    */
   registerMiddlewares(type: 'before' | 'after', classes: Function[], option: TypeNexusOptions): this {
-    this.metadataBuilder.buildMiddlewareMetadata(classes)
-    .filter(middleware => middleware.global && middleware.type === type)
-    .sort((middleware1, middleware2) => middleware2.priority - middleware1.priority)
-    .forEach(middleware => this.driver.registerMiddleware(middleware, option));
+    this.metadataBuilder
+      .buildMiddlewareMetadata(classes)
+      .filter((middleware) => middleware.global && middleware.type === type)
+      .sort((middleware1, middleware2) => middleware2.priority - middleware1.priority)
+      .forEach((middleware) => this.driver.registerMiddleware(middleware, option));
     return this;
   }
   /**
@@ -47,22 +48,23 @@ export class Controllers<T extends Driver> {
     // compute all parameters
     const paramsPromises = actionMetadata.params
       .sort((param1, param2) => param1.index - param2.index)
-      .map(param => {
-        return this.parameterHandler.handle(action, param)
+      .map((param) => {
+        return this.parameterHandler.handle(action, param);
       });
     // compute all constructor parameters
     const paramsConstructor = actionMetadata.paramsConstructor
       .sort((param1, param2) => param1.index - param2.index)
-      .map(param => this.parameterHandler.handleConstructor(action, param))
+      .map((param) => this.parameterHandler.handleConstructor(action, param))
       .filter(Boolean);
 
-    return Promise.all(paramsPromises).then((params) => {
-      const result = actionMetadata.callMethod(params, paramsConstructor, action);
-      return this.handleCallMethodResult(result, actionMetadata, action);
-    })
-    .catch(error => {
-      return this.driver.handleError(error, actionMetadata, action);
-    });
+    return Promise.all(paramsPromises)
+      .then((params) => {
+        const result = actionMetadata.callMethod(params, paramsConstructor, action);
+        return this.handleCallMethodResult(result, actionMetadata, action);
+      })
+      .catch((error) => {
+        return this.driver.handleError(error, actionMetadata, action);
+      });
   }
 
   /**
@@ -70,14 +72,15 @@ export class Controllers<T extends Driver> {
    */
   protected handleCallMethodResult(result: any, action: ActionMetadata, options: Action): any {
     if (isPromiseLike(result)) {
-      return result.then((data) => {
-        return this.handleCallMethodResult(data, action, options);
-      })
-      .catch((error) => {
-        return this.driver.handleError(error, action, options);
-      });
+      return result
+        .then((data) => {
+          return this.handleCallMethodResult(data, action, options);
+        })
+        .catch((error) => {
+          return this.driver.handleError(error, action, options);
+        });
     } else {
-      return this.driver.handleSuccess(result, action, options)
+      return this.driver.handleSuccess(result, action, options);
     }
   }
 }

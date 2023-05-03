@@ -32,7 +32,7 @@ export class MetadataBuilder {
     const middlewares = !classes
       ? getMetadataArgsStorage().middlewares
       : getMetadataArgsStorage().filterMiddlewareMetadatasForClasses(classes);
-    return middlewares.map(middlewareArgs => new MiddlewareMetadata(middlewareArgs));
+    return middlewares.map((middlewareArgs) => new MiddlewareMetadata(middlewareArgs));
   }
 
   /**
@@ -43,7 +43,7 @@ export class MetadataBuilder {
       ? getMetadataArgsStorage().controllers
       : getMetadataArgsStorage().filterControllerMetadataForClasses(classes);
 
-    return controllers.map(controllerArgs => {
+    return controllers.map((controllerArgs) => {
       const controller = new ControllerMetadata(controllerArgs);
       controller.build(this.createControllerResponseHandlers(controller));
       controller.actions = this.createActions(controller);
@@ -58,10 +58,10 @@ export class MetadataBuilder {
     const actionsWithTarget: ActionMetadata[] = [];
     for (let target = controller.target; target; target = Object.getPrototypeOf(target)) {
       const actions = getMetadataArgsStorage().filterActionsWithTarget(target);
-      const methods = actionsWithTarget.map(a => a.method);
+      const methods = actionsWithTarget.map((a) => a.method);
       actions
         .filter(({ method }) => !methods.includes(method))
-        .forEach(actionArgs => {
+        .forEach((actionArgs) => {
           const action = new ActionMetadata(controller, { ...actionArgs, target: controller.target }, this.options);
           action.params = this.createParams(action);
           action.paramsConstructor = this.createParamsConstructor(action);
@@ -79,19 +79,19 @@ export class MetadataBuilder {
   protected createParamsConstructor(action: ActionMetadata): ParamConstructorMetadata[] {
     return getMetadataArgsStorage()
       .filterParamsConstructorWithTargetAndMethod('constructor')
-      .map(paramArgs => new ParamConstructorMetadata(action, paramArgs));
+      .map((paramArgs) => new ParamConstructorMetadata(action, paramArgs));
   }
 
   /**
    * Creates param metadatas.
    */
   protected createParams(action: ActionMetadata): ParamMetadata[] {
-    const dta =  getMetadataArgsStorage()
+    const dta = getMetadataArgsStorage()
       .filterParamsWithTargetAndMethod(action.target, action.method)
-      .map(paramArgs => {
-        return new ParamMetadata(action, paramArgs)
+      .map((paramArgs) => {
+        return new ParamMetadata(action, paramArgs);
       });
-      return dta
+    return dta;
   }
 
   /**
@@ -100,8 +100,8 @@ export class MetadataBuilder {
   protected createActionResponseHandlers(action: ActionMetadata): ResponseHandlerMetadata[] {
     return getMetadataArgsStorage()
       .filterResponseHandlersWithTargetAndMethod(action.target, action.method)
-      .map(handlerArgs => {
-        return new ResponseHandlerMetadata(handlerArgs)
+      .map((handlerArgs) => {
+        return new ResponseHandlerMetadata(handlerArgs);
       });
   }
 
@@ -111,7 +111,7 @@ export class MetadataBuilder {
   protected createActionUses(action: ActionMetadata): UseMetadata[] {
     return getMetadataArgsStorage()
       .filterUsesWithTargetAndMethod(action.target, action.method)
-      .map(useArgs => new UseMetadata(useArgs));
+      .map((useArgs) => new UseMetadata(useArgs));
   }
 
   /**
@@ -120,7 +120,7 @@ export class MetadataBuilder {
   protected createControllerResponseHandlers(controller: ControllerMetadata): ResponseHandlerMetadata[] {
     return getMetadataArgsStorage()
       .filterResponseHandlersWithTarget(controller.target)
-      .map(handlerArgs => new ResponseHandlerMetadata(handlerArgs));
+      .map((handlerArgs) => new ResponseHandlerMetadata(handlerArgs));
   }
 
   /**
@@ -129,6 +129,6 @@ export class MetadataBuilder {
   protected createControllerUses(controller: ControllerMetadata): UseMetadata[] {
     return getMetadataArgsStorage()
       .filterUsesWithTargetAndMethod(controller.target, undefined)
-      .map(useArgs => new UseMetadata(useArgs));
+      .map((useArgs) => new UseMetadata(useArgs));
   }
 }

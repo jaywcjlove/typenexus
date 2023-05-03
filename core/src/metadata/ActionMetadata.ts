@@ -99,7 +99,11 @@ export class ActionMetadata {
    * Response headers to be set.
    */
   headers: { [name: string]: any };
-  constructor(controllerMetadata: ControllerMetadata, args: ActionMetadataArgs, private globalOptions: TypeNexusOptions) {
+  constructor(
+    controllerMetadata: ControllerMetadata,
+    args: ActionMetadataArgs,
+    private globalOptions: TypeNexusOptions,
+  ) {
     this.controllerMetadata = controllerMetadata;
     this.route = args.route;
     this.target = args.target;
@@ -111,13 +115,13 @@ export class ActionMetadata {
    * Action metadata can be used only after its build.
    */
   build(responseHandlers: ResponseHandlerMetadata[]) {
-    const authorizedHandler = responseHandlers.find(handler => handler.type === 'authorized');
-    const contentTypeHandler = responseHandlers.find(handler => handler.type === 'content-type');
-    const undefinedResultHandler = responseHandlers.find(handler => handler.type === 'on-undefined');
-    const nullResultHandler = responseHandlers.find(handler => handler.type === 'on-null');
-    const successCodeHandler = responseHandlers.find(handler => handler.type === 'success-code');
-    const redirectHandler = responseHandlers.find(handler => handler.type === 'redirect');
-    const renderedTemplateHandler = responseHandlers.find(handler => handler.type === 'rendered-template');
+    const authorizedHandler = responseHandlers.find((handler) => handler.type === 'authorized');
+    const contentTypeHandler = responseHandlers.find((handler) => handler.type === 'content-type');
+    const undefinedResultHandler = responseHandlers.find((handler) => handler.type === 'on-undefined');
+    const nullResultHandler = responseHandlers.find((handler) => handler.type === 'on-null');
+    const successCodeHandler = responseHandlers.find((handler) => handler.type === 'success-code');
+    const redirectHandler = responseHandlers.find((handler) => handler.type === 'redirect');
+    const renderedTemplateHandler = responseHandlers.find((handler) => handler.type === 'rendered-template');
 
     if (successCodeHandler) this.successHttpCode = successCodeHandler.value;
     if (redirectHandler) this.redirect = redirectHandler.value;
@@ -140,7 +144,7 @@ export class ActionMetadata {
     this.headers = this.buildHeaders(responseHandlers);
     this.isAuthorizedUsed = this.controllerMetadata.isAuthorizedUsed || !!authorizedHandler;
     this.authorizedRoles = (this.controllerMetadata.authorizedRoles || []).concat(
-      (authorizedHandler && authorizedHandler.value) || []
+      (authorizedHandler && authorizedHandler.value) || [],
     );
   }
   /**
@@ -182,13 +186,13 @@ export class ActionMetadata {
    * Builds action response headers.
    */
   private buildHeaders(responseHandlers: ResponseHandlerMetadata[]) {
-    const locationHandler = responseHandlers.find(handler => handler.type === 'location');
-    const contentTypeHandler = responseHandlers.find(handler => handler.type === 'content-type');
-    const headerHandlers = responseHandlers.filter(handler => handler.type === 'header');
+    const locationHandler = responseHandlers.find((handler) => handler.type === 'location');
+    const contentTypeHandler = responseHandlers.find((handler) => handler.type === 'content-type');
+    const headerHandlers = responseHandlers.filter((handler) => handler.type === 'header');
     const headers: ActionMetadata['headers'] = {};
     if (locationHandler) headers['Location'] = locationHandler.value;
     if (contentTypeHandler) headers['Content-type'] = contentTypeHandler.value;
-    if (headerHandlers) headerHandlers.map(handler => (headers[handler.value] = handler.secondaryValue));
+    if (headerHandlers) headerHandlers.map((handler) => (headers[handler.value] = handler.secondaryValue));
     return headers;
   }
 }

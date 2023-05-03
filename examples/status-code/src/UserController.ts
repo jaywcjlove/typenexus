@@ -26,9 +26,9 @@ export class UserController {
       }
     });
   }
-  @Get("/users/:id")
+  @Get('/users/:id')
   @OnUndefined(UserNotFoundError)
-  saveUser(@Param("id") id: number): null {
+  saveUser(@Param('id') id: number): null {
     return undefined;
   }
 }

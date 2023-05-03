@@ -1,5 +1,12 @@
 import { Controller, Get, Req } from 'typenexus';
-import { Middleware, ExpressMiddlewareInterface, UseAfter, UseBefore, ExpressErrorMiddlewareInterface, ForbiddenError } from 'typenexus';
+import {
+  Middleware,
+  ExpressMiddlewareInterface,
+  UseAfter,
+  UseBefore,
+  ExpressErrorMiddlewareInterface,
+  ForbiddenError,
+} from 'typenexus';
 import { Request, Response, NextFunction } from 'express';
 
 @Middleware({ type: 'before' })
@@ -13,7 +20,7 @@ export class LoggingMiddleware implements ExpressMiddlewareInterface {
 
 @Middleware({ type: 'after' })
 export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
-  error(error: any,request: Request, response: Response, next: NextFunction): void {
+  error(error: any, request: Request, response: Response, next: NextFunction): void {
     response.status(error.status || 500);
     next();
   }

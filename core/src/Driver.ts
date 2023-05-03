@@ -52,7 +52,7 @@ export abstract class Driver {
     this.options.port = typeof portOrOptions === 'number' ? portOrOptions : options.port;
     this.options.port && this.express.set('port', this.options.port);
     this.options.defaultErrorHandler = options.defaultErrorHandler !== undefined ? options.defaultErrorHandler : true;
-    this.currentUserChecker =  this.options.currentUserChecker || this.currentUserChecker;
+    this.currentUserChecker = this.options.currentUserChecker || this.currentUserChecker;
     this.authorizationChecker = this.options.authorizationChecker || this.authorizationChecker;
 
     if (this.options.bodyParser?.json !== false) {
@@ -68,12 +68,15 @@ export abstract class Driver {
       this.app.use(compression(this.options.compression));
     }
     if (this.options.bodyParser?.urlencoded !== false) {
-      this.app.use(express.urlencoded({ extended: false, ...this.options.bodyParser?.urlencoded }))
+      this.app.use(express.urlencoded({ extended: false, ...this.options.bodyParser?.urlencoded }));
     }
   }
   public async registerSession() {
     if (this.options?.session) {
-      let sessionOptions = typeof this.options?.session == 'function' ? this.options?.session({ app: this, dataSource: this.dataSource }) : this.options?.session;
+      let sessionOptions =
+        typeof this.options?.session == 'function'
+          ? this.options?.session({ app: this, dataSource: this.dataSource })
+          : this.options?.session;
       if (sessionOptions.repositoryTarget) {
         const reps = this.dataSource.getRepository(sessionOptions.repositoryTarget);
         const typeormStoreOptions = {
@@ -81,8 +84,8 @@ export abstract class Driver {
           cleanupLimit: 2,
           ttl: 86400,
           ...sessionOptions.typeormStore,
-        }
-        sessionOptions.store = new TypeormStore(typeormStoreOptions).connect(reps)
+        };
+        sessionOptions.store = new TypeormStore(typeormStoreOptions).connect(reps);
       }
       this.app.use(session(sessionOptions));
     }
@@ -109,8 +112,8 @@ export abstract class Driver {
           };
           if (isPromiseLike(checkResult)) {
             checkResult
-              .then(result => handleError(result))
-              .catch(error => this.handleError(error, actionMetadata, action));
+              .then((result) => handleError(result))
+              .catch((error) => this.handleError(error, actionMetadata, action));
           } else {
             handleError(checkResult);
           }
@@ -121,8 +124,8 @@ export abstract class Driver {
     }
     // user used middlewares
     const uses = [...actionMetadata.controllerMetadata.uses, ...actionMetadata.uses];
-    const beforeMiddlewares = this.prepareMiddlewares(uses.filter(use => !use.afterAction));
-    const afterMiddlewares = this.prepareMiddlewares(uses.filter(use => use.afterAction));
+    const beforeMiddlewares = this.prepareMiddlewares(uses.filter((use) => !use.afterAction));
+    const afterMiddlewares = this.prepareMiddlewares(uses.filter((use) => use.afterAction));
     // prepare route and route handler function
     const route = ActionMetadata.appendBaseRoute(this.routePrefix, actionMetadata.fullRoute);
     const routeHandler = (request: Request, response: Response, next: NextFunction) => {
@@ -144,7 +147,9 @@ export abstract class Driver {
       }
     };
 
-    this.app[actionMetadata.type.toLowerCase() as keyof Express](...[route, routeGuard, ...beforeMiddlewares, ...defaultMiddleware, routeHandler, ...afterMiddlewares]);
+    this.app[actionMetadata.type.toLowerCase() as keyof Express](
+      ...[route, routeGuard, ...beforeMiddlewares, ...defaultMiddleware, routeHandler, ...afterMiddlewares],
+    );
   }
   /**
    * Handles result of successfully executed controller action.
@@ -181,7 +186,7 @@ export abstract class Driver {
     }
 
     // apply http headers
-    Object.keys(action.headers).forEach(name => {
+    Object.keys(action.headers).forEach((name) => {
       options.response.header(name, action.headers[name]);
     });
 
@@ -305,7 +310,7 @@ export abstract class Driver {
 
       case 'headers':
         return request.headers;
-      
+
       case 'cookie':
         if (!request.headers?.cookie) return;
         const cookies = cookie.parse(request.headers.cookie);
@@ -314,7 +319,6 @@ export abstract class Driver {
       case 'cookies':
         if (!request.headers?.cookie) return {};
         return cookie.parse(request.headers.cookie);
-
     }
   }
   /**
@@ -347,7 +351,7 @@ export abstract class Driver {
             error,
             request,
             response,
-            next
+            next,
           );
         });
       } else {
@@ -409,13 +413,13 @@ export abstract class Driver {
 
       Object.keys(error)
         .filter(
-          key =>
+          (key) =>
             key !== 'stack' &&
             key !== 'name' &&
             key !== 'message' &&
-            (!(error instanceof HttpError) || key !== 'httpCode')
+            (!(error instanceof HttpError) || key !== 'httpCode'),
         )
-        .forEach(key => (processedError[key] = (error as any)[key]));
+        .forEach((key) => (processedError[key] = (error as any)[key]));
 
       return Object.keys(processedError).length > 0 ? processedError : undefined;
     }

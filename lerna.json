@@ -1,8 +1,5 @@
 {
   "version": "0.4.1",
-  "packages": [
-    "core",
-    "examples/*"
-  ],
+  "packages": ["core", "examples/*"],
   "useWorkspaces": true
 }

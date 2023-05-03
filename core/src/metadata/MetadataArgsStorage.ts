@@ -11,8 +11,7 @@ import { UseMetadataArgs } from './args/UseMetadataArgs.js';
  * Metadata args storage follows the best practices and stores metadata in a global variable.
  */
 export function getMetadataArgsStorage(): MetadataArgsStorage {
-  if (!(global as any).metadataArgsStorage)
-    (global as any).metadataArgsStorage = new MetadataArgsStorage();
+  if (!(global as any).metadataArgsStorage) (global as any).metadataArgsStorage = new MetadataArgsStorage();
 
   return (global as any).metadataArgsStorage;
 }
@@ -51,23 +50,23 @@ export class MetadataArgsStorage {
    * Filters registered controllers by a given classes.
    */
   filterControllerMetadataForClasses(classes: Function[]): ControllerMetadataArgs[] {
-    return this.controllers.filter(ctrl => {
-      return classes.filter(cls => ctrl.target === cls).length > 0;
+    return this.controllers.filter((ctrl) => {
+      return classes.filter((cls) => ctrl.target === cls).length > 0;
     });
   }
   /**
    * Filters registered actions by a given classes.
    */
   filterActionsWithTarget(target: Function): ActionMetadataArgs[] {
-    return this.actions.filter(action => {
-      return action.target === target
+    return this.actions.filter((action) => {
+      return action.target === target;
     });
   }
   /**
    * Filters response handlers by a given classes.
    */
   filterResponseHandlersWithTargetAndMethod(target: Function, methodName: string): ResponseHandlerMetadataArgs[] {
-    return this.responseHandlers.filter(property => {
+    return this.responseHandlers.filter((property) => {
       return property.target === target && property.method === methodName;
     });
   }
@@ -76,7 +75,7 @@ export class MetadataArgsStorage {
    * Filters constructor parameters by a given classes.
    */
   filterParamsConstructorWithTargetAndMethod(methodName: string): ParamConstructorMetadataArgs[] {
-    return this.paramsConstructor.filter(param => {
+    return this.paramsConstructor.filter((param) => {
       return param.method === methodName;
     });
   }
@@ -84,7 +83,7 @@ export class MetadataArgsStorage {
    * Filters parameters by a given classes.
    */
   filterParamsWithTargetAndMethod(target: Function, methodName: string): ParamMetadataArgs[] {
-    return this.params.filter(param => {
+    return this.params.filter((param) => {
       return param.object.constructor === target && param.method === methodName;
     });
   }
@@ -92,7 +91,7 @@ export class MetadataArgsStorage {
    * Filters response handlers by a given class.
    */
   filterResponseHandlersWithTarget(target: Function): ResponseHandlerMetadataArgs[] {
-    return this.responseHandlers.filter(property => {
+    return this.responseHandlers.filter((property) => {
       return property.target === target;
     });
   }
@@ -101,7 +100,7 @@ export class MetadataArgsStorage {
    * Filters registered "use middlewares" by a given target class and method name.
    */
   filterUsesWithTargetAndMethod(target: Function, methodName: string): UseMetadataArgs[] {
-    return this.uses.filter(use => {
+    return this.uses.filter((use) => {
       return use.target === target && use.method === methodName;
     });
   }
@@ -109,7 +108,8 @@ export class MetadataArgsStorage {
    * Filters registered middlewares by a given classes.
    */
   filterMiddlewareMetadatasForClasses(classes: Function[]): MiddlewareMetadataArgs[] {
-    return classes.map(cls => this.middlewares.find(mid => mid.target === cls)).filter(midd => midd !== undefined); // this might be not needed if all classes where decorated with `@Middleware`
+    return classes
+      .map((cls) => this.middlewares.find((mid) => mid.target === cls))
+      .filter((midd) => midd !== undefined); // this might be not needed if all classes where decorated with `@Middleware`
   }
-
 }

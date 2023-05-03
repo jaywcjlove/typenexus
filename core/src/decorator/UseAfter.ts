@@ -9,7 +9,7 @@ export function UseAfter(
   ...middlewares: Array<Function | ((request: Request, response: Response, next: NextFunction) => any)>
 ): ClassDecorator & PropertyDecorator {
   return function (objectOrFunction: Object | Function, methodName?: string) {
-    middlewares.forEach(middleware => {
+    middlewares.forEach((middleware) => {
       getMetadataArgsStorage().uses.push({
         target: methodName ? objectOrFunction.constructor : (objectOrFunction as Function),
         method: methodName,

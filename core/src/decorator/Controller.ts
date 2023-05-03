@@ -1,4 +1,3 @@
-
 import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 
 export function Controller(baseRoute: string = ''): ClassDecorator {
@@ -7,6 +6,6 @@ export function Controller(baseRoute: string = ''): ClassDecorator {
       type: 'json',
       target: object,
       route: baseRoute,
-    })
+    });
   };
 }

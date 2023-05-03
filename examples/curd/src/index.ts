@@ -16,8 +16,7 @@ declare module 'express-session' {
   }
 }
 
-
-;(async () => {
+(async () => {
   const app = new TypeNexus(3002, config);
   await app.connect();
 
@@ -43,10 +42,13 @@ declare module 'express-session' {
     // checker must return either boolean (true or false)
     // either promise that resolves a boolean value
     // demo code:
-    const token = action.request.query.token || action.request.body.token || (action.request.headers.authorization || '').replace(/^token\s/, '');
+    const token =
+      action.request.query.token ||
+      action.request.body.token ||
+      (action.request.headers.authorization || '').replace(/^token\s/, '');
     if (action.request.session.token === token) return true;
     return false;
-  }
+  };
 
   app.controllers([UserController]);
   app.express.disable('x-powered-by');

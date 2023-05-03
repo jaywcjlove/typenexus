@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Driver } from './Driver.js'
+import { Driver } from './Driver.js';
 import { ParamMetadata } from './metadata/ParamMetadata.js';
 import { ParamConstructorMetadata } from './metadata/ParamConstructorMetadata.js';
 import { Action } from './Action.js';
@@ -28,7 +28,7 @@ export class ActionParameterHandler<T extends Driver> {
 
     // get parameter value from request and normalize it
     const value = this.normalizeParamValue(this.driver.getParamFromRequest(action, param), param);
-    if (isPromiseLike(value)) return value.then(value => this.handleValue(value, action, param));
+    if (isPromiseLike(value)) return value.then((value) => this.handleValue(value, action, param));
     return this.handleValue(value, action, param);
   }
   /**
@@ -42,7 +42,6 @@ export class ActionParameterHandler<T extends Driver> {
    * Handles non-promise value.
    */
   protected handleValue(value: any, action: Action, param: ParamMetadata): Promise<any> | any {
-
     // if its current-user decorator then get its value
     if (param.type === 'current-user') {
       if (!this.driver.currentUserChecker) throw new CurrentUserCheckerNotDefinedError();
@@ -61,7 +60,7 @@ export class ActionParameterHandler<T extends Driver> {
         // current user has a special check as well
 
         if (isPromiseLike(value)) {
-          return value.then(currentUser => {
+          return value.then((currentUser) => {
             if (!currentUser) return Promise.reject(new AuthorizationRequiredError(action));
 
             return currentUser;
@@ -75,9 +74,6 @@ export class ActionParameterHandler<T extends Driver> {
       }
     }
 
-
     return value;
   }
-
-
 }

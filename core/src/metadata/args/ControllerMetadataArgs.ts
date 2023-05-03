@@ -1,4 +1,3 @@
-
 /**
  * Controller metadata used to storage information about registered controller.
  */

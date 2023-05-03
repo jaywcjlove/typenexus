@@ -3,7 +3,7 @@ import { OptionsUrlencoded, OptionsJson, OptionsText, Options } from 'body-parse
 import { CompressionOptions } from 'compression';
 import { Request, Response, NextFunction } from 'express';
 import { ISession } from 'connect-typeorm';
-import { SessionOptions } from "express-session";
+import { SessionOptions } from 'express-session';
 import session from 'express-session';
 import { TypeormStore, Ttl } from 'connect-typeorm';
 import { CorsOptions } from 'cors';
@@ -82,16 +82,17 @@ export interface TypeNexusOptions {
 
 export interface SessionResult extends session.SessionOptions {
   repositoryTarget?: EntityTarget<ISession>;
-  typeormStore?: Partial<SessionOptions & {
-    cleanupLimit: number;
-    limitSubquery: boolean;
-    onError: (s: TypeormStore, e: Error) => void;
-    ttl: Ttl;
-  }>;
+  typeormStore?: Partial<
+    SessionOptions & {
+      cleanupLimit: number;
+      limitSubquery: boolean;
+      onError: (s: TypeormStore, e: Error) => void;
+      ttl: Ttl;
+    }
+  >;
 }
 
 export type SessionCallback = (params: { app: Driver; dataSource: DataSource }) => SessionResult;
-
 
 /**
  * Express error middlewares can implement this interface.

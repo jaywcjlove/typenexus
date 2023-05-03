@@ -13,11 +13,11 @@ const ormOptions: DataSourceOptions = {
   synchronize: true,
   logging: true,
   // entities: ['dist/entity/*.js'],
-  entities: [User, Session], 
-}
+  entities: [User, Session],
+};
 
-;(async () => {
-  const options: TypeNexusOptions = { 
+(async () => {
+  const options: TypeNexusOptions = {
     dataSourceOptions: ormOptions,
     session: {
       secret: 'secret',
@@ -28,14 +28,13 @@ const ormOptions: DataSourceOptions = {
         cleanupLimit: 2,
         // limitSubquery: false, // If using MariaDB.
         ttl: 86400,
-      }
-    }
-  }
+      },
+    },
+  };
   const app = new TypeNexus(options);
   await app.connect();
   app.controllers([UserController]);
   app.express.disable('x-powered-by');
 
   await app.start();
-
 })();

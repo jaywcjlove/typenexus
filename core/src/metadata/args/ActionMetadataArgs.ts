@@ -29,5 +29,4 @@ export interface ActionMetadataArgs {
    * Params to be appended to the method call.
    */
   appendParams?: (action: Action) => any[];
-
 }

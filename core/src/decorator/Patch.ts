@@ -11,6 +11,6 @@ export function Patch(route: string | RegExp = ''): PropertyDecorator {
       target: object.constructor,
       method: methodName as string,
       route,
-    })
+    });
   };
 }

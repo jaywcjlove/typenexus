@@ -1,4 +1,3 @@
-
 /**
  * Controller action type.
  */
