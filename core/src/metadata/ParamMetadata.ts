@@ -44,11 +44,18 @@ export class ParamMetadata {
    */
   required: boolean;
 
+  /**
+   * Additional parameter options.
+   * For example it can be uploader middleware options or body-parser middleware options.
+   */
+  extraOptions: any;
+
   constructor(actionMetadata: ActionMetadata, args: ParamMetadataArgs) {
     this.actionMetadata = actionMetadata;
 
     this.target = args.object.constructor;
     this.method = args.method;
+    this.extraOptions = args.extraOptions;
     this.object = args.object;
     this.index = args.index;
     this.type = args.type;

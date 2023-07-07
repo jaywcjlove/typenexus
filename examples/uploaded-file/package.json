@@ -1,0 +1,31 @@
+{
+  "name": "@examples/uploaded-file",
+  "version": "0.4.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npm run build && node dist/index.js",
+    "dev": "nodemon --inspect dist/index.js",
+    "watch": "tsbb watch",
+    "build": "tsbb build",
+    "test": "tsbb test",
+    "coverage": "tsbb test --coverage --bail"
+  },
+  "author": "kenny wong <wowohoo@qq.com>",
+  "license": "MIT",
+  "jest": {
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/?!(.*)"
+    ]
+  },
+  "dependencies": {
+    "typenexus": "0.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3",
+    "supertest-session": "^4.1.0",
+    "ts-node": "^10.9.1",
+    "tsbb": "^4.1.5"
+  }
+}

@@ -32,6 +32,8 @@ export * from './decorator/CookieParam.js';
 export * from './decorator/CookieParams.js';
 export * from './decorator/Session.js';
 export * from './decorator/SessionParam.js';
+export * from './decorator/UploadedFile.js';
+export * from './decorator/UploadedFiles.js';
 export * from './decorator/Res.js';
 export * from './decorator/Req.js';
 export * from './decorator/DSource.js';

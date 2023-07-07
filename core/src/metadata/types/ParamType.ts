@@ -17,4 +17,6 @@ export type ParamType =
   | 'header'
   | 'headers'
   | 'session'
-  | 'session-param';
+  | 'session-param'
+  | 'file'
+  | 'files';

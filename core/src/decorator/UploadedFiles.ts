@@ -1,17 +1,18 @@
 import { getMetadataArgsStorage } from '../metadata/MetadataArgsStorage.js';
 
 /**
- * Allows to inject a request body value to the controller action parameter.
+ * Injects an uploaded file object to the controller action parameter.
  * Must be applied on a controller action parameter.
  */
-export function Body(options?: any): ParameterDecorator {
+export function UploadedFiles(name: string, options?: any): Function {
   return function (object: Object, methodName: string, index: number) {
     getMetadataArgsStorage().params.push({
-      type: 'body',
+      type: 'files',
       object: object,
       method: methodName,
       index: index,
-      extraOptions: options ? options : undefined,
+      name: name,
+      extraOptions: options ? options.options : undefined,
     });
   };
 }

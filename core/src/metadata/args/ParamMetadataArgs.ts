@@ -33,4 +33,9 @@ export interface ParamMetadataArgs {
    * Indicates if this parameter is required or not
    */
   required?: boolean;
+
+  /**
+   * Extra parameter options.
+   */
+  extraOptions?: any;
 }

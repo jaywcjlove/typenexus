@@ -1,0 +1,35 @@
+
+### 👉 POST one file
+
+POST http://localhost:3012/api/file
+# Content-Type: application/xml
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fileName1"; filename="demo.xml"
+Content-Type: text/xml
+
+< ./demo.xml
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### 👉 POST
+
+POST http://localhost:3012/api/multiple/file
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="text"
+
+title
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fileName"; filename="demo.xml"
+Content-Type: text/xml
+
+< ./demo.xml
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fileName"; filename="demo2.xml"
+Content-Type: text/xml
+
+< ./demo2.xml
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+

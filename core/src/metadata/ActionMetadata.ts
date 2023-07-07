@@ -32,6 +32,26 @@ export class ActionMetadata {
   route: string | RegExp;
 
   /**
+   * Indicates if this action uses Body.
+   */
+  isBodyUsed: boolean;
+
+  /**
+   * Indicates if this action uses Uploaded File.
+   */
+  isFileUsed: boolean;
+
+  /**
+   * Indicates if this action uses Uploaded Files.
+   */
+  isFilesUsed: boolean;
+
+  /**
+   * Extra options used by @Body decorator.
+   */
+  bodyExtraOptions: any;
+
+  /**
    * Action type represents http method used for the registered route. Can be one of the value defined in ActionTypes
    * class.
    */
@@ -122,6 +142,7 @@ export class ActionMetadata {
     const successCodeHandler = responseHandlers.find((handler) => handler.type === 'success-code');
     const redirectHandler = responseHandlers.find((handler) => handler.type === 'redirect');
     const renderedTemplateHandler = responseHandlers.find((handler) => handler.type === 'rendered-template');
+    const bodyParam = this.params.find((param) => param.type === 'body');
 
     if (successCodeHandler) this.successHttpCode = successCodeHandler.value;
     if (redirectHandler) this.redirect = redirectHandler.value;
@@ -134,6 +155,11 @@ export class ActionMetadata {
     this.nullResultCode = nullResultHandler
       ? nullResultHandler.value
       : this.globalOptions.defaults && this.globalOptions.defaults.nullResultCode;
+
+    this.bodyExtraOptions = bodyParam ? bodyParam.extraOptions : undefined;
+    this.isBodyUsed = !!this.params.find((param) => param.type === 'body' || param.type === 'body-param');
+    this.isFilesUsed = !!this.params.find((param) => param.type === 'files');
+    this.isFileUsed = !!this.params.find((param) => param.type === 'file');
 
     this.isJsonTyped =
       contentTypeHandler !== undefined

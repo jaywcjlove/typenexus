@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Build & Test
 
 on: push
 
@@ -117,6 +117,10 @@ jobs:
 
       - name: Run example views-render tests
         working-directory: examples/views-render
+        run: npm run coverage
+
+      - name: Run example uploaded-file tests
+        working-directory: examples/uploaded-file
         run: npm run coverage
 
   trigger_tests:

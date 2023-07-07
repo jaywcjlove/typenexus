@@ -1,7 +1,7 @@
 TypeNexus
 ===
 
-[![CI](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml/badge.svg)](https://github.com/jaywcjlove/typenexus/actions/workflows/main.yml)
+[![Build & Test](https://github.com/jaywcjlove/typenexus/actions/workflows/CI.yml/badge.svg)](https://github.com/jaywcjlove/typenexus/actions/workflows/CI.yml)
 [![NPM Downloads](https://img.shields.io/npm/dm/typenexus.svg?style=flat)](https://www.npmjs.com/package/typenexus)
 [![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat&label=typenexus)](https://npmjs.org/package/typenexus)
 [![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://typeorm.io/)
@@ -653,6 +653,52 @@ export class Session implements ISession {
 }
 ```
 
+### Inject uploaded file
+
+To inject uploaded file, use **`@UploadedFile`** decorator:
+
+```ts
+@Post("/file")
+saveFile(@UploadedFile("fileName") file: Express.Multer.File) {}
+```
+
+To inject uploaded multiple files, use the **`@UploadedFiles`** decorator:
+
+```ts
+@Post("/files")
+saveFiles(@UploadedFiles("fileName") file: Express.Multer.File[]) {}
+```
+
+You can also specify uploading options to [**`multer`**](https://github.com/expressjs/multer) this way:
+
+```ts
+import type { Options } from 'multer';
+// to keep code clean better to extract this function into separate file
+const fileUploadOptions: () => Options = () => ({
+  storage: multerFn.diskStorage({
+    destination: (req, file, cb) => {
+      //...
+    },
+    filename: (req, file, cb) => {
+      //...
+    }
+  }),
+  fileFilter: (req, file, cb) => {
+    //...
+  },
+  limits: {
+    fieldNameSize: 255,
+    fileSize: 1024 * 1024 * 2
+  }
+});
+
+// use options this way:
+@Post("/file")
+saveFiles(@UploadedFile("fileName", fileUploadOptions) file: Express.Multer.File) {}
+```
+
+To inject all uploaded files use **`@UploadedFiles`** decorator instead. _typenexus_ uses [**`multer`**](https://github.com/expressjs/multer) to handle file uploads. 
+
 ### Set Location
 
 You can set a **`Location`** header for any action:
@@ -967,7 +1013,7 @@ class DbError extends HttpError {
 
 ### Enable CORS
 
-Since CORS is a feature that is used almost in any web-api application, you can enable it in routing-controllers options.
+Since CORS is a feature that is used almost in any web-api application, you can enable it in **typenexus** options.
 
 ```typescript
 import { TypeNexus, Action } from 'typenexus';

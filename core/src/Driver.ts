@@ -2,6 +2,8 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { DataSource } from 'typeorm';
 import { TypeormStore } from 'connect-typeorm';
 import cookie from 'cookie';
+import multerFn, { DiskStorageOptions, Options } from 'multer';
+import bodyParser from 'body-parser';
 import compression from 'compression';
 import session from 'express-session';
 import cors from 'cors';
@@ -93,6 +95,15 @@ export abstract class Driver {
   public registerAction(actionMetadata: ActionMetadata, executeCallback: (options: Action) => any) {
     // middlewares required for this action
     const defaultMiddleware: ((request: Request, response: Response, next: NextFunction) => void)[] = [];
+
+    if (actionMetadata.isBodyUsed) {
+      if (actionMetadata.isJsonTyped) {
+        defaultMiddleware.push(bodyParser.json(actionMetadata.bodyExtraOptions));
+      } else {
+        defaultMiddleware.push(bodyParser.text(actionMetadata.bodyExtraOptions));
+      }
+    }
+
     if (actionMetadata.isAuthorizedUsed) {
       defaultMiddleware.push((request, response, next) => {
         const action: Action = { request, response, next, dataSource: this.dataSource };
@@ -122,6 +133,19 @@ export abstract class Driver {
         }
       });
     }
+    if (actionMetadata.isFileUsed || actionMetadata.isFilesUsed) {
+      actionMetadata.params
+        .filter((param) => param.type === 'file')
+        .forEach((param) => {
+          defaultMiddleware.push(multerFn(param.extraOptions).single(param.name));
+        });
+      actionMetadata.params
+        .filter((param) => param.type === 'files')
+        .forEach((param) => {
+          defaultMiddleware.push(multerFn(param.extraOptions).array(param.name));
+        });
+    }
+
     // user used middlewares
     const uses = [...actionMetadata.controllerMetadata.uses, ...actionMetadata.uses];
     const beforeMiddlewares = this.prepareMiddlewares(uses.filter((use) => !use.afterAction));
@@ -310,6 +334,12 @@ export abstract class Driver {
 
       case 'headers':
         return request.headers;
+
+      case 'file':
+        return request.file;
+
+      case 'files':
+        return request.files;
 
       case 'cookie':
         if (!request.headers?.cookie) return;
