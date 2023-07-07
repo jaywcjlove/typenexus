@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { createDatabase } from 'typeorm-extension';
 import localIpUrl from 'local-ip-url';
+import 'dotenv/config';
 import { Controllers } from './Controllers.js';
 import { Driver } from './Driver.js';
 
