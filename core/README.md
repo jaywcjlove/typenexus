@@ -48,7 +48,7 @@ import { TypeNexus } from 'typenexus';
 
 Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
 
-`./src/entities/user.entity.ts`
+`./src/user.entity.ts`
 
 ```typescript
 import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typenexus';

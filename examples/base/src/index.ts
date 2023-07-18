@@ -1,7 +1,7 @@
 import { TypeNexus, TypeNexusOptions, DataSourceOptions } from 'typenexus';
-import { UserController } from './controller/User.js';
-import { Session } from './entity/Session.js';
-import { User } from './entity/User.js';
+import { UserController } from './user.controller.js';
+import { Session } from './session.entity.js';
+import { User } from './user.entity.js';
 
 const ormOptions: DataSourceOptions = {
   type: 'postgres',

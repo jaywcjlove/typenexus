@@ -20,7 +20,7 @@ import {
 } from 'typenexus';
 import { HeaderParam, HeaderParams, Body, BodyParam, Session, SessionParam } from 'typenexus';
 import { Response, Request } from 'express';
-import { User } from '../entity/User.js';
+import { User } from './user.entity.js';
 
 @Controller('/users')
 export class UserController {
