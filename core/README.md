@@ -78,7 +78,7 @@ export class User {
 ```typescript
 import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
 import { Get, Post, Put, Delete, Patch, Delete, Head } from 'typenexus';
-import { User } from '../entities/user.entity';
+import { User } from '../user.entity.js';
 
 @Controller('/api/users')
 export class UserController {
@@ -122,7 +122,7 @@ This class will register routes specified in method decorators in your server fr
 
 ```typescript
 import { TypeNexus } from 'typenexus';
-import { UserController } from './controller/User.js';
+import { UserController } from './user.controller.js';
 
 ;(async () => {
   const app = new TypeNexus();
