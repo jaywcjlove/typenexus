@@ -118,7 +118,7 @@ This class will register routes specified in method decorators in your server fr
 
 ### ❸ Create Server
 
-`./src/user.entity.ts`
+`./src/index.ts`
 
 ```typescript
 import { TypeNexus } from 'typenexus';
