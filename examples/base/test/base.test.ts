@@ -1,9 +1,9 @@
 /** @jest-environment node */
 import { TypeNexus, TypeNexusOptions } from 'typenexus';
 import supertest from 'supertest';
-import { UserController } from '../dist/controller/User.js';
-import { Session } from '../dist/entity/Session.js';
-import { User } from '../dist/entity/User.js';
+import { UserController } from '../dist/user.controller.js';
+import { Session } from '../dist/session.entity.js';
+import { User } from '../dist/user.entity.js';
 
 const options: TypeNexusOptions = {
   dataSourceOptions: {
