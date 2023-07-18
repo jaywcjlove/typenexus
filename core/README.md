@@ -44,9 +44,36 @@ import { TypeNexus } from 'typenexus';
 })();
 ```
 
-### ❶ Create API
+### ❶ Create Entity
 
-`./src/controller/UserController.ts`
+Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
+
+`./src/entities/user.entity.ts`
+
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typenexus';
+// OR: 
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column({ select: false })
+  password: string;
+
+  @CreateDateColumn()
+  createAt: Date;
+}
+```
+
+### ❷ Create API
+
+`./src/user.controller.ts`
 
 ```typescript
 import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
@@ -89,36 +116,9 @@ export class UserController {
 
 This class will register routes specified in method decorators in your server framework [Express.js](https://github.com/expressjs/express).
 
-### ❷ Create Entity
-
-Entity is a class that maps to a database table (or collection when using `Postgres`). You can create an entity by defining a new class and mark it with **`@Entity()`**:
-
-`./src/entities/user.entity.ts`
-
-```typescript
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typenexus';
-// OR: 
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typeorm';
-
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ unique: true })
-  username: string;
-
-  @Column({ select: false })
-  password: string;
-
-  @CreateDateColumn()
-  createAt: Date;
-}
-```
-
 ### ❸ Create Server
 
-`./src/entities/user.entity.ts`
+`./src/user.entity.ts`
 
 ```typescript
 import { TypeNexus } from 'typenexus';
@@ -152,10 +152,8 @@ Open in browser http://localhost:3000/users. You will see This action returns al
 
 ```bash
 └── src
-    ├── controller
-    │   └── User.ts
-    ├── entity
-    │   └── User.ts
+    ├── user.controller.ts
+    ├── user.entity.ts
     └── index.ts
 ```
 
