@@ -78,7 +78,7 @@ export class User {
 ```typescript
 import { TypeNexus, Controller, Param, Body, DataSource } from 'typenexus';
 import { Get, Post, Put, Delete, Patch, Delete, Head } from 'typenexus';
-import { User } from '../user.entity.js';
+import { User } from './user.entity.js';
 
 @Controller('/api/users')
 export class UserController {
