@@ -123,7 +123,7 @@ export class User {
         <p><code>./src/user.controller.ts</code></p>
         <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> TypeNexus<span class="token punctuation">,</span> Controller<span class="token punctuation">,</span> Param<span class="token punctuation">,</span> Body<span class="token punctuation">,</span> DataSource <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
 </span><span class="code-line line-number" line="2"><span class="token keyword">import</span> <span class="token punctuation">{</span> Get<span class="token punctuation">,</span> Post<span class="token punctuation">,</span> Put<span class="token punctuation">,</span> Delete<span class="token punctuation">,</span> Patch<span class="token punctuation">,</span> Delete<span class="token punctuation">,</span> Head <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
-</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> User <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'../user.entity.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> User <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./user.entity.js'</span><span class="token punctuation">;</span>
 </span><span class="code-line line-number" line="4">
 </span><span class="code-line line-number" line="5"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Controller</span></span><span class="token punctuation">(</span><span class="token string">'/api/users'</span><span class="token punctuation">)</span>
 </span><span class="code-line line-number" line="6"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
@@ -159,7 +159,7 @@ export class User {
 </span><span class="code-line line-number" line="36"><span class="token punctuation">}</span>
 </span></code><input type="hidden" value="import { TypeNexus, Controller, Param, Body, DataSource } from &#x27;typenexus&#x27;;
 import { Get, Post, Put, Delete, Patch, Delete, Head } from &#x27;typenexus&#x27;;
-import { User } from &#x27;../user.entity.js&#x27;;
+import { User } from &#x27;./user.entity.js&#x27;;
 
 @Controller(&#x27;/api/users&#x27;)
 export class UserController {
