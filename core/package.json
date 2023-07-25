@@ -82,6 +82,6 @@
     "pg": "~8.10.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.12",
-    "typeorm-extension": "^2.5.2"
+    "typeorm-extension": "^3.0.0"
   }
 }
