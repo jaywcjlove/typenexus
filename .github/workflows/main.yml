@@ -24,7 +24,7 @@ jobs:
 
       - run: npm install idoc@1.27.1 -g
       - name: Create idoc config.
-        working-directory: packages/tsbb
+        working-directory: core
         run: |
           cat > idoc.yml << EOF
           site: "TypeNexus {{version}}"
