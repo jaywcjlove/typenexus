@@ -6,20 +6,46 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v3
         with:
           ref: main
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
 
       - run: npm install
       - run: npm run build
       - run: tree -I 'node_modules|.git|.github|src' -L 3 -a
 
-      - run: npm install idoc@1.25.0 -g
+      - run: npm install idoc@1.27.1 -g
+      - name: Create idoc config.
+        working-directory: packages/tsbb
+        run: |
+          cat > idoc.yml << EOF
+          site: "TypeNexus {{version}}"
+          giscus: 
+            src: https://giscus.app/client.js
+            data-repo: jaywcjlove/typenexus
+            data-repo-id: R_kgDOJJBHZA
+            data-category: Q&A
+            data-category-id: DIC_kwDOJJBHZM4CZihm
+            data-mapping: pathname
+            data-strict: 0
+            data-reactions-enabled: 1
+            data-emit-metadata: 0
+            data-input-position: top
+            data-theme: dark
+            data-lang: en
+            data-loading: lazy
+            crossorigin: anonymous
+            async: true
+          EOF
+
       - run: idoc -s "TypeNexus {{version}}"
         working-directory: core
 
@@ -62,7 +88,7 @@ jobs:
           path: core/package.json
           unset: scripts,nodemonConfig,devDependencies
 
-      - run: npm publish --access public
+      - run: npm publish --access public --provenance
         continue-on-error: true
         working-directory: core
         env:
@@ -76,7 +102,7 @@ jobs:
           path: core/package.json
           rename: etn
 
-      - run: npm publish --access public
+      - run: npm publish --access public --provenance
         continue-on-error: true
         working-directory: core
         env:
