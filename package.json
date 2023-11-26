@@ -29,7 +29,7 @@
     "@types/supertest": "^2.0.12",
     "husky": "^8.0.3",
     "lerna": "^8.0.0",
-    "lint-staged": "^14.0.0",
+    "lint-staged": "^15.0.0",
     "node-ts": "^6.0.0",
     "prettier": "^3.0.0",
     "supertest": "^6.3.3",
