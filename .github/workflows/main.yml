@@ -68,7 +68,7 @@ jobs:
         with:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: ${{steps.create_tag.outputs.version}} ${{ github.event.head_commit.message }}
+          commit_message: ${{steps.create_tag.outputs.version}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./core/dist
   
@@ -116,7 +116,7 @@ jobs:
           name: ${{ steps.create_tag.outputs.version }}
           tag: ${{ steps.create_tag.outputs.version }}
           body: |
-            [![](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/typenexus@${{steps.create_tag.outputs.versionNumber}}/file/README.md)
+            [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-048754?logo=buymeacoffee)](https://jaywcjlove.github.io/#/sponsor) [![](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/typenexus@${{steps.create_tag.outputs.versionNumber}}/file/README.md)
             
             Documentation ${{ steps.changelog.outputs.tag }}: https://raw.githack.com/jaywcjlove/typenexus/${{ steps.changelog.outputs.gh-pages-short-hash }}/index.html  
 
