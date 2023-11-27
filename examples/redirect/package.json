@@ -1,6 +1,6 @@
 {
   "name": "@examples/redirect",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,7 @@
     ]
   },
   "dependencies": {
-    "typenexus": "0.5.2"
+    "typenexus": "0.5.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",

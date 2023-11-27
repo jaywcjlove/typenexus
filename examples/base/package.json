@@ -1,6 +1,6 @@
 {
   "name": "@examples/base",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,7 +24,7 @@
     ]
   },
   "dependencies": {
-    "typenexus": "0.5.2"
+    "typenexus": "0.5.3"
   },
   "devDependencies": {
     "@types/node": "^18.14.1",
