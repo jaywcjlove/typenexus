@@ -28,6 +28,9 @@ jobs:
         run: |
           cat > idoc.yml << EOF
           site: "TypeNexus {{version}}"
+          menus:
+            Home: index.html
+            Sponsor: https://jaywcjlove.github.io/#/sponsor
           giscus: 
             src: https://giscus.app/client.js
             data-repo: jaywcjlove/typenexus
