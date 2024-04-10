@@ -60,7 +60,6 @@ jobs:
           EOF
 
       - run: idoc -s "TypeNexus {{version}}"
-        working-directory: core
 
       - name: Generate Contributors Images
         uses: jaywcjlove/github-action-contributors@main
