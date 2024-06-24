@@ -1,6 +1,6 @@
 {
   "name": "@examples/views-render",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "ejs": "^3.1.9",
-    "typenexus": "0.5.4"
+    "typenexus": "0.5.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
