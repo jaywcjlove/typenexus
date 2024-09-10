@@ -64,7 +64,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "^20.0.0",
     "@wcj/generate-password": "^1.0.3",
-    "body-parser": "^1.20.2",
+    "body-parser": "^2.0.0",
     "compression": "^1.7.4",
     "connect-typeorm": "^2.0.0",
     "cookie": "^0.6.0",
