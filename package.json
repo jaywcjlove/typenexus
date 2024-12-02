@@ -2,7 +2,7 @@
   "private": true,
   "version": "0.5.6",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "start": "npm run start --workspace=core",
     "watch": "npm run watch --workspace=core",
     "build": "lerna exec --scope @examples/* --scope typenexus -- npm run build",
@@ -27,8 +27,8 @@
     ]
   },
   "devDependencies": {
-    "@types/supertest": "^2.0.12",
-    "husky": "^8.0.3",
+    "@types/supertest": "^6.0.2",
+    "husky": "^9.1.7",
     "lerna": "^8.0.0",
     "lint-staged": "^15.0.0",
     "node-ts": "^6.0.0",
