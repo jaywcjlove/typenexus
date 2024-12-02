@@ -6,8 +6,8 @@ TypeNexus
 [![中文](https://jaywcjlove.github.io/sb/lang/chinese.svg)](README.zh.md)
 [![NPM Downloads](https://img.shields.io/npm/dm/typenexus.svg?style=flat)](https://www.npmjs.com/package/typenexus)
 [![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat&label=typenexus)](https://npmjs.org/package/typenexus)
-[![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://www.npmjs.com/package/typeorm)
-[![express@^4.18.2](https://shields.io/badge/express-^4.18.2-green?style=flat&logo=express)](https://www.npmjs.com/package/express)
+[![typeorm@^0.3.12](https://shields.io/badge/-^0.3.12-green?style=flat&logo=node.js&labelColor=757575)](https://www.npmjs.com/package/typeorm)
+[![express@^4.18.2](https://shields.io/badge/-^4.18.2-green?style=flat&logo=express&labelColor=757575)](https://www.npmjs.com/package/express)
 
 TypeNexus is a great tool for API encapsulation and management. It offers a clean and lightweight way to bundle [TypeORM](https://github.com/typeorm/typeorm) + [Express.js](https://github.com/expressjs/express) functionality, helping you to build applications faster while reducing template code redundancy and type conversion work.
 
