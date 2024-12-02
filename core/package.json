@@ -79,7 +79,7 @@
     "local-ip-url": "^1.0.3",
     "multer": "^1.4.5-lts.1",
     "path-templater": "^1.0.0",
-    "pg": "~8.11.0",
+    "pg": "~8.13.0",
     "reflect-metadata": "^0.2.0",
     "typeorm": "^0.3.12",
     "typeorm-extension": "^3.0.0"
