@@ -1,7 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { DataSource } from 'typeorm';
 import { TypeormStore } from 'connect-typeorm';
-import cookie from 'cookie';
+import { parse as cookieParse } from 'cookie';
 import multerFn, { DiskStorageOptions, Options } from 'multer';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -43,7 +43,10 @@ export abstract class Driver {
    * Special function used to get currently authorized user.
    */
   public currentUserChecker?: TypeNexusOptions['currentUserChecker'];
-  constructor(portOrOptions: number | TypeNexusOptions = 3000, public options: TypeNexusOptions = {}) {
+  constructor(
+    portOrOptions: number | TypeNexusOptions = 3000,
+    public options: TypeNexusOptions = {},
+  ) {
     if (typeof portOrOptions === 'object') {
       this.options = portOrOptions;
     }
@@ -343,12 +346,12 @@ export abstract class Driver {
 
       case 'cookie':
         if (!request.headers?.cookie) return;
-        const cookies = cookie.parse(request.headers.cookie);
+        const cookies = cookieParse(request.headers.cookie);
         return cookies[param.name];
 
       case 'cookies':
         if (!request.headers?.cookie) return {};
-        return cookie.parse(request.headers.cookie);
+        return cookieParse(request.headers.cookie);
     }
   }
   /**

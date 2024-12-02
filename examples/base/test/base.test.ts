@@ -149,7 +149,6 @@ describe('API request test case', () => {
       .set('Accept', 'text/html')
       .expect('Content-Type', /html/)
       .expect(200)
-      console.log('req.text:', req.text)
     expect(req.text).toEqual('<html>Test</html>');
   });
 });
