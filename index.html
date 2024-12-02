@@ -86,9 +86,9 @@
         <h3 id="-create-entity"><a aria-hidden="true" tabindex="-1" href="#-create-entity" class="anchor"><span class="icon icon-link"></span></a>❶ Create Entity</h3>
         <p>Entity is a class that maps to a database table (or collection when using <code>Postgres</code>). You can create an entity by defining a new class and mark it with <strong><code>@Entity()</code></strong>:</p>
         <p><code>./src/user.entity.ts</code></p>
-        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Entity<span class="token punctuation">,</span> PrimaryGeneratedColumn<span class="token punctuation">,</span> Column<span class="token punctuation">,</span> DeleteDateColumn<span class="token punctuation">,</span> CreateDateColumn <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
+        <pre class="language-typescript"><code class="language-typescript code-highlight"><span class="code-line line-number" line="1"><span class="token keyword">import</span> <span class="token punctuation">{</span> Entity<span class="token punctuation">,</span> PrimaryGeneratedColumn<span class="token punctuation">,</span> Column<span class="token punctuation">,</span> CreateDateColumn <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typenexus'</span><span class="token punctuation">;</span>
 </span><span class="code-line line-number" line="2"><span class="token comment">// OR: </span>
-</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> Entity<span class="token punctuation">,</span> PrimaryGeneratedColumn<span class="token punctuation">,</span> Column<span class="token punctuation">,</span> DeleteDateColumn<span class="token punctuation">,</span> CreateDateColumn <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typeorm'</span><span class="token punctuation">;</span>
+</span><span class="code-line line-number" line="3"><span class="token keyword">import</span> <span class="token punctuation">{</span> Entity<span class="token punctuation">,</span> PrimaryGeneratedColumn<span class="token punctuation">,</span> Column<span class="token punctuation">,</span> CreateDateColumn <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'typeorm'</span><span class="token punctuation">;</span>
 </span><span class="code-line line-number" line="4">
 </span><span class="code-line line-number" line="5"><span class="token decorator"><span class="token at operator">@</span><span class="token function">Entity</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 </span><span class="code-line line-number" line="6"><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
@@ -104,9 +104,9 @@
 </span><span class="code-line line-number" line="16">  <span class="token decorator"><span class="token at operator">@</span><span class="token function">CreateDateColumn</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 </span><span class="code-line line-number" line="17">  createAt<span class="token operator">:</span> Date<span class="token punctuation">;</span>
 </span><span class="code-line line-number" line="18"><span class="token punctuation">}</span>
-</span></code><input type="hidden" value="import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from &#x27;typenexus&#x27;;
+</span></code><input type="hidden" value="import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from &#x27;typenexus&#x27;;
 // OR: 
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from &#x27;typeorm&#x27;;
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from &#x27;typeorm&#x27;;
 
 @Entity()
 export class User {
