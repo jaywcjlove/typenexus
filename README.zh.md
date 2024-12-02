@@ -53,9 +53,9 @@ import { TypeNexus } from 'typenexus';
 `./src/user.entity.ts`
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typenexus';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typenexus';
 // 或者：
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {

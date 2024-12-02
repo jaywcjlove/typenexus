@@ -53,9 +53,9 @@ Entity is a class that maps to a database table (or collection when using `Postg
 `./src/user.entity.ts`
 
 ```typescript
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typenexus';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typenexus';
 // OR: 
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
