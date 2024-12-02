@@ -3,6 +3,7 @@ TypeNexus
 
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-048754?logo=buymeacoffee)](https://jaywcjlove.github.io/#/sponsor)
 [![Build & Test](https://github.com/jaywcjlove/typenexus/actions/workflows/CI.yml/badge.svg)](https://github.com/jaywcjlove/typenexus/actions/workflows/CI.yml)
+[![中文](https://jaywcjlove.github.io/sb/lang/chinese.svg)](README.zh.md)
 [![NPM Downloads](https://img.shields.io/npm/dm/typenexus.svg?style=flat)](https://www.npmjs.com/package/typenexus)
 [![NPM version](https://img.shields.io/npm/v/typenexus.svg?style=flat&label=typenexus)](https://npmjs.org/package/typenexus)
 [![typeorm@^0.3.12](https://shields.io/badge/typeorm-^0.3.12-green?style=flat&logo=node.js)](https://www.npmjs.com/package/typeorm)

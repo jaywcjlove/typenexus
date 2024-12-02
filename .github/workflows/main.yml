@@ -35,7 +35,7 @@ jobs:
               url: https://jaywcjlove.github.io/#/sponsor
               target: __blank
           sideEffectFiles:
-            - README-zh.md
+            - README.zh.md
           footer: |
             <a href="https://wangchujiang.com/#/projects" target="_blank">Projects</a> • 
             <a href="https://wangchujiang.com/#/sponsor" target="_blank">Sponsor</a> • 
@@ -59,7 +59,7 @@ jobs:
             async: true
           EOF
 
-      - run: idoc -s "TypeNexus {{version}}"
+      - run: idoc
 
       - name: Generate Contributors Images
         uses: jaywcjlove/github-action-contributors@main
